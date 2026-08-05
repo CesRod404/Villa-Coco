@@ -11,7 +11,31 @@ export default function HomePage() {
         href="/villas"
         className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
       >
-        Ver Villas (/villas)
+        Ver Villas
+      </Link>
+      <Link
+        href="/retreats"
+        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
+      >
+        Ver Retiros
+      </Link>
+      <Link
+        href="/packages"
+        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
+      >
+        Ver Paquetes
+      </Link>
+      <Link
+        href="/testimonials"
+        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
+      >
+        Ver Testimonios
+      </Link>
+      <Link
+        href="/faqs"
+        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
+      >
+        Ver FAQs
       </Link>
     </main>
   );
