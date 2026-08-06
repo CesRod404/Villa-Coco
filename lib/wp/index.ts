@@ -3,6 +3,28 @@ import { Villa, Retreat, Package, Testimonial, FAQ } from "../../types/wordpress
 const BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
 const API_URL = `${BASE_URL}/wp-json/wp/v2`;
 
+
+function normalizeUrls(obj: any): any{
+    if(typeof obj === "string"){
+        return obj
+            .replace("https://localhost:8881", BASE_URL)
+            .replace("https://localhost:8881", BASE_URL);
+    }
+
+    if(Array.isArray(obj)){
+        return obj.map(normalizeUrls);
+    }
+
+    if (obj && typeof obj === "object") {
+        for (const key in obj) {
+        obj[key] = normalizeUrls(obj[key]);
+        }
+    }
+
+    return obj;
+
+}
+
 // Helper genérico para peticiones a la API REST de WordPress
 async function fetchWP<T>(endpoint: string): Promise<T[]> {
     const url = `${API_URL}${endpoint}`;
@@ -17,7 +39,9 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
         }
 
         const data = await res.json();
-        return Array.isArray(data) ? data : [data];
+
+        const normalized = normalizeUrls(data);
+        return Array.isArray(normalized) ? normalized : [normalized];
     } catch (error) {
         console.error(`No se pudo conectar a WordPress en ${url}:`, error);
         return [];
