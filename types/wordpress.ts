@@ -80,3 +80,14 @@ export interface FAQACFFields {
 }
 
 export type FAQ = WPPost<FAQACFFields>;
+
+export interface ReservationPeriod {
+    id: number;
+    check_in: string;
+    check_out: string;
+}
+
+export interface VillaAvailability {
+    reservations: ReservationPeriod[];
+    isAvailable: boolean;
+}

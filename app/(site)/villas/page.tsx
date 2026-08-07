@@ -35,6 +35,7 @@ export default async function VillasPage() {
                     ))}
                 </div>
             )}
+            <Link href={"/"}> Volver al inicio</Link>
         </main>
     );
 }
