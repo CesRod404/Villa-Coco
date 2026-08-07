@@ -36,3 +36,21 @@ Thumbs.db
 # TypeScript cache
 *.tsbuildinfo
 next-env.d.ts
+
+# Datos internos de MySQL
+wordpress-docker/mysql/
+
+# Archivos de respaldo de la base de datos
+wordpress-docker/database.sql
+wordpress-docker/database-fixed.sql
+
+# WordPress generado por Docker
+wordpress-docker/wordpress/wp-admin/
+wordpress-docker/wordpress/wp-includes/
+wordpress-docker/wordpress/*.php
+
+# Archivos generados y subidos por WordPress
+wordpress-docker/wordpress/wp-content/uploads/
+wordpress-docker/wordpress/wp-content/cache/
+wordpress-docker/wordpress/wp-content/upgrade/
+wordpress-docker/wordpress/wp-content/debug.log

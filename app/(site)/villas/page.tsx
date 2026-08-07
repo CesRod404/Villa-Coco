@@ -24,7 +24,7 @@ export default async function VillasPage() {
                     <p className="text-sm text-amber-700">
                         Asegúrate de que tu servidor de WordPress esté corriendo en{" "}
                         <code className="bg-amber-100 px-2 py-0.5 rounded font-mono">
-                            {process.env.WORDPRESS_API_URL || "http://localhost:8881/wp-json/wp/v2"}
+                            {process.env.WORDPRESS_API_URL}
                         </code>
                     </p>
                 </div>
