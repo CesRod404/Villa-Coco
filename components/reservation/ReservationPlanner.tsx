@@ -83,7 +83,7 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
     const nights = checkIn && checkOut ? Math.round((parseIso(checkOut).getTime() - parseIso(checkIn).getTime()) / 86400000) : 0;
 
     return (
-        <section id="reservar" className="overflow-hidden rounded-[2rem] border border-[#d8e0dd] bg-white shadow-[0_24px_70px_rgba(23,48,79,0.10)] lg:rounded-[2.25rem]">
+        <section id="reservar" className="overflow-hidden rounded-4xl border border-[#d8e0dd] bg-white shadow-[0_24px_70px_rgba(23,48,79,0.10)] lg:rounded-[2.25rem]">
             <header className="relative overflow-hidden bg-[#17304f] px-6 py-7 text-white sm:px-8">
                 <div aria-hidden="true" className="absolute -right-12 bottom-0 h-24 w-72 rotate-[-8deg] rounded-[100%] border-t border-[#77bbb9]/70" />
                 <div aria-hidden="true" className="absolute -right-4 bottom-[-1.4rem] h-24 w-72 rotate-[-8deg] rounded-[100%] border-t border-[#77bbb9]/35" />
