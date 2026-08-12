@@ -1,7 +1,9 @@
-import { Villa, Retreat, Package, Testimonial, FAQ } from "../../types/wordpress";
+import { Villa, Retreat, Package, Testimonial, FAQ, ReservationPeriod, VillaAvailability } from "../../types/wordpress";
 
-const BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
+export const WORDPRESS_BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || process.env.WORDPRESS_API_URL || "http://localhost:8881";
+const BASE_URL = WORDPRESS_BASE_URL;
 const API_URL = `${BASE_URL}/wp-json/wp/v2`;
+const RESERVATIONS_API_URL = `${BASE_URL}/wp-json/villa-coco/v1`;
 
 
 function normalizeUrls(obj: any): any{
@@ -56,6 +58,21 @@ export async function getVillas(): Promise<Villa[]> {
 export async function getVillaBySlug(slug: string): Promise<Villa | null> {
     const villas = await fetchWP<Villa>(`/villa?slug=${encodeURIComponent(slug)}&_embed`);
     return villas[0] || null;
+}
+
+export async function getVillaReservations(villaId: number): Promise<ReservationPeriod[]> {
+    return (await getVillaAvailability(villaId)).reservations;
+}
+
+export async function getVillaAvailability(villaId: number): Promise<VillaAvailability> {
+    try {
+        const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, { cache: "no-store" });
+        if (!response.ok) return { reservations: [], isAvailable: false };
+        return { reservations: await response.json(), isAvailable: true };
+    } catch (error) {
+        console.error("No se pudo cargar la disponibilidad de la villa:", error);
+        return { reservations: [], isAvailable: false };
+    }
 }
 
 // 2. Retiros (retiro) — slug real en WordPress: "retiro"

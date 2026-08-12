@@ -1,4 +1,5 @@
 import "./globals.css";
+import ChatWidget from '@/components/chat/ChatWidget';
 
 export const metadata = {
   title: "Villa Coco",
@@ -12,7 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>{children}</body>
+      <body>
+        {children}
+        <ChatWidget />
+      </body>
     </html>
   );
 }
