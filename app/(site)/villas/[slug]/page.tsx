@@ -27,7 +27,9 @@ export default async function VillaDetailPage({ params }: { params: Promise<{ sl
                         <div className="rounded-2xl bg-white p-4"><dt className="text-xs uppercase tracking-wide text-slate-400">Suites</dt><dd className="mt-1 text-xl font-bold">{villa.acf.suites_count || "—"}</dd></div>
                     </dl>
                 </div>
-                <ReservationPlanner villaId={villa.id} villaName={villa.title.rendered.replace(/<[^>]*>/g, "")} maxGuests={villa.acf.suites_count ? villa.acf.suites_count * 2 : undefined} reservations={availability.reservations} availabilityOnline={availability.isAvailable} />
+                <div id="reservation" className="scroll-mt-8">
+                    <ReservationPlanner villaId={villa.id} villaName={villa.title.rendered.replace(/<[^>]*>/g, "")} maxGuests={villa.acf.suites_count ? villa.acf.suites_count * 2 : undefined} reservations={availability.reservations} availabilityOnline={availability.isAvailable} />
+                </div>
             </section>
         </main>
     );

@@ -9,6 +9,9 @@ export interface WPPost<ACFType> {
     content?: {
         rendered: string;
     };
+    excerpt?: {
+        rendered: string;
+    };
     featured_media?: number;
     _embedded?: {
         "wp:featuredmedia"?: Array<{
@@ -23,13 +26,25 @@ export interface WPPost<ACFType> {
 export interface VillaACFFields {
     description_short: string;
     description_long: string;
-    gallery?: string[] | Array<{ url: string }>;
+    gallery?: string | string[] | Array<{ url?: string; src?: string; alt?: string }>;
     suites_count: number;
     minimum_stay_nights: number;
     bedrooms: number;
     bathrooms: number;
     location: string;
     use_cases: Array<"family" | "wedding" | "corporate" | "wellness" | string>;
+    amenities?: string[] | string;
+    features?: string[] | string;
+    guests?: number;
+    max_guests?: number;
+    capacity?: number;
+    capacidad_personas?: number;
+    habitaciones?: number;
+    banos?: number;
+    price?: number | string;
+    precio?: number | string;
+    nightly_rate?: number | string;
+    price_per_night?: number | string;
 }
 
 export type Villa = WPPost<VillaACFFields>;

@@ -1,0 +1,6 @@
+FROM wordpress:php8.3-apache
+
+# El core de WordPress viene de la imagen oficial. Solo agregamos el contenido
+# propio del proyecto: plugins, temas y la configuración de WordPress.
+COPY --chown=www-data:www-data wordpress-docker/wordpress/wp-content/ /var/www/html/wp-content/
+COPY wordpress-docker/wordpress/wp-config.php /var/www/html/wp-config.php

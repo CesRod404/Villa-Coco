@@ -1,91 +1,183 @@
 "use client";
 
-import VillaGallery from "./VillaGallery"; 
 import Link from "next/link";
-import React from "react";
-import { Villa } from "../../types/wordpress";
+import { Bath, BedDouble, ChevronDown, Users } from "lucide-react";
+import type { Villa } from "@/types/wordpress";
+import VillaGallery, { type VillaGalleryImage } from "./VillaGallery";
+import styles from "./VillaCard.module.css";
 
-function stripHtml(html?: string) {
-	if (!html) return "";
-	return html.replace(/<[^>]*>/g, "").slice(0, 140);
+function plainText(value?: string) {
+  if (!value) return "";
+
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&#8217;|&rsquo;/gi, "’")
+    .replace(/&quot;/gi, '"')
+    .replace(/Ã¡/g, "á")
+    .replace(/Ã©/g, "é")
+    .replace(/Ã­/g, "í")
+    .replace(/Ã³/g, "ó")
+    .replace(/Ãº/g, "ú")
+    .replace(/Ã±/g, "ñ")
+    .replace(/Ã/g, "Á")
+    .replace(/Ã‰/g, "É")
+    .replace(/Ã/g, "Í")
+    .replace(/Ã“/g, "Ó")
+    .replace(/Ãš/g, "Ú")
+    .replace(/Ã‘/g, "Ñ")
+    .replace(/Â/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function extractImages(villa: Villa) {
-	const images: { src: string; alt?: string }[] = [];
+function extractImages(villa: Villa): VillaGalleryImage[] {
+  const images: VillaGalleryImage[] = [];
+  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
 
-	// Prefer featured media embedded (same as page.tsx)
-	const featured = (villa as any)._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-	const featuredAlt = (villa as any)._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || "";
-	if (featured) images.push({ src: featured, alt: featuredAlt });
+  if (featured?.source_url) {
+    images.push({
+      src: featured.source_url,
+      alt: featured.alt_text || "",
+    });
+  }
 
-	// Then fallback to ACF gallery (strings or objects)
-	const acfGallery: any = villa.acf?.gallery;
-	if (Array.isArray(acfGallery) && acfGallery.length > 0) {
-		for (const it of acfGallery) {
-			if (typeof it === "string") images.push({ src: it, alt: "" });
-			else if (it && (it.url || it.src)) images.push({ src: it.url || it.src, alt: it.alt || "" });
-		}
-	}
+  const gallery = villa.acf?.gallery;
+  if (Array.isArray(gallery)) {
+    for (const image of gallery) {
+      const normalized =
+        typeof image === "string"
+          ? { src: image, alt: "" }
+          : { src: image.url || image.src || "", alt: image.alt || "" };
 
-	return images;
+      if (
+        normalized.src &&
+        !images.some((existing) => existing.src === normalized.src)
+      ) {
+        images.push(normalized);
+      }
+    }
+  }
+
+  return images;
+}
+
+function firstPositiveNumber(values: unknown[]) {
+  for (const value of values) {
+    const number =
+      typeof value === "number"
+        ? value
+        : typeof value === "string"
+          ? Number(value.replace(/[^0-9.]/g, ""))
+          : Number.NaN;
+
+    if (Number.isFinite(number) && number > 0) return number;
+  }
+
+  return undefined;
+}
+
+function normalizeAmenities(villa: Villa) {
+  const acf = villa.acf;
+  const source = acf.amenities || acf.features || acf.use_cases || [];
+
+  return (Array.isArray(source) ? source : [source])
+    .flatMap((value) => String(value).split(","))
+    .map((value) => value.replace(/[_-]+/g, " ").trim())
+    .filter(Boolean)
+    .slice(0, 8);
 }
 
 export default function VillaCard({ villa }: { villa: Villa }) {
-	const title = villa.title?.rendered || "Untitled";
-	const excerpt = (villa as any).excerpt?.rendered || villa.acf?.description_short || villa.content?.rendered || "";
-	const images = extractImages(villa);
-	const mainImage = images.length ? images[0].src : "/placeholder.jpg";
-	const alt = images.length ? images[0].alt || title : title;
+  const title = plainText(villa.title?.rendered) || "Villa";
+  const villaName = title.replace(/^Casa\s+/i, "") || title;
+  const excerpt =
+    villa.acf?.description_short ||
+    villa.excerpt?.rendered ||
+    villa.content?.rendered ||
+    "A private island retreat designed for meaningful stays.";
+  const description = plainText(excerpt);
+  const images = extractImages(villa);
+  const acf = villa.acf;
+  const guests =
+    firstPositiveNumber([
+      acf.guests,
+      acf.max_guests,
+      acf.capacity,
+      acf.capacidad_personas,
+    ]) || (acf.suites_count ? acf.suites_count * 2 : undefined);
+  const bedrooms = firstPositiveNumber([acf.bedrooms, acf.habitaciones]);
+  const bathrooms = firstPositiveNumber([acf.bathrooms, acf.banos]);
+  const price = firstPositiveNumber([
+    acf.price,
+    acf.precio,
+    acf.nightly_rate,
+    acf.price_per_night,
+  ]);
+  const amenities = normalizeAmenities(villa);
+  const detailHref = `/villas/${villa.slug}`;
 
-	return (
-		<article className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-200">
-			<VillaGallery
-                images={images}
-                title={title}
-            />
+  return (
+    <article className={styles.card} aria-labelledby={`villa-${villa.id}-title`}>
+      <VillaGallery images={images} title={title} />
 
-			<div className="p-5 flex-1 flex flex-col justify-between">
-				<div>
-					<div className="flex items-center justify-between gap-2 mb-2">
-						<h3 className="text-xl font-bold text-slate-900" dangerouslySetInnerHTML={{ __html: title }} />
-						{villa.acf?.location && <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">📍 {villa.acf.location}</span>}
-					</div>
+      <div className={styles.content}>
+        <div className={styles.heading}>
+          <span className={styles.kicker}>Casa</span>
+          <h3 id={`villa-${villa.id}-title`}>{villaName}</h3>
+        </div>
 
-					<p className="text-slate-600 mb-4 text-sm line-clamp-3">{villa.acf?.description_short || stripHtml(excerpt)}</p>
+        <div className={styles.descriptionBlock}>
+          <p>{description}</p>
+          <Link href={detailHref} className={styles.readMore}>
+            <ChevronDown aria-hidden="true" size={14} strokeWidth={2.5} />
+            <span>Read more</span>
+          </Link>
+        </div>
 
-					{/* Especificaciones */}
-					<div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 text-xs text-slate-600 text-center mb-4">
-						<div>
-							<span className="font-bold text-slate-800 block text-sm">{villa.acf?.bedrooms || "-"}</span>
-							Recámaras
-						</div>
-						<div>
-							<span className="font-bold text-slate-800 block text-sm">{villa.acf?.bathrooms || "-"}</span>
-							Baños
-						</div>
-						<div>
-							<span className="font-bold text-slate-800 block text-sm">{villa.acf?.suites_count || "-"}</span>
-							Suites
-						</div>
-					</div>
+        <dl className={styles.stats}>
+          <div className={styles.stat}>
+            <Users aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Guests</dt>
+            <dd>{guests || "—"} guests</dd>
+          </div>
+          <div className={styles.stat}>
+            <BedDouble aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Bedrooms</dt>
+            <dd>{bedrooms || "—"} bedrooms</dd>
+          </div>
+          <div className={styles.stat}>
+            <Bath aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Bathrooms</dt>
+            <dd>{bathrooms || "—"} bathrooms</dd>
+          </div>
+        </dl>
 
-					{/* Casos de uso */}
-					{villa.acf?.use_cases && villa.acf.use_cases.length > 0 && (
-						<div className="flex gap-1.5 flex-wrap mb-4">
-							{villa.acf.use_cases.map((useCase, index) => (
-								<span key={index} className="bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full text-xs font-medium border border-emerald-100 capitalize">
-									{useCase}
-								</span>
-							))}
-						</div>
-					)}
-				</div>
+        <div className={styles.amenities} aria-label="Villa features">
+          {amenities.map((amenity) => (
+            <span key={amenity}>{amenity}</span>
+          ))}
+        </div>
 
-				<Link href={`/villas/${villa.slug}`} className="w-full inline-block text-center bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-lg text-sm transition-colors">
-					Ver detalles y disponibilidad
-				</Link>
-			</div>
-		</article>
-	);
+        <div className={styles.booking}>
+          <div className={styles.price}>
+            {price ? (
+              <>
+                <span>From</span>
+                <strong>${price.toLocaleString("en-US")}</strong>
+                <span>/ night + taxes</span>
+              </>
+            ) : (
+              <strong className={styles.priceOnRequest}>Rate upon request</strong>
+            )}
+          </div>
+
+          <Link href={`${detailHref}#reservation`} className={styles.inquire}>
+            Inquire here
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
 }
-

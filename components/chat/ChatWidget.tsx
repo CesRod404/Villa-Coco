@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import { OPEN_VILLA_CHAT_EVENT } from "./chat-events";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -20,10 +21,37 @@ export default function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    function openChat() {
+      setIsOpen(true);
+    }
+
+    function closeChatWithEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+      }
+    }
+
+    window.addEventListener(OPEN_VILLA_CHAT_EVENT, openChat);
+    window.addEventListener("keydown", closeChatWithEscape);
+
+    return () => {
+      window.removeEventListener(OPEN_VILLA_CHAT_EVENT, openChat);
+      window.removeEventListener("keydown", closeChatWithEscape);
+    };
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isOpen]);
 
   async function handleSend() {
     const trimmed = input.trim();
@@ -70,90 +98,88 @@ export default function ChatWidget() {
     }
   }
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-      {isOpen && (
-        <div className="mb-3 flex h-120 w-85 flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-gray-200 bg-primary px-4 py-3">
-            <span className="text-sm font-medium text-primary-foreground">
-              Coco B Assistant
-            </span>
-            <button
-              onClick={() => setIsOpen(false)}
-              aria-label="Close chat"
-              className="text-primary-foreground/80 hover:text-primary-foreground"
-            >
-              ✕
-            </button>
-          </div>
+      <div
+        id="villa-coco-chat"
+        role="dialog"
+        aria-label="Coco B Assistant"
+        className="flex h-[min(30rem,calc(100svh-3rem))] w-[min(21.25rem,calc(100vw-3rem))] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl"
+      >
+        <div className="flex items-center justify-between border-b border-gray-200 bg-primary px-4 py-3">
+          <span className="text-sm font-medium text-primary-foreground">
+            Coco B Assistant
+          </span>
+          <button
+            type="button"
+            onClick={() => setIsOpen(false)}
+            aria-label="Close chat"
+            className="text-primary-foreground/80 hover:text-primary-foreground"
+          >
+            ✕
+          </button>
+        </div>
 
-          {/* Messages */}
-          <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
-            {messages.map((msg, i) => (
+        <div className="flex-1 space-y-3 overflow-y-auto px-4 py-3">
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${
+                msg.role === "user" ? "justify-end" : "justify-start"
+              }`}
+            >
               <div
-                key={i}
-                className={`flex ${
-                  msg.role === "user" ? "justify-end" : "justify-start"
+                className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
+                  msg.role === "user"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-gray-100 text-black"
                 }`}
               >
-                <div
-                  className={`max-w-[85%] rounded-xl px-3 py-2 text-sm ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-gray-100 text-black"
-                  }`}
-                >
-                  {msg.content}
-                </div>
+                {msg.content}
               </div>
-            ))}
+            </div>
+          ))}
 
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="max-w-[85%] rounded-xl bg-gray-100 px-3 py-2 text-sm text-black/60">
-                  Typing…
-                </div>
+          {isLoading && (
+            <div className="flex justify-start">
+              <div className="max-w-[85%] rounded-xl bg-gray-100 px-3 py-2 text-sm text-black/60">
+                Typing…
               </div>
-            )}
+            </div>
+          )}
 
-            {error && (
-              <div className="text-center text-xs text-red-600">{error}</div>
-            )}
+          {error && (
+            <div className="text-center text-xs text-red-600">{error}</div>
+          )}
 
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="flex items-end gap-2 border-t border-gray-200 px-3 py-3">
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about villas, retreats…"
-              rows={1}
-              className="flex-1 resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-primary"
-              disabled={isLoading}
-            />
-            <button
-              onClick={handleSend}
-              disabled={isLoading || !input.trim()}
-              className="rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground disabled:opacity-40"
-            >
-              Send
-            </button>
-          </div>
+          <div ref={messagesEndRef} />
         </div>
-      )}
 
-      {/* Toggle button */}
-      <button
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-label={isOpen ? "Close chat" : "Open chat"}
-        className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg hover:opacity-90"
-      >
-        {isOpen ? "✕" : "💬"}
-      </button>
+        <div className="flex items-end gap-2 border-t border-gray-200 px-3 py-3">
+          <textarea
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Ask about villas, retreats…"
+            rows={1}
+            className="flex-1 resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-primary"
+            disabled={isLoading}
+          />
+          <button
+            type="button"
+            onClick={handleSend}
+            disabled={isLoading || !input.trim()}
+            className="rounded-lg bg-primary px-3 py-2 text-sm text-primary-foreground disabled:opacity-40"
+          >
+            Send
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

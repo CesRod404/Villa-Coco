@@ -1,0 +1,15 @@
+# Dependencias y salidas del frontend: WordPress no las necesita.
+node_modules
+.next
+.git
+
+# Base de datos local de Docker: en producción irá a Cloud SQL.
+wordpress-docker/mysql
+
+# Archivos locales, secretos y exportaciones de base de datos.
+.env.local
+wordpress-docker/*.sql
+
+# Archivos del sistema y documentación que no forman parte de la imagen.
+.DS_Store
+GUIA_PRUEBAS.md
