@@ -19,17 +19,27 @@ export interface WPPost<ACFType> {
     acf: ACFType;
 }
 
+// ACF "Image" field con Return Format = "Image Array" devuelve un objeto
+// como { url, alt, sizes, ... }, o null/false si el campo está vacío.
+export interface AcfImageField {
+    url: string;
+    alt?: string;
+}
+
 // 1. Villa (villa)
 export interface VillaACFFields {
     description_short: string;
     description_long: string;
-    gallery?: string[] | Array<{ url: string }>;
+    image_1?: AcfImageField | null;
+    image_2?: AcfImageField | null;
+    image_3?: AcfImageField | null;
     suites_count: number;
     minimum_stay_nights: number;
     bedrooms: number;
     bathrooms: number;
     location: string;
     use_cases: Array<"family" | "wedding" | "corporate" | "wellness" | string>;
+    precio?: number;
 }
 
 export type Villa = WPPost<VillaACFFields>;
@@ -66,6 +76,7 @@ export interface TestimonialACFFields {
     author_name: string;
     author_context?: string;
     author_photo?: string | number;
+    rating?: number;
     related_villa_id?: number;
     related_retreat_id?: number;
 }

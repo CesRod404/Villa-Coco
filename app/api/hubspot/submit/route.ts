@@ -53,10 +53,6 @@ export async function POST(req: NextRequest) {
       // Debe estar configurado como hidden con valor fijo por formulario en HubSpot.
       // Si HubSpot ya lo autocompleta por default value, esta línea es redundante pero inofensiva.
       { name: "request_type", value: "villa_wedding" },
-      // TODO: confirmar con el equipo si "loyalty_tier" es un campo real del negocio
-      // o si se eliminó del formulario en HubSpot. Mientras tanto se envía con
-      // el valor de prueba usado en la validación manual.
-      { name: "loyalty_tier", value: body.loyaltyTier ?? "villa" },
     ];
 
     const hubspotRes = await fetch(

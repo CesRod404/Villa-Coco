@@ -1,60 +1,56 @@
-import { getTestimonials } from "@/lib/wp";
+/**
+ * app/(site)/testimonials/page.tsx
+ * Carrusel horizontal con scroll-snap: la card activa queda centrada y
+ * completa, las cards vecinas se asoman cortadas a los lados — igual al
+ * patrón del Figma. Es scroll nativo (swipe en mobile), sin JS extra.
+ *
+ * TODO: el Figma tiene bloques de color de fondo alternados (durazno/azul
+ * claro) detrás de cada card — no tenemos esos hex confirmados todavía,
+ * así que por ahora todo el carrusel usa un solo fondo (--surface).
+ */
+
+import { getVillas, getTestimonials } from "@/lib/wp";
+import TestimonialCard from "@/components/testimonials/TestimonialCard";
 
 export default async function TestimonialsPage() {
-    const testimonials = await getTestimonials();
+  const [testimonials, villas] = await Promise.all([getTestimonials(), getVillas()]);
+  const villaNameById = new Map(villas.map((v) => [v.id, v.title.rendered]));
 
-    return (
-        <main className="container mx-auto p-6 max-w-6xl">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">Testimonios de Huéspedes</h1>
-                <p className="text-slate-600 text-sm mt-1">
-                    Lee lo que nuestros huéspedes y visitantes opinan sobre su experiencia en nuestras villas y retiros.
-                </p>
+  return (
+    <main className="space-y-8 bg-surface py-12">
+      <header className="space-y-2 px-6 text-center">
+        <p className="text-eyebrow uppercase text-primary">What People Say About</p>
+        <h1 className="text-section uppercase text-secondary">Coco B</h1>
+      </header>
+
+      {testimonials.length === 0 ? (
+        <div className="mx-6 rounded-md border border-dashed border-border bg-white p-8 text-center">
+          <p className="text-body text-secondary">
+            No hay testimonios disponibles en este momento.
+          </p>
+          <p className="mt-2 text-caption text-muted">
+            Puedes añadir testimonios en WordPress bajo el CPT{" "}
+            <code className="rounded bg-chip px-2 py-0.5 font-mono">testimonio</code>.
+          </p>
+        </div>
+      ) : (
+        <div
+          className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[7.5vw] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {testimonials.map((item) => (
+            <div key={item.id} className="w-[85vw] max-w-sm shrink-0 snap-center">
+              <TestimonialCard
+                testimonio={item}
+                villaName={
+                  item.acf?.related_villa_id
+                    ? villaNameById.get(item.acf.related_villa_id)
+                    : undefined
+                }
+              />
             </div>
-
-            {testimonials.length === 0 ? (
-                <div className="p-8 border border-dashed rounded-xl bg-blue-50 border-blue-200 text-center">
-                    <p className="text-blue-800 font-semibold mb-2">
-                        No hay testimonios disponibles en este momento.
-                    </p>
-                    <p className="text-sm text-blue-700">
-                        Puedes añadir testimonios en WordPress bajo el CPT <code className="bg-blue-100 px-2 py-0.5 rounded font-mono">testimonial</code>.
-                    </p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {testimonials.map((item) => (
-                        <article key={item.id} className="border border-slate-200 bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                            <div>
-                                <div className="text-emerald-500 text-3xl font-serif mb-2">“</div>
-                                <p className="text-slate-700 italic text-sm mb-6 leading-relaxed">
-                                    {item.acf?.quote || item.title?.rendered}
-                                </p>
-                            </div>
-
-                            <div className="pt-4 border-t border-slate-100 flex items-center gap-3">
-                                {item.acf?.author_photo && (
-                                    <img
-                                        src={typeof item.acf.author_photo === "string" ? item.acf.author_photo : ""}
-                                        alt={item.acf?.author_name || "Autor"}
-                                        className="w-10 h-10 rounded-full object-cover bg-slate-200"
-                                    />
-                                )}
-                                <div>
-                                    <h3 className="font-bold text-slate-900 text-sm">
-                                        {item.acf?.author_name || "Huésped satisfecho"}
-                                    </h3>
-                                    {item.acf?.author_context && (
-                                        <p className="text-xs text-slate-500">
-                                            {item.acf.author_context}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        </article>
-                    ))}
-                </div>
-            )}
-        </main>
-    );
+          ))}
+        </div>
+      )}
+    </main>
+  );
 }

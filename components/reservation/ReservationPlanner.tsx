@@ -145,7 +145,7 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
                     const form = new FormData(event.currentTarget);
                     setSubmitting(true);
                     setSubmitError(undefined);
-                    const response = await fetch("/api/reservations/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ villaId, checkIn, checkOut, guests, flexibleDates, firstName: form.get("firstName"), lastName: form.get("lastName"), email: form.get("email"), phone: `${form.get("phoneCountryCode")} ${form.get("phone")}`, referralSource: form.get("referralSource"), travelPlans: form.get("travelPlans") }) });
+                    const response = await fetch("/api/reservations/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ villaId, villaName, checkIn, checkOut, guests, flexibleDates, firstName: form.get("firstName"), lastName: form.get("lastName"), email: form.get("email"), phone: `${form.get("phoneCountryCode")} ${form.get("phone")}`, referralSource: form.get("referralSource"), travelPlans: form.get("travelPlans") }) });
                     setSubmitting(false);
                     if (response.ok) setSubmitted(true);
                     else setSubmitError((await response.json().catch(() => null))?.error || "No pudimos enviar tu solicitud. Inténtalo de nuevo.");

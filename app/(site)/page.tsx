@@ -1,42 +1,27 @@
-import Link from "next/link";
+/**
+ * app/(site)/page.tsx
+ */
 
-export default function HomePage() {
+import { getVillas, getTestimonials } from "@/lib/wp";
+import Hero from "@/components/home/Hero";
+import IntroSection from "@/components/home/IntroSection";
+import VillasSection from "@/components/home/VillasSection";
+import MixMatchSection from "@/components/home/MixMatchSection";
+import Testimonials from "@/components/testimonials/Testimonials";
+
+export default async function HomePage() {
+  const [villas, testimonios] = await Promise.all([
+    getVillas(),
+    getTestimonials(),
+  ]);
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-slate-50">
-      <h1 className="text-4xl font-bold text-emerald-800 mb-4">Villa Coco</h1>
-      <p className="text-slate-600 mb-8 text-lg text-center max-w-md">
-        Bienvenido a Villa Coco. Explora nuestras villas exclusivas conectadas a WordPress Headless.
-      </p>
-      <Link
-        href="/villas"
-        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
-      >
-        Ver Villas
-      </Link>
-      <Link
-        href="/retreats"
-        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
-      >
-        Ver Retiros
-      </Link>
-      <Link
-        href="/packages"
-        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
-      >
-        Ver Paquetes
-      </Link>
-      <Link
-        href="/testimonials"
-        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
-      >
-        Ver Testimonios
-      </Link>
-      <Link
-        href="/faqs"
-        className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium rounded-lg shadow-md transition-colors"
-      >
-        Ver FAQs
-      </Link>
+    <main>
+      <Hero />
+      <IntroSection />
+      <VillasSection villas={villas} />
+      <MixMatchSection />
+      <Testimonials testimonios={testimonios} villas={villas} />
     </main>
   );
 }

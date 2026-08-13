@@ -1,16 +1,203 @@
 @import "tailwindcss";
 
+/* =========================================================================
+   CAMBIOS vs la versión anterior:
+   1. Se agregan --radius-md (8px, fotos/cards) y --radius-full (círculos,
+      pills, avatares) — confirmados en Figma.
+   2. Se agregan --shadow-card y --shadow-elevated — confirmados en Figma
+      (Drop shadow de la card de testimonios y del avatar).
+   3. Se agregan 3 colores nuevos:
+        --navy-soft (#2C4A7C) — bordes/iconos de badges tipo "VILLA LOLA"
+          y botones de paginación circulares. Es MÁS CLARO que
+          --secondary (#1A2E4A), no lo reemplaces.
+        --chip-alt (#E8EEF7) — fondo de pill claro, usado en el badge
+          "VILLA LOLA" y en los botones circulares de paginación.
+          Distinto del --chip cyan (#CCF6FF) que ya teníamos, ese es solo
+          para badges de amenidades (Wi-Fi, private pool, etc).
+        --ink-soft (#343434) — texto secundario en la card de testimonios
+          ("New York, USA · April 2025"). Distinto de --muted (#1C1C1C).
+      NOTA: el archivo de Figma usa dos grises oscuros distintos
+      (#1C1C1C y #343434) para texto secundario en contextos diferentes.
+      Puede ser intencional (jerarquía sutil) o inconsistencia del diseño
+      — vale la pena preguntarle al equipo de UX cuál usar por defecto.
+   4. Se agregan tokens tipográficos: --text-group-heading (LOLA & ENCANTADA),
+      --text-meta (13 Total Bedrooms / Suites), --text-testimonial-name,
+      --text-testimonial-meta, --text-chip (VILLA LOLA badge).
+   5. --accent y --border TODAVÍA sin confirmar — siguen como placeholder.
+   ========================================================================= */
+
 @layer base {
   :root {
-    --primary: #059669;
+    /* Confirmados en Figma / muestreados de las capturas */
+    --primary: #00819b;            /* teal */
     --primary-foreground: #ffffff;
+    --secondary: #1a2e4a;          /* navy principal */
+    --secondary-foreground: #ffffff;
+    --navy-soft: #2c4a7c;          /* navy claro — bordes/iconos de badges y paginación */
+    --surface: #e2f4f4;            /* fondo suave de sección */
+    --chip: #ccf6ff;               /* fondo de badges de amenidades (Wi-Fi, pool...) */
+    --chip-foreground: #1a2e4a;
+    --chip-alt: #e8eef7;           /* fondo de pill claro (VILLA LOLA badge, paginación) */
+    --muted: #1c1c1c;              /* texto secundario (precio, etc.) */
+    --ink-soft: #343434;           /* texto secundario alterno (meta de testimonios) */
+
+    /* TODO: siguen sin confirmar */
+    --accent: #d97757;             /* "coral suave" del brief — sin confirmar */
+    --accent-foreground: #ffffff;
+    --border: #d8e2e7;             /* sin confirmar */
+
+    /* Sin cambios */
     --background: #f8fafc;
     --foreground: #0f172a;
+
+    /* Radios — confirmados en Figma */
+    --radius-md: 0.5rem;   /* 8px — fotos, cards */
+    --radius-full: 9999px; /* avatares, pills, botones circulares */
+
+    /* Sombras — confirmadas en Figma */
+    --shadow-card: 0 0 12px rgba(0, 0, 0, 0.15);
+    --shadow-elevated: 0 2px 12px rgba(0, 0, 0, 0.25);
   }
 
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
   }
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-navy-soft: var(--navy-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-surface: var(--surface);
+  --color-chip: var(--chip);
+  --color-chip-foreground: var(--chip-foreground);
+  --color-chip-alt: var(--chip-alt);
+  --color-muted: var(--muted);
+  --color-ink-soft: var(--ink-soft);
+  --color-border: var(--border);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --radius-md: var(--radius-md);
+  --radius-full: var(--radius-full);
+
+  --shadow-card: var(--shadow-card);
+  --shadow-elevated: var(--shadow-elevated);
+
+  --font-sans: var(--font-raleway), ui-sans-serif, system-ui, sans-serif;
+
+  /* Display — nombre de villa en el resultado del Villa Recommender, ej. "LOLA" */
+  --text-display: 2rem;
+  --text-display--line-height: 2.5rem;
+  --text-display--letter-spacing: 0.225em;
+  --text-display--font-weight: 400;
+
+  /* Heading — títulos de sección/modal, ej. "VILLA RECOMMENDER" */
+  --text-heading: 1.125rem;
+  --text-heading--line-height: 1.75rem;
+  --text-heading--letter-spacing: 0.0833em;
+  --text-heading--font-weight: 700;
+
+  /* Section — título grande de sección, ej. "VILLAS" / "MATCH" */
+  --text-section: 3.5rem;
+  --text-section--line-height: 5.25rem;
+  --text-section--letter-spacing: 0.2em;
+  --text-section--font-weight: 400;
+
+  /* Eyebrow — etiqueta pequeña sobre un título, ej. "OUR COLLECTION" / "MIX &" */
+  --text-eyebrow: 1rem;
+  --text-eyebrow--line-height: 1rem;
+  --text-eyebrow--letter-spacing: 0.1875em;
+  --text-eyebrow--font-weight: 700;
+
+  /* Card heading — nombre de villa en card de listado, ej. "LOLA" (card) */
+  --text-card-heading: 2rem;
+  --text-card-heading--line-height: 2.25rem;
+  --text-card-heading--letter-spacing: 0.169em;
+  --text-card-heading--font-weight: 600;
+
+  /* Group heading — combo de villas, ej. "LOLA & ENCANTADA" */
+  --text-group-heading: 1.5rem;             /* 24px */
+  --text-group-heading--line-height: 2.25rem; /* leading-9 */
+  --text-group-heading--letter-spacing: 0.167em; /* 4px */
+  --text-group-heading--font-weight: 600;
+
+  /* Meta — texto secundario tipo "13 Total Bedrooms / Suites" */
+  --text-meta: 1rem;                        /* 16px */
+  --text-meta--line-height: 1.444rem;       /* 23.1px / 144% */
+  --text-meta--font-weight: 600;
+
+  /* Card body — descripción larga dentro de una card */
+  --text-card-body: 1rem;
+  --text-card-body--line-height: 1.5rem;
+  --text-card-body--font-weight: 400;
+
+  /* Body — párrafos generales (hero, secciones, testimonios) */
+  --text-body: 1rem;
+  --text-body--line-height: 1.5rem;
+  --text-body--font-weight: 500;
+
+  /* Tagline — subtítulo itálico, ej. "Serenity by the Sea" */
+  --text-tagline: 0.75rem;
+  --text-tagline--line-height: 1rem;
+  --text-tagline--font-weight: 400;
+
+  /* Label — stats/badges en mayúsculas, ej. "2 BEDROOMS" */
+  --text-label: 0.75rem;
+  --text-label--line-height: 0.9rem;
+  --text-label--letter-spacing: 0.0833em;
+  --text-label--font-weight: 600;
+
+  /* Toggle — links tipo "READ MORE" */
+  --text-toggle: 0.75rem;
+  --text-toggle--line-height: 1rem;
+  --text-toggle--letter-spacing: 0.1em;
+  --text-toggle--font-weight: 600;
+
+  /* Stat — texto de stats sin mayúsculas, ej. "12 guests" */
+  --text-stat: 0.75rem;
+  --text-stat--line-height: 1.125rem;
+  --text-stat--font-weight: 500;
+
+  /* Price — precio principal, ej. "$3,200" */
+  --text-price: 1.25rem;
+  --text-price--line-height: 2rem;
+  --text-price--font-weight: 500;
+
+  /* Price suffix — texto pequeño junto al precio, ej. "/ night + taxes" */
+  --text-price-suffix: 0.875rem;
+  --text-price-suffix--line-height: 1.25rem;
+  --text-price-suffix--font-weight: 500;
+
+  /* Caption — texto ligero, ej. fechas */
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1rem;
+  --text-caption--font-weight: 300;
+
+  /* Button — texto de botones, ej. "INQUIRE HERE" */
+  --text-button: 0.75rem;
+  --text-button--line-height: 0.87rem;
+  --text-button--letter-spacing: 0.125em;
+  --text-button--font-weight: 700;
+
+  /* Testimonial name — ej. "James Whitfield" */
+  --text-testimonial-name: 1.125rem;        /* 18px */
+  --text-testimonial-name--line-height: 1.25rem;
+  --text-testimonial-name--font-weight: 700;
+
+  /* Testimonial meta — ej. "New York, USA · April 2025" */
+  --text-testimonial-meta: 0.875rem;        /* 14px */
+  --text-testimonial-meta--line-height: 1.125rem;
+  --text-testimonial-meta--font-weight: 500;
+
+  /* Chip — texto de pill tipo "VILLA LOLA" */
+  --text-chip: 0.75rem;
+  --text-chip--line-height: 1rem;
+  --text-chip--font-weight: 700;
 }
