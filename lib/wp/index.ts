@@ -6,22 +6,14 @@ const API_URL = `${BASE_URL}/wp-json/wp/v2`;
 const RESERVATIONS_API_URL = `${BASE_URL}/wp-json/villa-coco/v1`;
 const NGROK_HEADERS = { "ngrok-skip-browser-warning": "1" };
 
-const WORDPRESS_MEDIA_ORIGINS = Array.from(
-    new Set([
-        BASE_URL.replace(/\/+$/, ""),
-        process.env.WORDPRESS_PUBLIC_URL?.replace(/\/+$/, ""),
-        "http://localhost:8881",
-        "https://localhost:8881",
-    ].filter((origin): origin is string => Boolean(origin))),
-);
+const WORDPRESS_MEDIA_PROXY_PATH = "/api/wordpress-media/";
 
 
 function normalizeUrls(obj: any): any{
     if(typeof obj === "string"){
-        return WORDPRESS_MEDIA_ORIGINS.reduce(
-            (value, origin) => value.replaceAll(`${origin}/wp-content/`, "/wp-content/"),
-            obj,
-        );
+        return obj
+            .replace(/(?:https?:)?\/\/[^/\s"']+\/wp-content\//gi, WORDPRESS_MEDIA_PROXY_PATH)
+            .replaceAll("/wp-content/", WORDPRESS_MEDIA_PROXY_PATH);
     }
 
     if(Array.isArray(obj)){

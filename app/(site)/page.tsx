@@ -85,6 +85,7 @@ export default async function HomePage() {
       </section>
 
       <section
+        id="villas"
         className={styles.collection}
         aria-labelledby="villa-collection-title"
       >

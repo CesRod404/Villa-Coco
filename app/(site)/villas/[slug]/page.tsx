@@ -15,7 +15,7 @@ export default async function VillaDetailPage({ params }: { params: Promise<{ sl
         <main className="min-h-screen bg-[#edf5f5] text-[#17304f]">
             <section className="mx-auto grid max-w-[1440px] gap-8 px-4 py-6 sm:px-7 sm:py-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(440px,.88fr)] lg:items-start lg:gap-12 lg:px-12 lg:py-14">
                 <div className="lg:sticky lg:top-8 lg:self-start">
-                    <Link href="/villas" className="text-sm font-semibold tracking-wide text-[#4d806f] hover:underline">← Volver a villas</Link>
+                    <Link href="/#villas" className="text-sm font-semibold tracking-wide text-[#4d806f] hover:underline">← Volver a las villas</Link>
                     <div className="mt-8 grid gap-6 sm:grid-cols-[minmax(0,1fr)_180px] sm:items-end lg:grid-cols-1">
                         <div><p className="text-xs font-bold uppercase tracking-[0.22em] text-[#4d806f]">{villa.acf.location || "Isla Mujeres"} · México</p><h1 className="mt-3 font-serif text-[clamp(3.25rem,7vw,6.75rem)] leading-[.82] text-[#17304f]" dangerouslySetInnerHTML={{ __html: villa.title.rendered }} /></div>
                         <p className="border-l-2 border-[#dd9b4f] pl-4 text-sm leading-6 text-slate-600">{villa.acf.description_short || "Una estancia privada diseñada a tu ritmo."}</p>

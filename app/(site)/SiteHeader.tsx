@@ -9,7 +9,7 @@ export default function SiteHeader() {
         </Link>
         <nav className="flex gap-6 text-sm font-medium text-slate-600">
           <Link href="/" className="hover:text-emerald-600 transition-colors">Inicio</Link>
-          <Link href="/villas" className="hover:text-emerald-600 transition-colors">Villas</Link>
+          <Link href="/#villas" className="hover:text-emerald-600 transition-colors">Villas</Link>
           <Link href="/retreats" className="hover:text-emerald-600 transition-colors">Retiros</Link>
           <Link href="/packages" className="hover:text-emerald-600 transition-colors">Paquetes</Link>
           <Link href="/testimonials" className="hover:text-emerald-600 transition-colors">Testimonios</Link>
