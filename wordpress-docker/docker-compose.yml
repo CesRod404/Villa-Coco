@@ -11,6 +11,10 @@ services:
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_PUBLIC_URL: ${WORDPRESS_PUBLIC_URL:-http://localhost:8881}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', getenv('WORDPRESS_PUBLIC_URL'));
+        define('WP_SITEURL', getenv('WORDPRESS_PUBLIC_URL'));
 
     volumes:
       - ./wordpress:/var/www/html

@@ -1,16 +1,27 @@
 import { Villa, Retreat, Package, Testimonial, FAQ, ReservationPeriod, VillaAvailability } from "../../types/wordpress";
 
-export const WORDPRESS_BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || process.env.WORDPRESS_API_URL || "http://localhost:8881";
+export const WORDPRESS_BASE_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
 const BASE_URL = WORDPRESS_BASE_URL;
 const API_URL = `${BASE_URL}/wp-json/wp/v2`;
 const RESERVATIONS_API_URL = `${BASE_URL}/wp-json/villa-coco/v1`;
+const NGROK_HEADERS = { "ngrok-skip-browser-warning": "1" };
+
+const WORDPRESS_MEDIA_ORIGINS = Array.from(
+    new Set([
+        BASE_URL.replace(/\/+$/, ""),
+        process.env.WORDPRESS_PUBLIC_URL?.replace(/\/+$/, ""),
+        "http://localhost:8881",
+        "https://localhost:8881",
+    ].filter((origin): origin is string => Boolean(origin))),
+);
 
 
 function normalizeUrls(obj: any): any{
     if(typeof obj === "string"){
-        return obj
-            .replace("https://localhost:8881", BASE_URL)
-            .replace("https://localhost:8881", BASE_URL);
+        return WORDPRESS_MEDIA_ORIGINS.reduce(
+            (value, origin) => value.replaceAll(`${origin}/wp-content/`, "/wp-content/"),
+            obj,
+        );
     }
 
     if(Array.isArray(obj)){
@@ -33,6 +44,7 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
     try {
         const res = await fetch(url, {
             cache: "no-store",
+            headers: NGROK_HEADERS,
         });
 
         if (!res.ok) {
@@ -66,7 +78,10 @@ export async function getVillaReservations(villaId: number): Promise<Reservation
 
 export async function getVillaAvailability(villaId: number): Promise<VillaAvailability> {
     try {
-        const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, { cache: "no-store" });
+        const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, {
+            cache: "no-store",
+            headers: NGROK_HEADERS,
+        });
         if (!response.ok) return { reservations: [], isAvailable: false };
         return { reservations: await response.json(), isAvailable: true };
     } catch (error) {
