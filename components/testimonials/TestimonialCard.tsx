@@ -21,15 +21,26 @@ function resolvePhotoUrl(photo: unknown): string | null {
 export default function TestimonialCard({
   testimonio,
   villaName,
+  variant = "active",
 }: {
   testimonio: Testimonial;
   villaName?: string;
+  // "active" = card central (blanca, elevada); "peek" = cards laterales
+  // atenuadas del carrusel, ver diseño de Figma de la sección Testimonials.
+  variant?: "active" | "peek";
 }) {
   const { quote, author_name, author_context, rating, author_photo } = testimonio.acf;
   const photoUrl = resolvePhotoUrl(author_photo);
+  const isActive = variant === "active";
 
   return (
-    <div className="mx-auto max-w-sm rounded-md bg-white p-6 text-center shadow-card">
+    <div
+      className={`mx-auto w-full origin-center rounded-md p-6 text-center transition-all duration-300 ${
+        isActive
+          ? "scale-105 bg-white shadow-card"
+          : "scale-100 bg-chip-alt opacity-80 shadow-none"
+      }`}
+    >
       {photoUrl ? (
         <Image
           src={photoUrl}
@@ -53,7 +64,7 @@ export default function TestimonialCard({
 
       <div className="mt-4 flex items-center justify-between gap-2">
         {villaName ? (
-          <span className="rounded-full border border-navy-soft bg-chip-alt px-3 py-1 text-chip text-navy-soft">
+          <span className="rounded-full border border-navy-soft bg-transparent px-3 py-1 text-chip text-navy-soft">
             {villaName}
           </span>
         ) : (

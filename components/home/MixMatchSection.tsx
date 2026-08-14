@@ -35,7 +35,7 @@ export default function MixMatchSection() {
         </p>
       </div>
 
-      <div className="space-y-8 text-left">
+      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-6">
         {COMBOS.map((combo) => (
           <div key={combo.name}>
             <h3 className="text-group-heading uppercase text-secondary">
@@ -57,7 +57,7 @@ export default function MixMatchSection() {
       </div>
 
       <button className="border border-secondary px-8 py-4 text-button uppercase text-secondary">
-        Let&apos;s Mix &amp; Match
+        Inquire Here
       </button>
     </section>
   );
