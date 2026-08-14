@@ -92,8 +92,8 @@ export interface TestimonialACFFields {
     author_context?: string;
     author_photo?: string | number | { url?: string; alt?: string };
     rating?: number;
-    related_villa_id?: number;
-    related_retreat_id?: number;
+    related_villa_id?: number | number[];
+    related_retreat_id?: number | number[];
 }
 
 export type Testimonial = WPPost<TestimonialACFFields>;

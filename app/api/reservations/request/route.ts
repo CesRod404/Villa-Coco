@@ -5,9 +5,11 @@ import {
   isHubSpotReferralSource,
   type HubSpotReferralSource,
 } from "@/lib/hubspot/villa-form";
+import { normalizeRequestedVillaIds } from "@/lib/reservations/request";
 
 type ReservationRequest = {
   villaId?: number;
+  villaIds?: number[];
   villaName?: string;
   checkIn?: string;
   checkOut?: string;
@@ -23,15 +25,18 @@ type ReservationRequest = {
 
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as ReservationRequest | null;
-  if (!body || !Number.isInteger(body.villaId) || !body.checkIn || !body.checkOut || !Number.isInteger(body.guests) || !body.firstName || !body.lastName || !body.email || !body.phone || !isHubSpotReferralSource(body.referralSource) || !body.travelPlans?.trim()) {
+  const villaIds = body ? normalizeRequestedVillaIds(body) : [];
+  if (!body || !villaIds.length || !body.checkIn || !body.checkOut || !Number.isInteger(body.guests) || !body.firstName || !body.lastName || !body.email || !body.phone || !isHubSpotReferralSource(body.referralSource) || !body.travelPlans?.trim()) {
     return NextResponse.json({ error: "Completa todos los datos de la solicitud." }, { status: 400 });
   }
+
+  const normalizedBody = { ...body, villaId: villaIds[0], villaIds };
   try {
-    const response = await fetch(`${WORDPRESS_BASE_URL}/wp-json/villa-coco/v1/reservation-requests`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), cache: "no-store" });
+    const response = await fetch(`${WORDPRESS_BASE_URL}/wp-json/villa-coco/v1/reservation-requests`, { method: "POST", headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "1" }, body: JSON.stringify(normalizedBody), cache: "no-store" });
     const result = await response.json().catch(() => null);
     if (!response.ok) return NextResponse.json({ error: result?.message || "No fue posible registrar la solicitud." }, { status: response.status });
-    const hubspotSynced = await submitToHubSpot(body).catch(() => false);
-    return NextResponse.json({ id: result.id, hubspotSynced }, { status: 201 });
+    const hubspotSynced = await submitToHubSpot(normalizedBody).catch(() => false);
+    return NextResponse.json({ id: result.id, ids: result.ids || [result.id], hubspotSynced }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "El servicio de reservas no está disponible en este momento." }, { status: 503 });
   }

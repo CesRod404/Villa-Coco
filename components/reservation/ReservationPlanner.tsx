@@ -35,7 +35,10 @@ function isBetween(value: string, start?: string, end?: string) {
     return Boolean(start && end && value >= start && value <= end);
 }
 
-export default function ReservationPlanner({ villaId, villaName, reservations, availabilityOnline, maxGuests = 20 }: { villaId: number; villaName: string; reservations: ReservationPeriod[]; availabilityOnline: boolean; maxGuests?: number }) {
+export default function ReservationPlanner({ villas, reservations, availabilityOnline, maxGuests = 20 }: { villas: Array<{ id: number; name: string }>; reservations: ReservationPeriod[]; availabilityOnline: boolean; maxGuests?: number }) {
+    const villaIds = villas.map((villa) => villa.id);
+    const villaName = villas.map((villa) => villa.name).join(" + ");
+    const pairedStay = villas.length > 1;
     const [month, setMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const [checkIn, setCheckIn] = useState<string>();
     const [checkOut, setCheckOut] = useState<string>();
@@ -89,9 +92,9 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
             <header className="relative overflow-hidden bg-[#17304f] px-6 py-7 text-white sm:px-8">
                 <div aria-hidden="true" className="absolute -right-12 bottom-0 h-24 w-72 rotate-[-8deg] rounded-[100%] border-t border-[#77bbb9]/70" />
                 <div aria-hidden="true" className="absolute -right-4 bottom-[-1.4rem] h-24 w-72 rotate-[-8deg] rounded-[100%] border-t border-[#77bbb9]/35" />
-                <p className="relative text-xs font-bold uppercase tracking-[0.18em] text-[#b6d8cf]">Carta de marea · planifica tu estancia</p>
+                <p className="relative text-xs font-bold uppercase tracking-[0.18em] text-[#b6d8cf]">{pairedStay ? "Mix & Match · dos villas" : "Carta de marea · planifica tu estancia"}</p>
                 <h2 className="relative mt-2 font-serif text-3xl">Disponibilidad de {villaName}</h2>
-                <p className="relative mt-2 text-sm text-slate-200">Elige llegada y salida. Los días azul marino ya están reservados.</p>
+                <p className="relative mt-2 text-sm text-slate-200">Elige llegada y salida. {pairedStay ? "El calendario combina la disponibilidad de ambas villas." : "Los días azul marino ya están reservados."}</p>
             </header>
 
             <div className="p-5 sm:p-8">
@@ -148,7 +151,7 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
                     setSubmitting(true);
                     setSubmitError(undefined);
                     setSyncWarning(undefined);
-                    const response = await fetch("/api/reservations/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ villaId, villaName, checkIn, checkOut, guests, flexibleDates, firstName: form.get("firstName"), lastName: form.get("lastName"), email: form.get("email"), phone: `${form.get("phoneCountryCode")} ${form.get("phone")}`, referralSource: form.get("referralSource"), travelPlans: form.get("travelPlans") }) });
+                    const response = await fetch("/api/reservations/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ villaId: villaIds[0], villaIds, villaName, checkIn, checkOut, guests, flexibleDates, firstName: form.get("firstName"), lastName: form.get("lastName"), email: form.get("email"), phone: `${form.get("phoneCountryCode")} ${form.get("phone")}`, referralSource: form.get("referralSource"), travelPlans: form.get("travelPlans") }) });
                     setSubmitting(false);
                     const result = await response.json().catch(() => null);
                     if (response.ok) {
@@ -170,7 +173,7 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
                         <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Cuéntanos sobre tu viaje<textarea required name="travelPlans" rows={4} className="mt-1.5 w-full resize-y rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]" placeholder="Motivo del viaje, celebraciones, preferencias o cualquier detalle importante." /></label>
                     </div>
                     <button type="submit" disabled={!checkIn || !checkOut || submitting || submitted || !availabilityOnline} className="w-full rounded-xl bg-[#17304f] px-5 py-4 font-bold text-white transition hover:bg-[#264c76] disabled:cursor-not-allowed disabled:opacity-40">{submitted ? "Solicitud enviada" : submitting ? "Enviando solicitud…" : `Solicitar estas fechas${nights ? ` · ${nights} noche${nights === 1 ? "" : "s"}` : ""}`}</button>
-                    {submitted && <p role="status" className="rounded-xl bg-[#e7f4ee] p-4 text-sm text-[#276044]">Recibimos tu solicitud. El equipo confirmará la disponibilidad y la reserva solo bloqueará fechas cuando sea aprobada.</p>}
+                    {submitted && <p role="status" className="rounded-xl bg-[#e7f4ee] p-4 text-sm text-[#276044]">Recibimos tu solicitud{pairedStay ? " para ambas villas" : ""}. El equipo confirmará la disponibilidad y la reserva solo bloqueará fechas cuando sea aprobada.</p>}
                     {syncWarning && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">{syncWarning}</p>}
                     {submitError && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{submitError}</p>}
                 </form>

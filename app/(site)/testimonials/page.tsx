@@ -12,6 +12,10 @@
 import { getVillas, getTestimonials } from "@/lib/wp";
 import TestimonialCard from "@/components/testimonials/TestimonialCard";
 
+function firstRelatedVillaId(value?: number | number[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export default async function TestimonialsPage() {
   const [testimonials, villas] = await Promise.all([getTestimonials(), getVillas()]);
   const villaNameById = new Map(villas.map((v) => [v.id, v.title.rendered]));
@@ -37,18 +41,18 @@ export default async function TestimonialsPage() {
         <div
           className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[7.5vw] pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          {testimonials.map((item) => (
-            <div key={item.id} className="w-[85vw] max-w-sm shrink-0 snap-center">
-              <TestimonialCard
-                testimonio={item}
-                villaName={
-                  item.acf?.related_villa_id
-                    ? villaNameById.get(item.acf.related_villa_id)
-                    : undefined
-                }
-              />
-            </div>
-          ))}
+          {testimonials.map((item) => {
+            const relatedVillaId = firstRelatedVillaId(item.acf?.related_villa_id);
+
+            return (
+              <div key={item.id} className="w-[85vw] max-w-sm shrink-0 snap-center">
+                <TestimonialCard
+                  testimonio={item}
+                  villaName={relatedVillaId ? villaNameById.get(relatedVillaId) : undefined}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
     </main>

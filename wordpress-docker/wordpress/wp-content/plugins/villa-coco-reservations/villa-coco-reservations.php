@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Villa Coco Reservations
  * Description: Gestiona reservas por villa y expone su disponibilidad al frontend headless.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Villa Coco
  */
 
@@ -70,6 +70,8 @@ final class Villa_Coco_Reservations {
             'referral_source' => 'string',
             'travel_plans' => 'string',
             'flexible_dates' => 'boolean',
+            'reservation_group' => 'string',
+            'villa_names' => 'string',
         ) as $key => $type) {
             register_post_meta(self::POST_TYPE, $key, array(
                 'single' => true,
@@ -97,6 +99,8 @@ final class Villa_Coco_Reservations {
     public function render_reservation_meta_box(WP_Post $post): void {
         wp_nonce_field('villa_coco_reservation', 'villa_coco_reservation_nonce');
         $villa_id = (int) get_post_meta($post->ID, 'villa_id', true);
+        $reservation_group = get_post_meta($post->ID, 'reservation_group', true);
+        $villa_names = get_post_meta($post->ID, 'villa_names', true);
         $villas = get_posts(array('post_type' => 'villa', 'posts_per_page' => -1, 'post_status' => 'publish', 'orderby' => 'title', 'order' => 'ASC'));
         ?>
         <style>.villa-coco-field{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center;margin:14px 0}.villa-coco-field input,.villa-coco-field select{width:100%;max-width:420px}</style>
@@ -106,6 +110,9 @@ final class Villa_Coco_Reservations {
         <div class="villa-coco-field"><label for="guest_count"><strong>Cantidad de invitados</strong></label><input id="guest_count" name="guest_count" type="number" min="1" value="<?php echo esc_attr(get_post_meta($post->ID, 'guest_count', true)); ?>" required></div>
         <div class="villa-coco-field"><label for="guest_name"><strong>Nombre de quien reserva</strong></label><input id="guest_name" name="guest_name" type="text" value="<?php echo esc_attr(get_post_meta($post->ID, 'guest_name', true)); ?>" required></div>
         <div class="villa-coco-field"><label for="guest_email"><strong>Correo electrónico</strong></label><input id="guest_email" name="guest_email" type="email" value="<?php echo esc_attr(get_post_meta($post->ID, 'guest_email', true)); ?>"></div>
+        <?php if ($reservation_group) : ?>
+            <div class="villa-coco-field"><strong>Solicitud combinada</strong><span><code><?php echo esc_html($reservation_group); ?></code><br><?php echo esc_html($villa_names); ?></span></div>
+        <?php endif; ?>
         <p class="description">Publica la reserva solo cuando esté confirmada. Las reservas en borrador o pendientes no bloquean el calendario público.</p>
         <?php
     }
@@ -166,7 +173,11 @@ final class Villa_Coco_Reservations {
     }
 
     public function create_reservation_request(WP_REST_Request $request) {
-        $villa_id = absint($request->get_param('villaId'));
+        $requested_villa_ids = $request->get_param('villaIds');
+        $villa_ids = is_array($requested_villa_ids)
+            ? array_values(array_map('absint', $requested_villa_ids))
+            : array(absint($request->get_param('villaId')));
+        $villa_ids = array_values(array_filter($villa_ids));
         $check_in = sanitize_text_field($request->get_param('checkIn'));
         $check_out = sanitize_text_field($request->get_param('checkOut'));
         $guests = absint($request->get_param('guests'));
@@ -179,42 +190,68 @@ final class Villa_Coco_Reservations {
         $travel_plans = sanitize_textarea_field($request->get_param('travelPlans'));
         $flexible_dates = (bool) $request->get_param('flexibleDates');
 
-        if (!$villa_id || get_post_type($villa_id) !== 'villa' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $check_in) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $check_out) || $check_out <= $check_in || !$guests || !$guest_name || !is_email($guest_email) || !$guest_phone || !$referral_source) {
+        if (count($villa_ids) < 1 || count($villa_ids) > 2 || count(array_unique($villa_ids)) !== count($villa_ids) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $check_in) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $check_out) || $check_out <= $check_in || !$guests || !$guest_name || !is_email($guest_email) || !$guest_phone || !$referral_source) {
             return new WP_Error('invalid_reservation_request', 'Los datos de la solicitud no son válidos.', array('status' => 400));
         }
 
-        $confirmed = get_posts(array(
-            'post_type' => self::POST_TYPE,
-            'post_status' => 'publish',
-            'posts_per_page' => -1,
-            'meta_query' => array(array('key' => 'villa_id', 'value' => $villa_id, 'compare' => '=')),
-        ));
-        foreach ($confirmed as $reservation) {
-            $reserved_start = get_post_meta($reservation->ID, 'check_in', true);
-            $reserved_end = get_post_meta($reservation->ID, 'check_out', true);
-            if ($reserved_start < $check_out && $reserved_end > $check_in) {
-                return new WP_Error('dates_unavailable', 'Una o más fechas ya no están disponibles.', array('status' => 409));
+        $villa_names = array();
+        foreach ($villa_ids as $villa_id) {
+            if (get_post_type($villa_id) !== 'villa') {
+                return new WP_Error('invalid_villa', 'Una de las villas seleccionadas no es válida.', array('status' => 400));
+            }
+
+            $villa_names[] = get_the_title($villa_id);
+            $confirmed = get_posts(array(
+                'post_type' => self::POST_TYPE,
+                'post_status' => 'publish',
+                'posts_per_page' => -1,
+                'meta_query' => array(array('key' => 'villa_id', 'value' => $villa_id, 'compare' => '=')),
+            ));
+            foreach ($confirmed as $reservation) {
+                $reserved_start = get_post_meta($reservation->ID, 'check_in', true);
+                $reserved_end = get_post_meta($reservation->ID, 'check_out', true);
+                if ($reserved_start < $check_out && $reserved_end > $check_in) {
+                    return new WP_Error('dates_unavailable', sprintf('Las fechas ya no están disponibles para %s.', get_the_title($villa_id)), array('status' => 409));
+                }
             }
         }
 
-        $post_id = wp_insert_post(array(
-            'post_type' => self::POST_TYPE,
-            'post_status' => 'pending',
-            'post_title' => sprintf('%s · %s al %s', $guest_name, $check_in, $check_out),
-        ), true);
-        if (is_wp_error($post_id)) return $post_id;
+        $reservation_group = count($villa_ids) > 1 ? wp_generate_uuid4() : '';
+        $villa_names_label = implode(' + ', $villa_names);
+        $post_ids = array();
 
-        update_post_meta($post_id, 'villa_id', $villa_id);
-        update_post_meta($post_id, 'check_in', $check_in);
-        update_post_meta($post_id, 'check_out', $check_out);
-        update_post_meta($post_id, 'guest_count', $guests);
-        update_post_meta($post_id, 'guest_name', $guest_name);
-        update_post_meta($post_id, 'guest_email', $guest_email);
-        update_post_meta($post_id, 'guest_phone', $guest_phone);
-        update_post_meta($post_id, 'referral_source', $referral_source);
-        update_post_meta($post_id, 'travel_plans', $travel_plans);
-        update_post_meta($post_id, 'flexible_dates', $flexible_dates);
-        return new WP_REST_Response(array('id' => $post_id), 201);
+        foreach ($villa_ids as $villa_id) {
+            $post_id = wp_insert_post(array(
+                'post_type' => self::POST_TYPE,
+                'post_status' => 'pending',
+                'post_title' => sprintf('%s · %s · %s al %s', $guest_name, $villa_names_label, $check_in, $check_out),
+            ), true);
+
+            if (is_wp_error($post_id)) {
+                foreach ($post_ids as $created_post_id) wp_delete_post($created_post_id, true);
+                return $post_id;
+            }
+
+            update_post_meta($post_id, 'villa_id', $villa_id);
+            update_post_meta($post_id, 'check_in', $check_in);
+            update_post_meta($post_id, 'check_out', $check_out);
+            update_post_meta($post_id, 'guest_count', $guests);
+            update_post_meta($post_id, 'guest_name', $guest_name);
+            update_post_meta($post_id, 'guest_email', $guest_email);
+            update_post_meta($post_id, 'guest_phone', $guest_phone);
+            update_post_meta($post_id, 'referral_source', $referral_source);
+            update_post_meta($post_id, 'travel_plans', $travel_plans);
+            update_post_meta($post_id, 'flexible_dates', $flexible_dates);
+            update_post_meta($post_id, 'villa_names', $villa_names_label);
+            if ($reservation_group) update_post_meta($post_id, 'reservation_group', $reservation_group);
+            $post_ids[] = $post_id;
+        }
+
+        return new WP_REST_Response(array(
+            'id' => $post_ids[0],
+            'ids' => $post_ids,
+            'reservation_group' => $reservation_group,
+        ), 201);
     }
 }
 

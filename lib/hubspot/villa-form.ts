@@ -39,6 +39,10 @@ function getVillaOfInterest(villaName?: string) {
 }
 
 export function buildHubSpotVillaFields(data: VillaFormData) {
+  const villaNote = data.villaName?.trim()
+    ? `Villas solicitadas: ${data.villaName.trim()}\n\n`
+    : "";
+
   return [
     { name: "firstname", value: data.firstName },
     { name: "lastname", value: data.lastName },
@@ -50,7 +54,7 @@ export function buildHubSpotVillaFields(data: VillaFormData) {
     { name: "flexible_dates", value: data.flexibleDates ? "yes" : "no" },
     { name: "villa_of_interest", value: getVillaOfInterest(data.villaName) },
     { name: "how_you_heard_about_us", value: data.referralSource },
-    { name: "message", value: data.travelPlans },
+    { name: "message", value: `${villaNote}${data.travelPlans}` },
     { name: "request_type", value: "villa" },
     // La definición publicada de HubSpot lo exige aunque no aparezca en el editor visual.
     { name: "loyalty_tier", value: "villa" },

@@ -1,72 +1,101 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./HeroNavbar.module.css";
 
 const navigation = [
-  { label: "Home", href: "/", match: "/" },
-  { label: "About us", href: "/#about-us", match: "#about-us" },
-  { label: "Villas", href: "/#villas", match: "#villas" },
-  { label: "Wellness", href: "/retreats", match: "/retreats" },
-  { label: "Hotels", href: "/packages", match: "/packages" },
-  { label: "Weddings", href: "/#weddings", match: "#weddings" },
-  { label: "Galleries", href: "/#galleries", match: "#galleries" },
-  { label: "Inquiries", href: "/#inquiries", match: "#inquiries" },
+  { label: "Home", id: "home" },
+  { label: "Villas", id: "villas" },
+  { label: "Mix & Match", id: "mix-match" },
+  { label: "Guest Stories", id: "testimonials" },
+  { label: "Services", id: "services" },
+  { label: "Contact", id: "contact" },
 ] as const;
 
 export default function HeroNavbar() {
-  const pathname = usePathname();
-  const [hash, setHash] = useState("");
+  const [activeId, setActiveId] = useState("home");
+  const menuRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
-    const updateHash = () => setHash(window.location.hash);
-    updateHash();
-    window.addEventListener("hashchange", updateHash);
-    return () => window.removeEventListener("hashchange", updateHash);
+    let ticking = false;
+
+    const updateActiveSection = () => {
+      const marker = Math.min(180, window.innerHeight * 0.28);
+      let current = "home";
+
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8) {
+        setActiveId("contact");
+        ticking = false;
+        return;
+      }
+
+      for (const item of navigation) {
+        const section = document.getElementById(item.id);
+        if (section && section.getBoundingClientRect().top <= marker) current = item.id;
+      }
+
+      setActiveId(current);
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveSection);
+        ticking = true;
+      }
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
-  const isActive = (match: string) => {
-    if (match.startsWith("#")) return pathname === "/" && hash === match;
-    if (match === "/") return pathname === "/" && !hash;
-    return pathname.startsWith(match);
-  };
+  function selectSection(id: string) {
+    setActiveId(id);
+    menuRef.current?.removeAttribute("open");
+  }
 
   return (
     <>
-      <nav className={styles.desktopNav} aria-label="Main navigation">
+      <nav className={styles.desktopNav} aria-label="Main page sections">
         <div className={styles.navInner}>
           {navigation.map((item) => {
-            const active = isActive(item.match);
+            const active = activeId === item.id;
             return (
-              <Link
-                key={item.label}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                aria-current={active ? "location" : undefined}
                 className={`${styles.navLink} ${active ? styles.active : ""}`}
+                onClick={() => selectSection(item.id)}
               >
                 {item.label}
-              </Link>
+              </a>
             );
           })}
         </div>
       </nav>
 
-      <details className={styles.mobileMenu}>
+      <details ref={menuRef} className={styles.mobileMenu}>
         <summary>Explore</summary>
-        <nav aria-label="Mobile navigation">
+        <nav aria-label="Mobile page sections">
           {navigation.map((item) => {
-            const active = isActive(item.match);
+            const active = activeId === item.id;
             return (
-              <Link
-                key={item.label}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                aria-current={active ? "location" : undefined}
                 className={active ? styles.mobileActive : undefined}
+                onClick={() => selectSection(item.id)}
               >
                 {item.label}
-              </Link>
+              </a>
             );
           })}
         </nav>

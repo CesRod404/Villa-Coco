@@ -80,6 +80,16 @@ La **imagen destacada** es la fotografía principal de la tarjeta y del formular
 
 El slug que genera WordPress se usa en la URL del formulario, por ejemplo `/villas/casa-cielo`.
 
+Al publicar una segunda villa, la sección **Mix & Match** se activa automáticamente. La selección abre un solo formulario y combina la disponibilidad de las dos villas.
+
+## Agregar testimonios a la portada
+
+1. Entra a **Testimonios → Añadir nuevo**.
+2. Completa los campos ACF `quote`, `author_name`, `author_context`, `author_photo`, `related_villa_id` y `rating`.
+3. Relaciona el testimonio con la villa correspondiente y pulsa **Publicar**.
+4. Comprueba que aparezca en `http://localhost:8881/wp-json/wp/v2/testimonio?_embed`.
+5. Recarga la portada: el carrusel se actualiza directamente desde la API de WordPress.
+
 ## Disponibilidad y reservas
 
 El plugin **Villa Coco Reservations** agrega el menú **Reservas**.

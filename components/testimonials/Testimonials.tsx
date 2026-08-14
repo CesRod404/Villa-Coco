@@ -14,6 +14,10 @@ import type { Testimonial, Villa } from "@/types/wordpress";
 
 const AUTOPLAY_MS = 5000;
 
+function firstRelatedVillaId(value?: number | number[]) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
 export default function Testimonials({
   testimonios,
   villas = [],
@@ -58,8 +62,10 @@ export default function Testimonials({
 
   const count = testimonios.length;
   const villaNameById = new Map(villas.map((v) => [v.id, v.title.rendered]));
-  const villaNameFor = (t: Testimonial) =>
-    t.acf.related_villa_id ? villaNameById.get(t.acf.related_villa_id) : undefined;
+  const villaNameFor = (t: Testimonial) => {
+    const relatedVillaId = firstRelatedVillaId(t.acf.related_villa_id);
+    return relatedVillaId ? villaNameById.get(relatedVillaId) : undefined;
+  };
 
   const current = testimonios[index];
   const prevIndex = index === 0 ? count - 1 : index - 1;

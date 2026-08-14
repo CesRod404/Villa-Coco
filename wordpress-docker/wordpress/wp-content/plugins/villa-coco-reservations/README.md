@@ -8,3 +8,5 @@
 El plugin expone `GET /wp-json/villa-coco/v1/villas/{id}/reservations` para el frontend.
 
 Las solicitudes públicas se guardan como **pendientes**. Revisa sus datos, confirma que la villa y el rango sean correctos y cámbialas a **Publicada** para bloquear fechas en el calendario.
+
+Las solicitudes **Mix & Match** crean un registro pendiente para cada villa. Ambos registros comparten el mismo identificador de grupo, nombre del huésped, fechas y datos de contacto. Publica los dos registros relacionados cuando la solicitud combinada sea confirmada.
