@@ -1,5 +1,7 @@
 .pageShell {
   min-height: 100svh;
+  background: #087f99;
+  color: #ffffff;
   font-family: var(--font-raleway), "Avenir Next", "Segoe UI", sans-serif;
 }
 

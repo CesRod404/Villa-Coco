@@ -17,6 +17,11 @@
   background: #eaf3f4;
 }
 
+.mainImage:focus-visible {
+  outline: 3px solid rgba(32, 145, 167, 0.4);
+  outline-offset: 3px;
+}
+
 .mainImage img,
 .thumbnail img {
   display: block;

@@ -9,6 +9,9 @@ export interface WPPost<ACFType> {
     content?: {
         rendered: string;
     };
+    excerpt?: {
+        rendered: string;
+    };
     featured_media?: number;
     _embedded?: {
         "wp:featuredmedia"?: Array<{
@@ -30,6 +33,7 @@ export interface AcfImageField {
 export interface VillaACFFields {
     description_short: string;
     description_long: string;
+    gallery?: string | string[] | Array<{ url?: string; src?: string; alt?: string }>;
     image_1?: AcfImageField | null;
     image_2?: AcfImageField | null;
     image_3?: AcfImageField | null;
@@ -39,7 +43,18 @@ export interface VillaACFFields {
     bathrooms: number;
     location: string;
     use_cases: Array<"family" | "wedding" | "corporate" | "wellness" | string>;
-    precio?: number;
+    amenities?: string[] | string;
+    features?: string[] | string;
+    guests?: number;
+    max_guests?: number;
+    capacity?: number;
+    capacidad_personas?: number;
+    habitaciones?: number;
+    banos?: number;
+    price?: number | string;
+    precio?: number | string;
+    nightly_rate?: number | string;
+    price_per_night?: number | string;
 }
 
 export type Villa = WPPost<VillaACFFields>;
@@ -75,7 +90,7 @@ export interface TestimonialACFFields {
     quote: string;
     author_name: string;
     author_context?: string;
-    author_photo?: string | number;
+    author_photo?: string | number | { url?: string; alt?: string };
     rating?: number;
     related_villa_id?: number;
     related_retreat_id?: number;

@@ -8,7 +8,7 @@ import styles from "./HeroNavbar.module.css";
 const navigation = [
   { label: "Home", href: "/", match: "/" },
   { label: "About us", href: "/#about-us", match: "#about-us" },
-  { label: "Villas", href: "/villas", match: "/villas" },
+  { label: "Villas", href: "/#villas", match: "#villas" },
   { label: "Wellness", href: "/retreats", match: "/retreats" },
   { label: "Hotels", href: "/packages", match: "/packages" },
   { label: "Weddings", href: "/#weddings", match: "#weddings" },

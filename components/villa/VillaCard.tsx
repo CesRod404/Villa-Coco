@@ -120,12 +120,14 @@ export default function VillaCard({ villa }: { villa: Villa }) {
 
   return (
     <article className={styles.card} aria-labelledby={`villa-${villa.id}-title`}>
-      <VillaGallery images={images} title={title} />
+      <VillaGallery images={images} title={title} href={detailHref} />
 
       <div className={styles.content}>
         <div className={styles.heading}>
           <span className={styles.kicker}>Casa</span>
-          <h3 id={`villa-${villa.id}-title`}>{villaName}</h3>
+          <h3 id={`villa-${villa.id}-title`}>
+            <Link href={detailHref}>{villaName}</Link>
+          </h3>
         </div>
 
         <div className={styles.descriptionBlock}>

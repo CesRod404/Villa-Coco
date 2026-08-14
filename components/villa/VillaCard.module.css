@@ -56,6 +56,15 @@
   white-space: nowrap;
 }
 
+.heading h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.heading h3 a:hover {
+  color: #00819b;
+}
+
 .descriptionBlock {
   display: flex;
   width: 100%;
@@ -218,7 +227,8 @@
 }
 
 .inquire:focus-visible,
-.readMore:focus-visible {
+.readMore:focus-visible,
+.heading h3 a:focus-visible {
   outline: 3px solid rgba(32, 145, 167, 0.4);
   outline-offset: 3px;
 }

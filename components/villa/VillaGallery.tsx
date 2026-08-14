@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import styles from "./VillaGallery.module.css";
 
 export type VillaGalleryImage = {
@@ -11,9 +12,10 @@ export type VillaGalleryImage = {
 type VillaGalleryProps = {
   images: VillaGalleryImage[];
   title: string;
+  href: string;
 };
 
-export default function VillaGallery({ images, title }: VillaGalleryProps) {
+export default function VillaGallery({ images, title, href }: VillaGalleryProps) {
   const [selected, setSelected] = useState(0);
 
   if (!images.length) {
@@ -29,13 +31,17 @@ export default function VillaGallery({ images, title }: VillaGalleryProps) {
 
   return (
     <div className={styles.gallery}>
-      <div className={styles.mainImage}>
+      <Link
+        href={href}
+        className={styles.mainImage}
+        aria-label={`Ver disponibilidad de ${title}`}
+      >
         <img
           src={activeImage.src}
           alt={activeImage.alt || title}
           loading="lazy"
         />
-      </div>
+      </Link>
 
       <div className={styles.thumbnails} aria-label={`${title} image gallery`}>
         {images.map((image, index) => (

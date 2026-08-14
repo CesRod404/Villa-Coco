@@ -187,6 +187,7 @@ export async function POST(req: Request) {
     const villa = villas.find((v) => v.slug === picked.slug) || villas[0];
     const acf = villa.acf;
     const image = acf.image_1 || acf.image_2 || acf.image_3;
+    const featuredImage = villa._embedded?.["wp:featuredmedia"]?.[0];
 
     const result: VillaRecommendationData = {
       id: villa.id,
@@ -194,7 +195,14 @@ export async function POST(req: Request) {
       name: villa.title.rendered,
       tagline: picked.tagline || "Your Island Escape",
       blurb: picked.blurb || acf.description_short || "",
-      image: image ? { url: image.url, alt: image.alt || villa.title.rendered } : null,
+      image: image
+        ? { url: image.url, alt: image.alt || villa.title.rendered }
+        : featuredImage?.source_url
+          ? {
+              url: featuredImage.source_url,
+              alt: featuredImage.alt_text || villa.title.rendered,
+            }
+          : null,
       stats: {
         bedrooms: acf.bedrooms,
         bathrooms: acf.bathrooms,

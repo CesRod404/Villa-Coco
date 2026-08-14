@@ -1,14 +1,20 @@
 import { Villa, Retreat, Package, Testimonial, FAQ, ReservationPeriod, VillaAvailability, AcfImageField } from "../../types/wordpress";
+import { unstable_rethrow } from "next/navigation";
 
-export const WORDPRESS_BASE_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || process.env.WORDPRESS_API_URL || "http://localhost:8881";
+export const WORDPRESS_BASE_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
 const BASE_URL = WORDPRESS_BASE_URL;
 const API_URL = `${BASE_URL}/wp-json/wp/v2`;
 const RESERVATIONS_API_URL = `${BASE_URL}/wp-json/villa-coco/v1`;
+const NGROK_HEADERS = { "ngrok-skip-browser-warning": "1" };
+
+const WORDPRESS_MEDIA_PROXY_PATH = "/api/wordpress-media/";
 
 
 function normalizeUrls(obj: any): any{
     if(typeof obj === "string"){
-        return obj.replace(/https?:\/\/(localhost|127\.0\.0\.1):8881/g, BASE_URL);
+        return obj
+            .replace(/(?:https?:)?\/\/[^/\s"']+\/wp-content\//gi, WORDPRESS_MEDIA_PROXY_PATH)
+            .replaceAll("/wp-content/", WORDPRESS_MEDIA_PROXY_PATH);
     }
 
     if(Array.isArray(obj)){
@@ -32,8 +38,11 @@ function normalizeUrls(obj: any): any{
 // con el recomendador de villas (bug: <Image src="" /> en
 // VillaRecommendationResult.tsx).
 function normalizeImageField(field: any): AcfImageField | null {
+    if (typeof field === "string" && field.trim() !== "") {
+        return { url: normalizeUrls(field), alt: "" };
+    }
     if (field && typeof field === "object" && typeof field.url === "string" && field.url.trim() !== "") {
-        return { url: field.url, alt: field.alt || "" };
+        return { url: normalizeUrls(field.url), alt: field.alt || "" };
     }
     return null;
 }
@@ -56,6 +65,7 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
     try {
         const res = await fetch(url, {
             cache: "no-store",
+            headers: NGROK_HEADERS,
         });
 
         if (!res.ok) {
@@ -68,6 +78,7 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
         const normalized = normalizeUrls(data);
         return Array.isArray(normalized) ? normalized : [normalized];
     } catch (error) {
+        unstable_rethrow(error);
         console.error(`No se pudo conectar a WordPress en ${url}:`, error);
         return [];
     }
@@ -78,11 +89,15 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
 // author_photo, sin importar el Return Format configurado en ACF).
 async function resolveMediaUrl(mediaId: number): Promise<string | null> {
     try {
-        const res = await fetch(`${API_URL}/media/${mediaId}`, { cache: "no-store" });
+        const res = await fetch(`${API_URL}/media/${mediaId}`, {
+            cache: "no-store",
+            headers: NGROK_HEADERS,
+        });
         if (!res.ok) return null;
         const data = await res.json();
         return normalizeUrls(data?.source_url ?? null);
-    } catch {
+    } catch (error) {
+        unstable_rethrow(error);
         return null;
     }
 }
@@ -105,10 +120,14 @@ export async function getVillaReservations(villaId: number): Promise<Reservation
 
 export async function getVillaAvailability(villaId: number): Promise<VillaAvailability> {
     try {
-        const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, { cache: "no-store" });
+        const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, {
+            cache: "no-store",
+            headers: NGROK_HEADERS,
+        });
         if (!response.ok) return { reservations: [], isAvailable: false };
         return { reservations: await response.json(), isAvailable: true };
     } catch (error) {
+        unstable_rethrow(error);
         console.error("No se pudo cargar la disponibilidad de la villa:", error);
         return { reservations: [], isAvailable: false };
     }

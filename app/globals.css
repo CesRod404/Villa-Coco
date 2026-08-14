@@ -76,7 +76,6 @@
     box-sizing: border-box;
   }
 }
-
 @theme inline {
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
@@ -223,4 +222,3 @@
     transform: translateY(0);
   }
 }
- 
