@@ -19,6 +19,26 @@ final class Villa_Coco_Reservations {
         add_action('add_meta_boxes', array($this, 'add_reservation_meta_box'));
         add_action('save_post_' . self::POST_TYPE, array($this, 'save_reservation_meta'));
         add_action('rest_api_init', array($this, 'register_rest_routes'));
+        add_filter('map_meta_cap', array($this, 'allow_public_read_of_attachments'), 10, 4);
+    }
+
+    /**
+     * Corrige un comportamiento del core de WordPress: los adjuntos (imágenes
+     * de la Media Library) subidos sin quedar "attached" a un post
+     * (post_parent = 0) devuelven 401 en la REST API para peticiones sin
+     * autenticar, aunque el sitio sea público. Esto rompía author_photo en
+     * los testimonios (ACF devuelve el ID numérico bien, pero
+     * /wp-json/wp/v2/media/{id} bloqueaba la lectura). Con este filtro,
+     * cualquier adjunto es legible públicamente sin importar su post padre.
+     */
+    public function allow_public_read_of_attachments($caps, $cap, $user_id, $args) {
+        if ($cap === 'read_post' && !empty($args[0])) {
+            $post = get_post($args[0]);
+            if ($post && $post->post_type === 'attachment') {
+                return array('exist');
+            }
+        }
+        return $caps;
     }
 
     public function register_post_type(): void {

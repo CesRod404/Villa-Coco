@@ -4,7 +4,9 @@ import { Sparkles } from "lucide-react";
 import FindVillaChatButton from "@/components/home/FindVillaChatButton";
 import HeroNavbar from "@/components/home/HeroNavbar";
 import VillaCard from "@/components/villa/VillaCard";
-import { getVillas } from "@/lib/wp";
+import MixMatchSection from "@/components/home/MixMatchSection"; // ⬅️ 1a. agregar import
+import Testimonials from "@/components/testimonials/Testimonials"; // ⬅️ 1b. agregar import
+import { getVillas, getTestimonials } from "@/lib/wp"; // ⬅️ 2. agregar getTestimonials aquí
 import styles from "./home.module.css";
 
 const raleway = localFont({
@@ -17,7 +19,10 @@ const raleway = localFont({
 });
 
 export default async function HomePage() {
-  const villas = await getVillas();
+  const [villas, testimonios] = await Promise.all([
+    getVillas(),
+    getTestimonials(),
+  ]); // ⬅️ 3. ahora se piden los dos en paralelo, en vez de solo villas
 
   return (
     <main className={`${styles.pageShell} ${raleway.variable}`}>
@@ -106,6 +111,12 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ⬅️ 4. Mix & Match, antes de Testimonials */}
+      <MixMatchSection />
+
+      {/* ⬅️ 5. Testimonials, al final */}
+      <Testimonials testimonios={testimonios} villas={villas} />
     </main>
   );
 }

@@ -212,3 +212,15 @@
   --text-chip--line-height: 1rem;
   --text-chip--font-weight: 700;
 }
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+ 
