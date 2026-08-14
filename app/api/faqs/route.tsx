@@ -1,17 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { MessageCircle, X, HelpCircle } from "lucide-react";
+import { MessageCircle, X, Home, HelpCircle, Users } from "lucide-react";
 
 type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   needsHumanHelp?: boolean;
-  cta?: {
-    label: string;
-    href: string;
-    note?: string;
-  };
 };
 
 type Faq = {
@@ -19,37 +14,6 @@ type Faq = {
   question: string;
   answer: string;
 };
-
-// Mismas 4 FAQs que ya están como "CONOCIMIENTO FIJO" en el prompt de
-// app/api/chat/route.ts — se muestran directo como chips iniciales,
-// con la pregunta parafraseada más corta para que el chip no sea tan
-// ancho (la respuesta completa se mantiene igual).
-const FIXED_FAQS: Faq[] = [
-  {
-    id: 1,
-    question: "How does booking work?",
-    answer:
-      "There's no online payment. Booking works by submitting a request through our inquiry form. Our team reviews it and confirms your stay directly with you.",
-  },
-  {
-    id: 2,
-    question: "How much does it cost?",
-    answer:
-      "We work with a range of budgets. Pricing depends on the villa, group size, and season. Our team can put together options that fit what you're looking for.",
-  },
-  {
-    id: 3,
-    question: "What's included?",
-    answer:
-      "Daily housekeeping, a gourmet breakfast from our in-house chef, and access to kayaks and paddle boards. Private transfers and custom excursions are available on request.",
-  },
-  {
-    id: 4,
-    question: "What's the minimum stay?",
-    answer:
-      "Minimum stay varies by villa and season. Typically a few nights for smaller stays and longer for full villa buyouts. Ask about a specific villa for exact details.",
-  },
-];
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,6 +31,9 @@ export default function ChatWidget() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const [showQuickActions, setShowQuickActions] = useState(true);
+  const [faqMode, setFaqMode] = useState(false);
+  const [faqs, setFaqs] = useState<Faq[] | null>(null);
+  const [faqsLoading, setFaqsLoading] = useState(false);
 
   useEffect(() => {
     function closeChatWithEscape(event: KeyboardEvent) {
@@ -97,15 +64,9 @@ export default function ChatWidget() {
     if (!trimmed || isLoading) return;
 
     setShowQuickActions(false);
+    setFaqMode(false);
 
     const userMessage: ChatMessage = { role: "user", content: trimmed };
-    // Historial ANTES de agregar el mensaje nuevo — así el backend arma
-    // el turno actual por separado y sabe qué se dijo antes (para
-    // follow-up questions como "yes" referido a algo previo).
-    const historyForRequest = messages.map((m) => ({
-      role: m.role,
-      content: m.content,
-    }));
     setMessages((prev) => [...prev, userMessage]);
     if (!presetText) setInput("");
     setIsLoading(true);
@@ -115,7 +76,7 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed, history: historyForRequest }),
+        body: JSON.stringify({ message: trimmed }),
       });
 
       const data = await res.json();
@@ -140,18 +101,44 @@ export default function ChatWidget() {
     }
   }
 
+  async function openFaqs() {
+    setShowQuickActions(false);
+    setFaqMode(true);
+    if (faqs) return; // ya cargadas, no volver a pedirlas
+
+    setFaqsLoading(true);
+    try {
+      const res = await fetch("/api/faqs");
+      const data = await res.json();
+      setFaqs(Array.isArray(data.faqs) ? data.faqs : []);
+    } catch (err) {
+      console.error("Error cargando FAQs:", err);
+      setFaqs([]);
+    } finally {
+      setFaqsLoading(false);
+    }
+  }
+
   function selectFaq(faq: Faq) {
+    setFaqMode(false);
     setMessages((prev) => [
       ...prev,
       { role: "user", content: faq.question },
+      { role: "assistant", content: faq.answer },
+    ]);
+  }
+
+  function talkToTeam() {
+    setShowQuickActions(false);
+    setFaqMode(false);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: "Talk to our team" },
       {
         role: "assistant",
-        content: faq.answer,
-        cta: {
-          label: "Inquire Here",
-          href: "/villas/casa-coco#reservation",
-          note: "We'd love to help you plan your stay.",
-        },
+        content:
+          "Of course! You can reach our team directly through this form and we'll get back to you shortly.",
+        needsHumanHelp: true,
       },
     ]);
   }
@@ -214,22 +201,6 @@ export default function ChatWidget() {
                     Contact Our Team
                   </a>
                 )}
-
-                {/* Botón de CTA específico (ej. la FAQ de booking) — la
-                    nota va primero (como segundo párrafo), el botón después. */}
-                {msg.role === "assistant" && msg.cta && (
-                  <>
-                    {msg.cta.note && (
-                      <p className="text-xs text-muted">{msg.cta.note}</p>
-                    )}
-                    <a
-                      href={msg.cta.href}
-                      className="text-button rounded-md bg-secondary px-4 py-2 text-center uppercase text-white"
-                    >
-                      {msg.cta.label}
-                    </a>
-                  </>
-                )}
               </div>
             ))}
 
@@ -245,24 +216,55 @@ export default function ChatWidget() {
               <div className="text-center text-xs text-red-600">{error}</div>
             )}
 
-            {/* Chips iniciales — las 4 FAQs fijas. "Talk to our team" ya
-                no va aquí, aparece solo cuando el fallback lo dispara. */}
+            {/* Chips iniciales — solo antes de que el usuario interactúe */}
             {showQuickActions && !isLoading && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {FIXED_FAQS.map((faq) => (
-                  <button
-                    key={faq.id}
-                    type="button"
-                    onClick={() => {
-                      setShowQuickActions(false);
-                      selectFaq(faq);
-                    }}
-                    className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-left text-xs font-medium text-secondary transition-colors hover:border-primary"
-                  >
-                    <HelpCircle className="h-3.5 w-3.5 shrink-0 text-primary" />
-                    {faq.question}
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => handleSend("What villas do you have?")}
+                  className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:border-primary"
+                >
+                  <Home className="h-3.5 w-3.5 text-primary" /> See our villas
+                </button>
+                <button
+                  type="button"
+                  onClick={openFaqs}
+                  className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:border-primary"
+                >
+                  <HelpCircle className="h-3.5 w-3.5 text-primary" /> FAQs
+                </button>
+                <button
+                  type="button"
+                  onClick={talkToTeam}
+                  className="flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-secondary transition-colors hover:border-primary"
+                >
+                  <Users className="h-3.5 w-3.5 text-primary" /> Talk to our team
+                </button>
+              </div>
+            )}
+
+            {/* Lista de FAQs reales — sin llamar a la IA */}
+            {faqMode && (
+              <div className="flex flex-col gap-2 pt-1">
+                {faqsLoading && (
+                  <p className="text-xs text-muted">Loading questions…</p>
+                )}
+                {!faqsLoading && faqs?.length === 0 && (
+                  <p className="text-xs text-muted">
+                    No FAQs available right now.
+                  </p>
+                )}
+                {!faqsLoading &&
+                  faqs?.map((faq) => (
+                    <button
+                      key={faq.id}
+                      type="button"
+                      onClick={() => selectFaq(faq)}
+                      className="rounded-lg border border-border bg-background px-3 py-2 text-left text-xs text-secondary transition-colors hover:border-primary"
+                    >
+                      {faq.question}
+                    </button>
+                  ))}
               </div>
             )}
 

@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight, Minus, Plus, Users } from "lucide-react";
 import type { ReservationPeriod } from "@/types/wordpress";
+import { HUBSPOT_REFERRAL_OPTIONS } from "@/lib/hubspot/villa-form";
 
 const DAYS = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 const monthFormatter = new Intl.DateTimeFormat("es-MX", { month: "long", year: "numeric" });
@@ -41,6 +42,7 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
     const [guests, setGuests] = useState(2);
     const [submitted, setSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string>();
+    const [syncWarning, setSyncWarning] = useState<string>();
     const [submitting, setSubmitting] = useState(false);
     const [dateError, setDateError] = useState<string>();
     const [flexibleDates, setFlexibleDates] = useState(false);
@@ -145,21 +147,31 @@ export default function ReservationPlanner({ villaId, villaName, reservations, a
                     const form = new FormData(event.currentTarget);
                     setSubmitting(true);
                     setSubmitError(undefined);
+                    setSyncWarning(undefined);
                     const response = await fetch("/api/reservations/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ villaId, villaName, checkIn, checkOut, guests, flexibleDates, firstName: form.get("firstName"), lastName: form.get("lastName"), email: form.get("email"), phone: `${form.get("phoneCountryCode")} ${form.get("phone")}`, referralSource: form.get("referralSource"), travelPlans: form.get("travelPlans") }) });
                     setSubmitting(false);
-                    if (response.ok) setSubmitted(true);
-                    else setSubmitError((await response.json().catch(() => null))?.error || "No pudimos enviar tu solicitud. Inténtalo de nuevo.");
+                    const result = await response.json().catch(() => null);
+                    if (response.ok) {
+                        setSubmitted(true);
+                        if (!result?.hubspotSynced) setSyncWarning("La solicitud quedó guardada, pero HubSpot no confirmó la sincronización. El equipo debe revisarla; no es necesario volver a enviarla.");
+                    } else setSubmitError(result?.error || "No pudimos enviar tu solicitud. Inténtalo de nuevo.");
                 }} className="mt-7 space-y-4">
+                    <div className="border-b border-[#d8e0dd] pb-4">
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#4d806f]">Tus datos</p>
+                        <h3 className="mt-1 font-serif text-2xl text-[#17304f]">Cuéntanos cómo contactarte</h3>
+                        <p className="mt-1 text-sm text-slate-500">Usaremos esta información únicamente para dar seguimiento a tu estancia.</p>
+                    </div>
                     <div className="grid gap-4 sm:grid-cols-2">
-                        <label className="text-sm font-semibold text-[#17304f]">Nombre<input required name="firstName" className="mt-1.5 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#4d806f] focus:ring-2 focus:ring-[#d5e6ff]" placeholder="María" /></label>
-                        <label className="text-sm font-semibold text-[#17304f]">Apellido<input required name="lastName" className="mt-1.5 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#4d806f] focus:ring-2 focus:ring-[#d5e6ff]" placeholder="González" /></label>
-                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Correo electrónico<input required type="email" name="email" className="mt-1.5 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#4d806f] focus:ring-2 focus:ring-[#d5e6ff]" placeholder="maria@ejemplo.com" /></label>
-                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Teléfono<div className="mt-1.5 flex overflow-hidden rounded-xl border border-slate-200 bg-white focus-within:border-[#4d806f] focus-within:ring-2 focus-within:ring-[#d5e6ff]"><select name="phoneCountryCode" aria-label="Código de país" defaultValue="+52" className="w-32 border-r border-slate-200 bg-[#f4f7f6] px-3 py-3 text-sm font-semibold text-[#17304f] outline-none"><option value="+52">🇲🇽 +52</option><option value="+1">🇺🇸 +1</option><option value="+1">🇨🇦 +1</option><option value="+34">🇪🇸 +34</option><option value="+44">🇬🇧 +44</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+57">🇨🇴 +57</option><option value="+54">🇦🇷 +54</option></select><input required type="tel" name="phone" className="min-w-0 flex-1 px-4 py-3 outline-none" placeholder="55 1234 5678" /></div></label>
-                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">¿Cómo te enteraste de nosotros?<select required name="referralSource" defaultValue="" className="mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-[#4d806f] focus:ring-2 focus:ring-[#d5e6ff]"><option value="" disabled>Selecciona una opción</option><option>Instagram</option><option>Google</option><option>Recomendación</option><option>Agencia de viajes</option><option>Ya nos conocía</option><option>Otro</option></select></label>
-                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Cuéntanos sobre tus planes de viaje<textarea name="travelPlans" rows={4} className="mt-1.5 w-full resize-y rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[#4d806f] focus:ring-2 focus:ring-[#d5e6ff]" placeholder="Motivo del viaje, celebraciones, preferencias o cualquier detalle importante." /></label>
+                        <label className="text-sm font-semibold text-[#17304f]">Nombre(s)<input required autoComplete="given-name" name="firstName" className="mt-1.5 w-full rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]" placeholder="María" /></label>
+                        <label className="text-sm font-semibold text-[#17304f]">Apellidos<input required autoComplete="family-name" name="lastName" className="mt-1.5 w-full rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]" placeholder="González" /></label>
+                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Correo electrónico<input required autoComplete="email" type="email" name="email" className="mt-1.5 w-full rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]" placeholder="maria@ejemplo.com" /></label>
+                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">WhatsApp o teléfono<div className="mt-1.5 flex overflow-hidden rounded-xl border border-[#c9dcde] bg-[#fbfefe] focus-within:border-[#4d806f] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#d5e6ff]"><select name="phoneCountryCode" aria-label="Código de país" defaultValue="+52" className="w-32 border-r border-[#c9dcde] bg-[#e7f4ee] px-3 py-3 text-sm font-semibold text-[#17304f] outline-none"><option value="+52">🇲🇽 +52</option><option value="+1">🇺🇸 +1</option><option value="+1">🇨🇦 +1</option><option value="+34">🇪🇸 +34</option><option value="+44">🇬🇧 +44</option><option value="+33">🇫🇷 +33</option><option value="+49">🇩🇪 +49</option><option value="+57">🇨🇴 +57</option><option value="+54">🇦🇷 +54</option></select><input required autoComplete="tel" inputMode="tel" type="tel" name="phone" className="min-w-0 flex-1 bg-transparent px-4 py-3 outline-none" placeholder="55 1234 5678" /></div></label>
+                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">¿Cómo nos conociste?<select required name="referralSource" defaultValue="" className="mt-1.5 w-full rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]"><option value="" disabled>Selecciona una opción</option>{HUBSPOT_REFERRAL_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select><span className="mt-1.5 block text-xs font-normal text-slate-500">Las opciones están sincronizadas con HubSpot.</span></label>
+                        <label className="text-sm font-semibold text-[#17304f] sm:col-span-2">Cuéntanos sobre tu viaje<textarea required name="travelPlans" rows={4} className="mt-1.5 w-full resize-y rounded-xl border border-[#c9dcde] bg-[#fbfefe] px-4 py-3 outline-none transition placeholder:text-slate-400 focus:border-[#4d806f] focus:bg-white focus:ring-2 focus:ring-[#d5e6ff]" placeholder="Motivo del viaje, celebraciones, preferencias o cualquier detalle importante." /></label>
                     </div>
                     <button type="submit" disabled={!checkIn || !checkOut || submitting || submitted || !availabilityOnline} className="w-full rounded-xl bg-[#17304f] px-5 py-4 font-bold text-white transition hover:bg-[#264c76] disabled:cursor-not-allowed disabled:opacity-40">{submitted ? "Solicitud enviada" : submitting ? "Enviando solicitud…" : `Solicitar estas fechas${nights ? ` · ${nights} noche${nights === 1 ? "" : "s"}` : ""}`}</button>
                     {submitted && <p role="status" className="rounded-xl bg-[#e7f4ee] p-4 text-sm text-[#276044]">Recibimos tu solicitud. El equipo confirmará la disponibilidad y la reserva solo bloqueará fechas cuando sea aprobada.</p>}
+                    {syncWarning && <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">{syncWarning}</p>}
                     {submitError && <p role="alert" className="rounded-xl bg-red-50 p-4 text-sm text-red-700">{submitError}</p>}
                 </form>
             </div>

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  buildHubSpotVillaFields,
+  isHubSpotReferralSource,
+} from "@/lib/hubspot/villa-form";
 
 const PORTAL_ID = process.env.HUBSPOT_PORTAL_ID;
-const FORM_ID = process.env.HUBSPOT_VILLA_FORM_ID;
+const FORM_ID = process.env.HUBSPOT_FORM_ID;
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,7 +19,15 @@ export async function POST(req: NextRequest) {
     }
 
     // --- Validación básica del lado del servidor ---
-    if (!body.email || !body.firstname) {
+    if (
+      !body.email ||
+      !body.firstname ||
+      !body.checkInDate ||
+      !body.checkOutDate ||
+      !Number.isFinite(Number(body.numberOfGuests)) ||
+      !body.message?.trim() ||
+      !isHubSpotReferralSource(body.howYouHeardAboutUs)
+    ) {
       return NextResponse.json(
         { ok: false, error: "Faltan campos obligatorios." },
         { status: 400 }
@@ -24,7 +36,7 @@ export async function POST(req: NextRequest) {
 
     if (!PORTAL_ID || !FORM_ID) {
       console.error(
-        "Faltan HUBSPOT_PORTAL_ID o HUBSPOT_VILLA_FORM_ID en las variables de entorno."
+        "Faltan HUBSPOT_PORTAL_ID o HUBSPOT_FORM_ID en las variables de entorno."
       );
       return NextResponse.json(
         { ok: false, error: "Configuración del servidor incompleta." },
@@ -32,28 +44,26 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // --- Construir el payload para HubSpot Forms API ---
-    // Nombres de campo (internal names) confirmados directamente en HubSpot.
-    const fields = [
-      { name: "firstname", value: body.firstname },
-      { name: "lastname", value: body.lastname ?? "" },
-      { name: "email", value: body.email },
-      { name: "phone", value: body.phone ?? "" },
-      { name: "check_in_date", value: body.checkInDate ?? "" },
-      { name: "check_out_date", value: body.checkOutDate ?? "" },
-      { name: "number_of_guests", value: body.numberOfGuests ?? "" },
-      // Dropdown de opciones fijas: "Yes" | "No"
-      { name: "flexible_dates", value: body.flexibleDates ?? "" },
-      // Dropdown de opciones fijas: "Casa Coco (10 Bedrooms)" | "Not Sure"
-      { name: "villa_of_interest", value: body.villaOfInterest ?? "" },
-      // Dropdown de opciones fijas: "Airbnb" | "VRBO" | "Web Search" | "Social Media" | "Referral" | "Magazine"
-      { name: "how_you_heard_about_us", value: body.howYouHeardAboutUs ?? "" },
-      { name: "message", value: body.message ?? "" },
-      // Campo "Request Type" (visible en HubSpot como Request Type, internal name request_type).
-      // Debe estar configurado como hidden con valor fijo por formulario en HubSpot.
-      // Si HubSpot ya lo autocompleta por default value, esta línea es redundante pero inofensiva.
-      { name: "request_type", value: "villa_wedding" },
-    ];
+    const fields = buildHubSpotVillaFields({
+      firstName: body.firstname,
+      lastName: body.lastname ?? "",
+      email: body.email,
+      phone: body.phone ?? "",
+      checkIn: body.checkInDate,
+      checkOut: body.checkOutDate,
+      guests: Number(body.numberOfGuests),
+      flexibleDates:
+        body.flexibleDates === true ||
+        body.flexibleDates === "Yes" ||
+        body.flexibleDates === "yes",
+      villaName:
+        body.villaOfInterest === "Casa Coco (10 Bedrooms)" ||
+        body.villaOfInterest === "casa_coco"
+          ? "Casa Coco"
+          : undefined,
+      referralSource: body.howYouHeardAboutUs,
+      travelPlans: body.message.trim(),
+    });
 
     const hubspotRes = await fetch(
       `https://api.hsforms.com/submissions/v3/integration/submit/${PORTAL_ID}/${FORM_ID}`,

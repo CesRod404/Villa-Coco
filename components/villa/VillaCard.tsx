@@ -1,105 +1,182 @@
 "use client";
 
-import { useState } from "react";
-import VillaGallery from "./VillaGallery";
 import Link from "next/link";
-import { Villa } from "../../types/wordpress";
+import { Bath, BedDouble, ChevronDown, Users } from "lucide-react";
+import type { Villa } from "@/types/wordpress";
+import VillaGallery, { type VillaGalleryImage } from "./VillaGallery";
+import styles from "./VillaCard.module.css";
 
-function stripHtml(html?: string) {
-  if (!html) return "";
-  return html.replace(/<[^>]*>/g, "");
+function plainText(value?: string) {
+  if (!value) return "";
+
+  return value
+    .replace(/<[^>]*>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&#8217;|&rsquo;/gi, "’")
+    .replace(/&quot;/gi, '"')
+    .replace(/Ã¡/g, "á")
+    .replace(/Ã©/g, "é")
+    .replace(/Ã­/g, "í")
+    .replace(/Ã³/g, "ó")
+    .replace(/Ãº/g, "ú")
+    .replace(/Ã±/g, "ñ")
+    .replace(/Ã/g, "Á")
+    .replace(/Ã‰/g, "É")
+    .replace(/Ã/g, "Í")
+    .replace(/Ã“/g, "Ó")
+    .replace(/Ãš/g, "Ú")
+    .replace(/Ã‘/g, "Ñ")
+    .replace(/Â/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function extractImages(villa: Villa) {
-  const images: { src: string; alt?: string }[] = [];
-  const candidates = [villa.acf?.image_1, villa.acf?.image_2, villa.acf?.image_3];
-  for (const field of candidates) {
-    if (field && field.url) {
-      images.push({ src: field.url, alt: field.alt || "" });
+function extractImages(villa: Villa): VillaGalleryImage[] {
+  const images: VillaGalleryImage[] = [];
+  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
+
+  if (featured?.source_url) {
+    images.push({
+      src: featured.source_url,
+      alt: featured.alt_text || "",
+    });
+  }
+
+  const gallery = villa.acf?.gallery;
+  if (Array.isArray(gallery)) {
+    for (const image of gallery) {
+      const normalized =
+        typeof image === "string"
+          ? { src: image, alt: "" }
+          : { src: image.url || image.src || "", alt: image.alt || "" };
+
+      if (
+        normalized.src &&
+        !images.some((existing) => existing.src === normalized.src)
+      ) {
+        images.push(normalized);
+      }
     }
   }
-  if (images.length === 0) {
-    const featured = villa._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
-    const featuredAlt = villa._embedded?.["wp:featuredmedia"]?.[0]?.alt_text || "";
-    if (featured) images.push({ src: featured, alt: featuredAlt });
-  }
+
   return images;
 }
 
-// TODO: "Wi-Fi included / private pool / parking lot / Chef upon request" del
-// Figma NO es un campo de WordPress todavía — no existe amenities en el ACF.
-// Mientras se agrega ese campo (o se decide usar use_cases en su lugar),
-// se deja como lista estática para no bloquear el home visualmente.
-// Avisar a César / decidir en el próximo sync antes de la demo.
-const STATIC_AMENITIES_PLACEHOLDER = [
-  "Wi-Fi included",
-  "private pool",
-  "parking lot",
-  "Chef upon request",
-];
+function firstPositiveNumber(values: unknown[]) {
+  for (const value of values) {
+    const number =
+      typeof value === "number"
+        ? value
+        : typeof value === "string"
+          ? Number(value.replace(/[^0-9.]/g, ""))
+          : Number.NaN;
+
+    if (Number.isFinite(number) && number > 0) return number;
+  }
+
+  return undefined;
+}
+
+function normalizeAmenities(villa: Villa) {
+  const acf = villa.acf;
+  const source = acf.amenities || acf.features || acf.use_cases || [];
+
+  return (Array.isArray(source) ? source : [source])
+    .flatMap((value) => String(value).split(","))
+    .map((value) => value.replace(/[_-]+/g, " ").trim())
+    .filter(Boolean)
+    .slice(0, 8);
+}
 
 export default function VillaCard({ villa }: { villa: Villa }) {
-  const [expanded, setExpanded] = useState(false);
-
-  const title = villa.title?.rendered || "Untitled";
-  const description =
-    villa.acf?.description_short || stripHtml((villa as any).excerpt?.rendered || villa.content?.rendered || "");
+  const title = plainText(villa.title?.rendered) || "Villa";
+  const villaName = title.replace(/^Casa\s+/i, "") || title;
+  const excerpt =
+    villa.acf?.description_short ||
+    villa.excerpt?.rendered ||
+    villa.content?.rendered ||
+    "A private island retreat designed for meaningful stays.";
+  const description = plainText(excerpt);
   const images = extractImages(villa);
+  const acf = villa.acf;
+  const guests =
+    firstPositiveNumber([
+      acf.guests,
+      acf.max_guests,
+      acf.capacity,
+      acf.capacidad_personas,
+    ]) || (acf.suites_count ? acf.suites_count * 2 : undefined);
+  const bedrooms = firstPositiveNumber([acf.bedrooms, acf.habitaciones]);
+  const bathrooms = firstPositiveNumber([acf.bathrooms, acf.banos]);
+  const price = firstPositiveNumber([
+    acf.price,
+    acf.precio,
+    acf.nightly_rate,
+    acf.price_per_night,
+  ]);
+  const amenities = normalizeAmenities(villa);
+  const detailHref = `/villas/${villa.slug}`;
 
   return (
-    <article className="overflow-hidden rounded-md bg-white shadow-card">
+    <article className={styles.card} aria-labelledby={`villa-${villa.id}-title`}>
       <VillaGallery images={images} title={title} />
 
-      <div className="p-5">
-        <h3
-          className="text-card-heading uppercase text-secondary"
-          dangerouslySetInnerHTML={{ __html: title }}
-        />
-
-        <p className={`mt-2 text-card-body text-foreground ${expanded ? "" : "line-clamp-3"}`}>
-          {description}
-        </p>
-        {description.length > 140 && (
-          <button
-            onClick={() => setExpanded((v) => !v)}
-            className="mt-1 text-toggle uppercase text-primary"
-          >
-            {expanded ? "Read Less" : "Read More"}
-          </button>
-        )}
-
-        {/* Stats — solo con campos que SÍ existen en WordPress */}
-        <div className="mt-4 flex items-center gap-4 text-stat text-secondary">
-          {villa.acf?.bedrooms && <span>{villa.acf.bedrooms} bedrooms</span>}
-          {villa.acf?.bathrooms && <span>{villa.acf.bathrooms} bathrooms</span>}
-          {villa.acf?.suites_count && <span>{villa.acf.suites_count} suites</span>}
+      <div className={styles.content}>
+        <div className={styles.heading}>
+          <span className={styles.kicker}>Casa</span>
+          <h3 id={`villa-${villa.id}-title`}>{villaName}</h3>
         </div>
 
-        {/* Amenidades — placeholder estático, ver TODO arriba */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          {STATIC_AMENITIES_PLACEHOLDER.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-chip px-3 py-1 text-caption text-chip-foreground"
-            >
-              {tag}
-            </span>
+        <div className={styles.descriptionBlock}>
+          <p>{description}</p>
+          <Link href={detailHref} className={styles.readMore}>
+            <ChevronDown aria-hidden="true" size={14} strokeWidth={2.5} />
+            <span>Read more</span>
+          </Link>
+        </div>
+
+        <dl className={styles.stats}>
+          <div className={styles.stat}>
+            <Users aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Guests</dt>
+            <dd>{guests || "—"} guests</dd>
+          </div>
+          <div className={styles.stat}>
+            <BedDouble aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Bedrooms</dt>
+            <dd>{bedrooms || "—"} bedrooms</dd>
+          </div>
+          <div className={styles.stat}>
+            <Bath aria-hidden="true" size={22} strokeWidth={2.2} />
+            <dt className={styles.visuallyHidden}>Bathrooms</dt>
+            <dd>{bathrooms || "—"} bathrooms</dd>
+          </div>
+        </dl>
+
+        <div className={styles.amenities} aria-label="Villa features">
+          {amenities.map((amenity) => (
+            <span key={amenity}>{amenity}</span>
           ))}
         </div>
 
-        {villa.acf?.precio && (
-          <p className="mt-4 text-price text-secondary">
-            From ${villa.acf.precio}
-            <span className="ml-1 text-price-suffix text-muted">/ night + taxes</span>
-          </p>
-        )}
+        <div className={styles.booking}>
+          <div className={styles.price}>
+            {price ? (
+              <>
+                <span>From</span>
+                <strong>${price.toLocaleString("en-US")}</strong>
+                <span>/ night + taxes</span>
+              </>
+            ) : (
+              <strong className={styles.priceOnRequest}>Rate upon request</strong>
+            )}
+          </div>
 
-        <Link
-          href={`/villas/${villa.slug}`}
-          className="mt-4 block bg-secondary py-4 text-center text-button uppercase text-white"
-        >
-          Inquire Here
-        </Link>
+          <Link href={`${detailHref}#reservation`} className={styles.inquire}>
+            Inquire here
+          </Link>
+        </div>
       </div>
     </article>
   );
