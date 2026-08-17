@@ -56,7 +56,10 @@ Crea un grupo llamado **Información de la Villa**, asígnalo al Post Type `Vill
 |---|---|---|
 | Descripción corta | `description_short` | Text Area |
 | Descripción larga | `description_long` | Text Area o WYSIWYG |
-| Galería | `gallery` | Gallery o Repeater de imágenes |
+| Imagen 1 | `image_1` | Image (Image Array) |
+| Imagen 2 | `image_2` | Image (Image Array) |
+| Imagen 3 | `image_3` | Image (Image Array) |
+| Imagen 4 | `image_4` | Image (Image Array) |
 | Suites | `suites_count` | Number |
 | Estancia mínima | `minimum_stay_nights` | Number |
 | Recámaras | `bedrooms` | Number |
@@ -66,7 +69,7 @@ Crea un grupo llamado **Información de la Villa**, asígnalo al Post Type `Vill
 | Amenidades | `amenities` | Checkbox |
 | Precio por noche | `price` | Number |
 
-La **imagen destacada** es la fotografía principal de la tarjeta y del formulario. La galería es opcional.
+La **imagen destacada** es la fotografía principal de la tarjeta y del formulario. Los campos `image_1` a `image_4` alimentan el carrusel; las imágenes repetidas se muestran una sola vez.
 
 ## Agregar una nueva villa
 

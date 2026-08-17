@@ -17,6 +17,10 @@ export interface WPPost<ACFType> {
         "wp:featuredmedia"?: Array<{
             source_url: string;
             alt_text?: string;
+            media_details?: {
+                width?: number;
+                height?: number;
+            };
         }>;
     };
     acf: ACFType;
@@ -27,6 +31,8 @@ export interface WPPost<ACFType> {
 export interface AcfImageField {
     url: string;
     alt?: string;
+    width?: number;
+    height?: number;
 }
 
 // 1. Villa (villa)
@@ -37,6 +43,7 @@ export interface VillaACFFields {
     image_1?: AcfImageField | null;
     image_2?: AcfImageField | null;
     image_3?: AcfImageField | null;
+    image_4?: AcfImageField | null;
     suites_count: number;
     minimum_stay_nights: number;
     bedrooms: number;

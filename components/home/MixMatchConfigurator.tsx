@@ -2,152 +2,204 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowRight, BedDouble, Users } from "lucide-react";
 import styles from "./MixMatchConfigurator.module.css";
 
 export type MixMatchVilla = {
   id: number;
   slug: string;
   name: string;
-  image?: string;
+  images: Array<{
+    src: string;
+    width?: number;
+    height?: number;
+  }>;
   bedrooms: number;
   suites: number;
   guests: number;
 };
 
-function VillaChoice({
-  label,
-  selectedId,
-  onChange,
-  villas,
+type VillaPair = {
+  key: string;
+  villas: [MixMatchVilla, MixMatchVilla];
+};
+
+type PairImageAssignments = Map<number, string | undefined>;
+
+const preferredPairs = [
+  ["lola", "encantada"],
+  ["coco", "cielo"],
+] as const;
+
+function normalizedName(name: string) {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function shortName(name: string) {
+  return name.replace(/^(casa|villa)\s+/i, "").trim();
+}
+
+function pairKey(first: MixMatchVilla, second: MixMatchVilla) {
+  return [first.id, second.id].sort((a, b) => a - b).join("-");
+}
+
+function buildPairs(villas: MixMatchVilla[]): VillaPair[] {
+  const pairs: VillaPair[] = [];
+  const usedIds = new Set<number>();
+
+  for (const [firstName, secondName] of preferredPairs) {
+    const first = villas.find(
+      (villa) => !usedIds.has(villa.id) && normalizedName(villa.name).includes(firstName),
+    );
+    const second = villas.find(
+      (villa) =>
+        villa.id !== first?.id &&
+        !usedIds.has(villa.id) &&
+        normalizedName(villa.name).includes(secondName),
+    );
+
+    if (first && second) {
+      pairs.push({ key: pairKey(first, second), villas: [first, second] });
+      usedIds.add(first.id);
+      usedIds.add(second.id);
+    }
+  }
+
+  const remaining = villas.filter((villa) => !usedIds.has(villa.id));
+  for (let index = 0; index + 1 < remaining.length; index += 2) {
+    const first = remaining[index];
+    const second = remaining[index + 1];
+    pairs.push({ key: pairKey(first, second), villas: [first, second] });
+  }
+
+  if (!pairs.length && villas.length >= 2) {
+    pairs.push({ key: pairKey(villas[0], villas[1]), villas: [villas[0], villas[1]] });
+  }
+
+  return pairs.slice(0, 2);
+}
+
+function assignBestImages(pairs: VillaPair[]): PairImageAssignments {
+  const assignments: PairImageAssignments = new Map();
+  const usedSources = new Set<string>();
+  const minimumArea = 171 * 228;
+
+  for (const pair of pairs) {
+    for (const villa of pair.villas) {
+      const ranked = [...villa.images].sort(
+        (first, second) =>
+          (second.width || 0) * (second.height || 0) -
+          (first.width || 0) * (first.height || 0),
+      );
+      const highResolution = ranked.filter(
+        (image) => !image.width || !image.height || image.width * image.height >= minimumArea,
+      );
+      const selected =
+        highResolution.find((image) => !usedSources.has(image.src)) ||
+        highResolution[0] ||
+        ranked.find((image) => !usedSources.has(image.src)) ||
+        ranked[0];
+
+      assignments.set(villa.id, selected?.src);
+      if (selected) usedSources.add(selected.src);
+    }
+  }
+
+  return assignments;
+}
+
+function PairCard({
+  pair,
+  images,
+  selected,
+  onSelect,
 }: {
-  label: string;
-  selectedId?: number;
-  onChange: (id: number) => void;
-  villas: MixMatchVilla[];
+  pair: VillaPair;
+  images: PairImageAssignments;
+  selected: boolean;
+  onSelect: () => void;
 }) {
-  const villa = villas.find((item) => item.id === selectedId);
+  const [first, second] = pair.villas;
+  const roomTotal = first.bedrooms + second.bedrooms || first.suites + second.suites;
+  const pairName = `${shortName(first.name)} & ${shortName(second.name)}`;
 
   return (
-    <article className={styles.choice}>
-      <label className={styles.selectLabel}>
-        <span>{label}</span>
-        <select
-          value={selectedId ?? ""}
-          onChange={(event) => onChange(Number(event.target.value))}
-          disabled={villas.length < 2}
-        >
-          <option value="" disabled>
-            Select a villa
-          </option>
-          {villas.map((option) => (
-            <option key={option.id} value={option.id}>
-              {option.name}
-            </option>
-          ))}
-        </select>
-      </label>
+    <button
+      type="button"
+      className={`${styles.pairCard} ${selected ? styles.pairCardSelected : ""}`}
+      onClick={onSelect}
+      role="radio"
+      aria-checked={selected}
+      aria-label={`Select ${pairName}`}
+    >
+      <span className={styles.pairHeading}>
+        <strong>{pairName}</strong>
+        <span>{roomTotal} Total Bedrooms / Suites</span>
+      </span>
 
-      <div className={styles.imageFrame}>
-        {villa?.image ? (
-          <img src={villa.image} alt={villa.name} loading="lazy" />
-        ) : (
-          <span>{villas.length < 2 ? "Add another villa in WordPress" : "Image coming soon"}</span>
-        )}
-      </div>
+      <span className={styles.pairImages} aria-hidden="true">
+        {[first, second].map((villa) => {
+          const image = images.get(villa.id);
 
-      <div className={styles.choiceMeta}>
-        <strong>{villa?.name || "Villa"}</strong>
-        <span>
-          <BedDouble aria-hidden="true" size={18} />
-          {villa?.bedrooms || 0} bedrooms
-        </span>
-      </div>
-    </article>
+          return (
+            <span className={styles.imageFrame} key={villa.id}>
+              {image ? (
+                <img src={image} alt="" loading="lazy" decoding="async" />
+              ) : (
+                <span>Image coming soon</span>
+              )}
+            </span>
+          );
+        })}
+      </span>
+    </button>
   );
 }
 
 export default function MixMatchConfigurator({ villas }: { villas: MixMatchVilla[] }) {
-  const [firstId, setFirstId] = useState<number | undefined>(villas[0]?.id);
-  const [secondId, setSecondId] = useState<number | undefined>(villas[1]?.id);
-
-  const first = villas.find((villa) => villa.id === firstId);
-  const second = villas.find((villa) => villa.id === secondId);
-
-  const totals = useMemo(
-    () => ({
-      bedrooms: (first?.bedrooms || 0) + (second?.bedrooms || 0),
-      suites: (first?.suites || 0) + (second?.suites || 0),
-      guests: (first?.guests || 0) + (second?.guests || 0),
-    }),
-    [first, second],
-  );
-
-  const pairReady = Boolean(first && second && first.id !== second.id);
+  const pairs = useMemo(() => buildPairs(villas), [villas]);
+  const pairImages = useMemo(() => assignBestImages(pairs), [pairs]);
+  const [selectedKey, setSelectedKey] = useState<string | undefined>(pairs[0]?.key);
+  const selectedPair = pairs.find((pair) => pair.key === selectedKey) || pairs[0];
+  const [first, second] = selectedPair?.villas || [];
+  const pairReady = Boolean(first && second);
   const bookingHref = pairReady
-    ? `/villas/${first!.slug}?with=${encodeURIComponent(second!.slug)}#reservation`
+    ? `/villas/${first.slug}?with=${encodeURIComponent(second.slug)}#reservation`
     : "#mix-match";
-
-  function selectFirst(id: number) {
-    setFirstId(id);
-    if (id === secondId) setSecondId(villas.find((villa) => villa.id !== id)?.id);
-  }
-
-  function selectSecond(id: number) {
-    setSecondId(id);
-    if (id === firstId) setFirstId(villas.find((villa) => villa.id !== id)?.id);
-  }
 
   return (
     <div className={styles.configurator}>
-      <div className={styles.pairGrid}>
-        <VillaChoice label="First villa" selectedId={firstId} onChange={selectFirst} villas={villas} />
-
-        <div className={styles.plus} aria-hidden="true">
-          +
+      {pairs.length ? (
+        <div className={styles.pairGrid} role="radiogroup" aria-label="Side-by-side villa combinations">
+          {pairs.map((pair) => (
+            <PairCard
+              key={pair.key}
+              pair={pair}
+              images={pairImages}
+              selected={pair.key === selectedPair?.key}
+              onSelect={() => setSelectedKey(pair.key)}
+            />
+          ))}
         </div>
+      ) : (
+        <p className={styles.emptyState}>
+          Publish at least two villas in WordPress to activate Mix & Match.
+        </p>
+      )}
 
-        <VillaChoice label="Second villa" selectedId={secondId} onChange={selectSecond} villas={villas} />
-      </div>
-
-      <div className={styles.summary} aria-live="polite">
-        {pairReady ? (
-          <>
-            <div>
-              <span>Your private compound</span>
-              <strong>
-                {first!.name} + {second!.name}
-              </strong>
-            </div>
-            <dl>
-              <div>
-                <dt>Bedrooms / suites</dt>
-                <dd>{totals.bedrooms || totals.suites}</dd>
-              </div>
-              <div>
-                <dt>Up to</dt>
-                <dd>
-                  <Users aria-hidden="true" size={18} /> {totals.guests} guests
-                </dd>
-              </div>
-            </dl>
-          </>
-        ) : (
-          <p>
-            Publish at least two villas in WordPress to activate combined availability and booking.
-          </p>
-        )}
-      </div>
+      <p className={styles.selectionStatus} aria-live="polite">
+        {pairReady ? `${first.name} and ${second.name} selected` : "Select two villas"}
+      </p>
 
       {pairReady ? (
         <Link className={styles.inquire} href={bookingHref}>
-          Check both calendars
-          <ArrowRight aria-hidden="true" size={20} />
+          Inquire here
         </Link>
       ) : (
         <span className={`${styles.inquire} ${styles.disabled}`} aria-disabled="true">
-          Check both calendars
-          <ArrowRight aria-hidden="true" size={20} />
+          Inquire here
         </span>
       )}
     </div>

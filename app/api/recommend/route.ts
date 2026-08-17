@@ -186,7 +186,7 @@ export async function POST(req: Request) {
 
     const villa = villas.find((v) => v.slug === picked.slug) || villas[0];
     const acf = villa.acf;
-    const image = acf.image_1 || acf.image_2 || acf.image_3;
+    const image = acf.image_1 || acf.image_2 || acf.image_3 || acf.image_4;
     const featuredImage = villa._embedded?.["wp:featuredmedia"]?.[0];
 
     const result: VillaRecommendationData = {

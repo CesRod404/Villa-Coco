@@ -42,19 +42,52 @@ function normalizeImageField(field: any): AcfImageField | null {
         return { url: normalizeUrls(field), alt: "" };
     }
     if (field && typeof field === "object" && typeof field.url === "string" && field.url.trim() !== "") {
-        return { url: normalizeUrls(field.url), alt: field.alt || "" };
+        return {
+            url: normalizeUrls(field.url),
+            alt: field.alt || "",
+            width: Number(field.width) || undefined,
+            height: Number(field.height) || undefined,
+        };
     }
     return null;
 }
 
-function normalizeVillaImages(villa: Villa): Villa {
+async function normalizeVillaImages(
+    villa: Villa,
+    mediaRequests = new Map<number, Promise<AcfImageField | null>>()
+): Promise<Villa> {
+    const resolveImageField = async (field: unknown): Promise<AcfImageField | null> => {
+        const normalized = normalizeImageField(field);
+        if (normalized) return normalized;
+
+        if (typeof field !== "number" || !Number.isInteger(field) || field <= 0) {
+            return null;
+        }
+
+        let request = mediaRequests.get(field);
+        if (!request) {
+            request = resolveMediaImage(field);
+            mediaRequests.set(field, request);
+        }
+
+        return request;
+    };
+
+    const [image_1, image_2, image_3, image_4] = await Promise.all([
+        resolveImageField(villa.acf?.image_1),
+        resolveImageField(villa.acf?.image_2),
+        resolveImageField(villa.acf?.image_3),
+        resolveImageField(villa.acf?.image_4),
+    ]);
+
     return {
         ...villa,
         acf: {
             ...villa.acf,
-            image_1: normalizeImageField(villa.acf?.image_1),
-            image_2: normalizeImageField(villa.acf?.image_2),
-            image_3: normalizeImageField(villa.acf?.image_3),
+            image_1,
+            image_2,
+            image_3,
+            image_4,
         },
     };
 }
@@ -102,16 +135,41 @@ async function resolveMediaUrl(mediaId: number): Promise<string | null> {
     }
 }
 
+async function resolveMediaImage(mediaId: number): Promise<AcfImageField | null> {
+    try {
+        const res = await fetch(`${API_URL}/media/${mediaId}`, {
+            cache: "no-store",
+            headers: NGROK_HEADERS,
+        });
+        if (!res.ok) return null;
+
+        const data = await res.json();
+        const url = normalizeUrls(data?.source_url ?? null);
+        if (!url) return null;
+
+        return {
+            url,
+            alt: data?.alt_text || "",
+            width: Number(data?.media_details?.width) || undefined,
+            height: Number(data?.media_details?.height) || undefined,
+        };
+    } catch (error) {
+        unstable_rethrow(error);
+        return null;
+    }
+}
+
 // 1. Villas (villa)
 export async function getVillas(): Promise<Villa[]> {
     const villas = await fetchWP<Villa>("/villa?_embed");
-    return villas.map(normalizeVillaImages);
+    const mediaRequests = new Map<number, Promise<AcfImageField | null>>();
+    return Promise.all(villas.map((villa) => normalizeVillaImages(villa, mediaRequests)));
 }
 
 export async function getVillaBySlug(slug: string): Promise<Villa | null> {
     const villas = await fetchWP<Villa>(`/villa?slug=${encodeURIComponent(slug)}&_embed`);
     const villa = villas[0];
-    return villa ? normalizeVillaImages(villa) : null;
+    return villa ? await normalizeVillaImages(villa) : null;
 }
 
 export async function getVillaReservations(villaId: number): Promise<ReservationPeriod[]> {

@@ -56,8 +56,28 @@ function villaName(villa: Villa) {
   return plainText(villa.title?.rendered) || "Villa";
 }
 
-function villaImage(villa: Villa) {
-  return villa._embedded?.["wp:featuredmedia"]?.[0]?.source_url;
+function villaImages(villa: Villa): MixMatchVilla["images"] {
+  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
+  const candidates = [
+    villa.acf.image_1,
+    villa.acf.image_2,
+    villa.acf.image_3,
+    villa.acf.image_4,
+    featured?.source_url
+      ? {
+          url: featured.source_url,
+          width: featured.media_details?.width,
+          height: featured.media_details?.height,
+        }
+      : null,
+  ];
+
+  return candidates.reduce<MixMatchVilla["images"]>((images, image) => {
+    if (!image?.url || images.some((existing) => existing.src === image.url)) return images;
+
+    images.push({ src: image.url, width: image.width, height: image.height });
+    return images;
+  }, []);
 }
 
 const services = [
@@ -79,7 +99,7 @@ export default async function HomePage() {
     id: villa.id,
     slug: villa.slug,
     name: villaName(villa),
-    image: villaImage(villa),
+    images: villaImages(villa),
     bedrooms: positiveNumber(villa.acf.bedrooms, villa.acf.habitaciones),
     suites: positiveNumber(villa.acf.suites_count),
     guests:
@@ -207,24 +227,28 @@ export default async function HomePage() {
         <div className={styles.servicesStory}>
           <div className={styles.servicesImage}>
             <Image
-              src="/images/home/concierge-services.png"
+              src="/images/home/SERVICES.png"
               alt="Concierge ringing a service bell at a private coastal villa"
-              width={1536}
-              height={1024}
-              sizes="(max-width: 900px) 100vw, 50vw"
+              width={400}
+              height={405}
+              sizes="(max-width: 820px) calc(100vw - 40px), 400px"
             />
           </div>
 
           <div className={styles.servicesCopy}>
-            <p><strong>Concierge excellence for your every desire.</strong> Housekeeping, gourmet breakfasts and curated experiences—every detail orchestrated around your stay.</p>
+            <p><strong>Concierge excellence for your every desire.</strong> Housekeeping, gourmet breakfasts, curated experiences. Perfection orchestrated.</p>
             <ol>
-              <li><span>01</span><p><strong>Choose the right villa.</strong> Curated recommendations and direct communication.</p></li>
-              <li><span>02</span><p><strong>Concierge coordination.</strong> One dedicated host handles every detail.</p></li>
-              <li><span>03</span><p><strong>Seamless group planning.</strong> Invite your guests and shape the itinerary together.</p></li>
-              <li><span>04</span><p><strong>Arrive and exhale.</strong> Your Isla Mujeres stay is ready.</p></li>
+              <li><Image className={styles.serviceStepIcon} src="/images/home/service-steps/step-01.svg" alt="" width={24} height={24} /><p><strong>Choose the right villa:</strong> Curated recommendations. Direct communication. No guesswork.</p></li>
+              <li><Image className={styles.serviceStepIcon} src="/images/home/service-steps/step-02.svg" alt="" width={24} height={24} /><p><strong>Concierge coordination:</strong> Your dedicated concierge handles every detail of your stay.</p></li>
+              <li><Image className={styles.serviceStepIcon} src="/images/home/service-steps/step-03.svg" alt="" width={24} height={24} /><p><strong>Seamless group planning:</strong> Invite your guests and build your itinerary in our private guest portal.</p></li>
+              <li><Image className={styles.serviceStepIcon} src="/images/home/service-steps/step-04.svg" alt="" width={24} height={24} /><p><strong><em>Start planning your Tulum villa stay.</em></strong></p></li>
             </ol>
           </div>
         </div>
+
+        <p className={styles.servicesComplement}>
+          Complement your stay with our in-villa services &amp; on request experiences
+        </p>
 
         <ul className={styles.serviceList} aria-label="Concierge services">
           {services.map(({ icon: Icon, label }) => (
@@ -235,9 +259,9 @@ export default async function HomePage() {
 
       <footer id="contact" className={styles.footer}>
         <div className={styles.footerInner}>
-          <Image src="/images/home/villas-logo.svg" alt="Villa Coco" width={130} height={130} className={styles.footerLogo} />
+          <Image src="/images/home/villas-logo.svg" alt="Villa Coco" width={72} height={61} className={styles.footerLogo} />
 
-          <section aria-labelledby="direct-contact-title">
+          <section className={styles.footerDirect} aria-labelledby="direct-contact-title">
             <h2 id="direct-contact-title">Direct Contact</h2>
             <address>
               <a href="tel:+12065790798"><Phone aria-hidden="true" size={22} /> Mobile<br /><span>+1 206-579-0798</span></a>
@@ -246,14 +270,17 @@ export default async function HomePage() {
             </address>
           </section>
 
-          <section aria-labelledby="front-desk-title">
+          <section className={styles.footerDesk} aria-labelledby="front-desk-title">
             <h2 id="front-desk-title">Concierge & Front Desk</h2>
-            <p>(7 a.m. – 11 p.m. Central)</p>
-            <a href="https://wa.me/529983154343">Call & WhatsApp: +52 998 315 4343</a>
-            <a href="tel:+529982096937">Call: +52 998 209 6937</a>
+            <div className={styles.footerDeskDetails}>
+              <p>(7 a.m. - 11 p.m. Central)</p>
+              <a href="https://wa.me/529983154343">Call & WhatsApp: +52 - 998 - 315 - 4343</a>
+              <a href="tel:+529982096937">Call: +52 998 209 6937</a>
+            </div>
           </section>
+
+          <p className={styles.cookiePreferences}>Cookies preferences</p>
         </div>
-        <p className={styles.copyright}>© {new Date().getFullYear()} Villa Coco · Isla Mujeres, México</p>
       </footer>
     </main>
   );

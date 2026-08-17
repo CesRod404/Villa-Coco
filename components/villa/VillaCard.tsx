@@ -34,15 +34,33 @@ function plainText(value?: string) {
 
 function extractImages(villa: Villa): VillaGalleryImage[] {
   const images: VillaGalleryImage[] = [];
+  const addImage = (image?: VillaGalleryImage | null) => {
+    const src = image?.src?.trim();
+
+    if (!src || images.some((existing) => existing.src === src)) return;
+
+    images.push({ src, alt: image?.alt || "" });
+  };
+
   const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
 
   if (featured?.source_url) {
-    images.push({
+    addImage({
       src: featured.source_url,
       alt: featured.alt_text || "",
     });
   }
 
+  for (const image of [
+    villa.acf?.image_1,
+    villa.acf?.image_2,
+    villa.acf?.image_3,
+    villa.acf?.image_4,
+  ]) {
+    if (image?.url) addImage({ src: image.url, alt: image.alt });
+  }
+
+  // Conserva compatibilidad con villas que todavía usen el campo Gallery de ACF Pro.
   const gallery = villa.acf?.gallery;
   if (Array.isArray(gallery)) {
     for (const image of gallery) {
@@ -51,12 +69,7 @@ function extractImages(villa: Villa): VillaGalleryImage[] {
           ? { src: image, alt: "" }
           : { src: image.url || image.src || "", alt: image.alt || "" };
 
-      if (
-        normalized.src &&
-        !images.some((existing) => existing.src === normalized.src)
-      ) {
-        images.push(normalized);
-      }
+      addImage(normalized);
     }
   }
 
@@ -82,11 +95,12 @@ function normalizeAmenities(villa: Villa) {
   const acf = villa.acf;
   const source = acf.amenities || acf.features || acf.use_cases || [];
 
-  return (Array.isArray(source) ? source : [source])
+  const amenities = (Array.isArray(source) ? source : [source])
     .flatMap((value) => String(value).split(","))
     .map((value) => value.replace(/[_-]+/g, " ").trim())
-    .filter(Boolean)
-    .slice(0, 8);
+    .filter(Boolean);
+
+  return Array.from(new Set(amenities)).slice(0, 8);
 }
 
 export default function VillaCard({ villa }: { villa: Villa }) {
