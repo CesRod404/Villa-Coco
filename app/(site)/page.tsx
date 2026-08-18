@@ -1,16 +1,6 @@
 import Image from "next/image";
 import localFont from "next/font/local";
-import {
-  BellRing,
-  ChefHat,
-  Compass,
-  Heart,
-  Mail,
-  Phone,
-  Ship,
-  Sparkles,
-  Waves,
-} from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import FindVillaChatButton from "@/components/home/FindVillaChatButton";
 import HeroNavbar from "@/components/home/HeroNavbar";
 import MixMatchConfigurator, {
@@ -56,6 +46,42 @@ function villaName(villa: Villa) {
   return plainText(villa.title?.rendered) || "Villa";
 }
 
+function formatTestimonialDate(value?: string) {
+  const raw = plainText(value);
+  if (!raw) return "";
+
+  let year: number | undefined;
+  let month: number | undefined;
+  let day = 1;
+
+  if (/^\d{8}$/.test(raw)) {
+    year = Number(raw.slice(0, 4));
+    month = Number(raw.slice(4, 6));
+    day = Number(raw.slice(6, 8));
+  } else {
+    const iso = raw.match(/^(\d{4})[-/]([01]\d)[-/]([0-3]\d)$/);
+    const dayFirst = raw.match(/^([0-3]\d)[-/]([01]\d)[-/](\d{4})$/);
+
+    if (iso) {
+      year = Number(iso[1]);
+      month = Number(iso[2]);
+      day = Number(iso[3]);
+    } else if (dayFirst) {
+      year = Number(dayFirst[3]);
+      month = Number(dayFirst[2]);
+      day = Number(dayFirst[1]);
+    }
+  }
+
+  if (!year || !month || month > 12 || day > 31) return raw;
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)));
+}
+
 function villaImages(villa: Villa): MixMatchVilla["images"] {
   const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
   const candidates = [
@@ -81,12 +107,12 @@ function villaImages(villa: Villa): MixMatchVilla["images"] {
 }
 
 const services = [
-  { icon: BellRing, label: "24-hour concierge" },
-  { icon: Waves, label: "Yoga & wellness" },
-  { icon: Ship, label: "Private boat transfers" },
-  { icon: ChefHat, label: "Private chef on request" },
-  { icon: Heart, label: "Weddings & events" },
-  { icon: Compass, label: "Excursions & activities" },
+  { iconSrc: "/images/icons/service-concierge.svg", label: "24-hour concierge" },
+  { iconSrc: "/images/icons/service-yoga.svg", label: "Yoga & wellness" },
+  { iconSrc: "/images/icons/service-boat.svg", label: "Private boat transfers" },
+  { iconSrc: "/images/icons/service-chef.svg", label: "Private chef on request" },
+  { iconSrc: "/images/icons/service-weddings.svg", label: "Weddings & events" },
+  { iconSrc: "/images/icons/service-excursions.svg", label: "Excursions & activities" },
 ];
 
 export default async function HomePage() {
@@ -122,7 +148,10 @@ export default async function HomePage() {
       id: item.id,
       quote: plainText(item.acf?.quote || item.content?.rendered || item.title?.rendered),
       authorName: plainText(item.acf?.author_name) || "Villa Coco guest",
-      context: plainText(item.acf?.author_context),
+      context:
+        [plainText(item.acf?.lugar), formatTestimonialDate(item.acf?.fecha)]
+          .filter(Boolean)
+          .join(" · ") || plainText(item.acf?.author_context),
       photo:
         typeof authorPhoto === "string" && authorPhoto
           ? authorPhoto
@@ -164,7 +193,13 @@ export default async function HomePage() {
           </div>
 
           <FindVillaChatButton className={styles.cta}>
-            <Sparkles aria-hidden="true" size={27} strokeWidth={2.25} />
+            <Image
+              className={styles.ctaIcon}
+              src="/images/icons/find-villa.svg"
+              alt=""
+              width={32}
+              height={32}
+            />
             <span>Find my villa</span>
           </FindVillaChatButton>
         </div>
@@ -225,13 +260,24 @@ export default async function HomePage() {
         </header>
 
         <div className={styles.servicesStory}>
+          <h3 className={styles.servicesStoryTitle}>
+            <Image
+              className={styles.servicesStoryIcon}
+              src="/images/icons/service-concierge.svg"
+              alt=""
+              width={32}
+              height={32}
+            />
+            <span>Concierge services</span>
+          </h3>
+
           <div className={styles.servicesImage}>
             <Image
               src="/images/home/SERVICES.png"
               alt="Concierge ringing a service bell at a private coastal villa"
               width={400}
               height={405}
-              sizes="(max-width: 820px) calc(100vw - 40px), 400px"
+              sizes="(max-width: 767px) calc(100vw - 32px), (max-width: 820px) calc(100vw - 40px), 400px"
             />
           </div>
 
@@ -251,8 +297,11 @@ export default async function HomePage() {
         </p>
 
         <ul className={styles.serviceList} aria-label="Concierge services">
-          {services.map(({ icon: Icon, label }) => (
-            <li key={label}><Icon aria-hidden="true" size={34} strokeWidth={1.7} /><span>{label}</span></li>
+          {services.map(({ iconSrc, label }) => (
+            <li key={label}>
+              <Image className={styles.serviceIcon} src={iconSrc} alt="" width={32} height={32} />
+              <span>{label}</span>
+            </li>
           ))}
         </ul>
       </section>

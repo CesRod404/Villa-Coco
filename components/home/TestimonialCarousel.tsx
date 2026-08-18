@@ -70,7 +70,7 @@ export default function TestimonialCarousel({ testimonials }: { testimonials: Te
                 {item.context ? <p>{item.context}</p> : null}
               </div>
 
-              <blockquote>“{item.quote}”</blockquote>
+              <blockquote>{item.quote}</blockquote>
 
               <footer>
                 <span>{item.villaName || "Villa Coco"}</span>
@@ -90,9 +90,6 @@ export default function TestimonialCarousel({ testimonials }: { testimonials: Te
           <button type="button" onClick={() => move(-1)} aria-label="Previous testimonial">
             <ArrowLeft aria-hidden="true" size={24} />
           </button>
-          <span>
-            {active + 1} / {testimonials.length}
-          </span>
           <button type="button" onClick={() => move(1)} aria-label="Next testimonial">
             <ArrowRight aria-hidden="true" size={24} />
           </button>

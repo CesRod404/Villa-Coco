@@ -235,6 +235,53 @@
   }
 }
 
+@media (max-width: 767px) {
+  .configurator {
+    width: calc(100% - 32px);
+  }
+
+  .pairGrid {
+    width: 100%;
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .pairCard {
+    width: 100%;
+    height: auto;
+    grid-template-rows: 63px auto;
+  }
+
+  .pairHeading {
+    width: 100%;
+  }
+
+  .pairHeading strong {
+    font-size: clamp(20px, 6.15vw, 24px);
+    letter-spacing: clamp(2.8px, 1vw, 4px);
+  }
+
+  .pairImages {
+    width: 100%;
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .imageFrame {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 171 / 228;
+  }
+
+  .inquire {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 40px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pairCard .imageFrame,
   .inquire {

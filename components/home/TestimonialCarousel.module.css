@@ -1,63 +1,74 @@
 .carousel {
-  width: min(1220px, calc(100% - 40px));
+  width: 100%;
   margin-inline: auto;
+  overflow: hidden;
 }
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: center;
+  position: relative;
+  left: 50%;
+  display: flex;
+  width: max-content;
+  padding-top: 24px;
+  align-items: flex-end;
+  transform: translateX(-50%);
 }
 
 .card {
+  box-sizing: border-box;
   display: flex;
-  min-height: 480px;
-  padding: 34px 28px 28px;
+  width: 282px;
+  height: 389.4350891113281px;
+  padding: 24px 16px 20px;
   flex-direction: column;
+  flex: 0 0 282px;
+  gap: 16px;
+  overflow: hidden;
   border: 1px solid rgba(26, 46, 74, 0.08);
-  background: #e7eef8;
+  background: #e8eef7;
   color: #1a2e4a;
 }
 
 .card:first-child {
-  border-radius: 18px 0 0 18px;
+  border-radius: 0;
 }
 
 .card:last-child {
-  border-radius: 0 18px 18px 0;
+  border-radius: 0;
 }
 
 .card.featured {
   z-index: 1;
-  min-height: 540px;
-  border: 0;
+  width: 293px;
+  height: 409px;
+  flex-basis: 293px;
   border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 18px 40px rgba(21, 45, 72, 0.14);
+  box-shadow: 0 0 12px 0 #00000026;
 }
 
 .cards .card:only-child {
-  width: min(460px, 100%);
-  margin-inline: auto;
-  grid-column: 1 / -1;
-  border-radius: 18px;
+  width: 293px;
+  height: 409px;
+  flex-basis: 293px;
+  border-radius: 0;
 }
 
 .cards:has(.card:nth-child(2):last-child) {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: center;
 }
 
 .avatar,
 .avatarFallback {
   display: grid;
-  width: 88px;
-  height: 88px;
+  width: 70px;
+  height: 70px;
   margin-inline: auto;
   place-items: center;
-  border: 5px solid rgba(255, 255, 255, 0.82);
-  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 33554400px;
   background: linear-gradient(145deg, #2b6d86, #1a2e4a);
-  box-shadow: 0 8px 16px rgba(20, 43, 67, 0.18);
+  box-shadow: 0 4px 12px rgba(20, 43, 67, 0.18);
   color: #ffffff;
   font-size: 24px;
   font-weight: 600;
@@ -65,27 +76,35 @@
 }
 
 .author {
-  margin-top: 24px;
+  margin-top: 5px;
   text-align: center;
 }
 
 .author h3 {
   margin: 0;
-  font-size: 21px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 20px;
 }
 
 .author p {
   margin: 4px 0 0;
-  color: #4e5e70;
+  color: #1a2e4a;
   font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
 }
 
 .card blockquote {
-  margin: 28px 0 30px;
-  color: #263f60;
-  font-size: clamp(17px, 1.45vw, 20px);
-  line-height: 1.65;
+  display: -webkit-box;
+  margin: 8px 0 0;
+  overflow: hidden;
+  color: #1a2e4a;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
 }
 
 .card footer {
@@ -97,58 +116,58 @@
 }
 
 .card footer > span:first-child {
-  border-radius: 999px;
-  background: rgba(215, 228, 245, 0.78);
-  padding: 6px 12px;
-  color: #285385;
+  padding: 0;
+  color: #2c4a7c;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  line-height: 16px;
   text-transform: uppercase;
+}
+
+.card.featured footer > span:first-child,
+.cards .card:only-child footer > span:first-child {
+  border-radius: 999px;
+  background: #e8eef7;
+  padding: 6px 12px;
 }
 
 .rating {
   display: inline-flex;
   gap: 2px;
-  color: #0088a2;
+  color: #00819b;
 }
 
 .controls {
   display: flex;
-  margin-top: 34px;
+  width: 88px;
+  height: 40px;
+  margin: 32px auto 0;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 8px;
 }
 
 .controls button {
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 40px;
+  height: 40px;
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #e6eef9;
-  color: #285385;
+  background: #e8eef7;
+  color: #2c4a7c;
   cursor: pointer;
   transition: background-color 180ms ease, transform 180ms ease;
 }
 
 .controls button:hover {
   transform: translateY(-2px);
-  background: #d6e5f7;
+  background: #d7e2f1;
 }
 
 .controls button:focus-visible {
   outline: 3px solid #0088a2;
   outline-offset: 3px;
-}
-
-.controls > span {
-  color: #657489;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.12em;
 }
 
 .empty {
@@ -165,34 +184,105 @@
 
 @media (max-width: 900px) {
   .cards {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
+    display: flex;
   }
 
   .card,
-  .card.featured,
   .card:first-child,
   .card:last-child {
-    width: min(560px, 100%);
-    min-height: 430px;
-    margin-inline: auto;
-    border-radius: 18px;
+    width: 282px;
+    height: 389.4350891113281px;
+    margin: 0;
+    border-radius: 0;
   }
 
-  .cards .card:not(.featured) {
-    display: none;
+  .card.featured,
+  .cards .card:only-child {
+    width: 293px;
+    height: 409px;
   }
 }
 
 @media (max-width: 480px) {
   .carousel {
-    width: calc(100% - 28px);
+    width: 100%;
   }
 
   .card,
   .card.featured {
-    min-height: 410px;
-    padding: 28px 22px 24px;
+    padding: 24px 16px 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .carousel {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cards,
+  .cards:has(.card:nth-child(2):last-child) {
+    display: flex;
+    width: max-content;
+    grid-template-columns: none;
+    overflow: visible;
+  }
+
+  .card,
+  .card.featured,
+  .card:first-child,
+  .card:last-child,
+  .cards .card:only-child {
+    display: flex;
+    box-sizing: border-box;
+    width: 282px;
+    height: 389.4350891113281px;
+    margin: 0;
+    padding: 24px 16px 20px;
+    flex: 0 0 282px;
+    border-radius: 0;
+  }
+
+  .cards .card:not(.featured) {
+    display: flex;
+  }
+
+  .card.featured,
+  .cards .card:only-child {
+    width: 293px;
+    height: 409px;
+    flex-basis: 293px;
+    box-shadow: 0 0 12px 0 #00000026;
+  }
+
+  .avatar,
+  .avatarFallback {
+    width: 70px;
+    height: 70px;
+  }
+
+  .author {
+    margin-top: 5px;
+  }
+
+  .author h3 {
+    font-size: 18px;
+  }
+
+  .card blockquote {
+    margin: 8px 0 0;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .controls {
+    margin-top: 32px;
+    gap: 8px;
+  }
+
+  .controls button {
+    width: 40px;
+    height: 40px;
   }
 }
 

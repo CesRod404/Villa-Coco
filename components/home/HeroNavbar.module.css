@@ -1,12 +1,10 @@
 .desktopNav {
-  width: min(1180px, calc(100% - 48px));
+  width: 100%;
   height: 78px;
   min-height: 78px;
   max-height: 78px;
-  margin-inline: auto;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 14px;
+  border-block: 1px solid rgba(255, 255, 255, 0.18);
   background: rgba(0, 129, 155, 0.5);
   box-shadow: 0 12px 40px rgba(0, 51, 67, 0.08);
   backdrop-filter: blur(20px);
@@ -72,8 +70,7 @@
 
   .mobileMenu {
     display: block;
-    width: calc(100% - 40px);
-    margin-inline: auto;
+    width: 100%;
     color: #ffffff;
     font-family: var(--font-raleway), "Avenir Next", "Segoe UI", sans-serif;
   }
@@ -85,8 +82,7 @@
     list-style: none;
     align-items: center;
     justify-content: space-between;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    border-radius: 12px;
+    border-block: 1px solid rgba(255, 255, 255, 0.42);
     background: rgba(0, 129, 155, 0.56);
     padding-inline: 22px;
     font-size: 15px;
@@ -113,10 +109,8 @@
 
   .mobileMenu nav {
     display: grid;
-    margin-top: 8px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 12px;
+    border-block: 1px solid rgba(255, 255, 255, 0.3);
     background: rgba(0, 89, 108, 0.84);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -138,6 +132,13 @@
   .mobileMenu nav a.mobileActive {
     background: #acd2e3;
     color: #1a2e4a;
+  }
+}
+
+@media (max-width: 767px) {
+  .desktopNav,
+  .mobileMenu {
+    display: none;
   }
 }
 

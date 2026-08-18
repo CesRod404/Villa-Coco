@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { Bath, BedDouble, ChevronDown, Users } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import type { Villa } from "@/types/wordpress";
 import VillaGallery, { type VillaGalleryImage } from "./VillaGallery";
 import styles from "./VillaCard.module.css";
@@ -104,14 +106,22 @@ function normalizeAmenities(villa: Villa) {
 }
 
 export default function VillaCard({ villa }: { villa: Villa }) {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const title = plainText(villa.title?.rendered) || "Villa";
   const villaName = title.replace(/^Casa\s+/i, "") || title;
-  const excerpt =
+  const summarySource =
     villa.acf?.description_short ||
     villa.excerpt?.rendered ||
     villa.content?.rendered ||
     "A private island retreat designed for meaningful stays.";
-  const description = plainText(excerpt);
+  const fullDescriptionSource =
+    villa.acf?.description_long ||
+    villa.content?.rendered ||
+    villa.excerpt?.rendered ||
+    summarySource;
+  const summary = plainText(summarySource);
+  const fullDescription = plainText(fullDescriptionSource) || summary;
+  const descriptionId = `villa-${villa.id}-description`;
   const images = extractImages(villa);
   const acf = villa.acf;
   const guests =
@@ -133,7 +143,10 @@ export default function VillaCard({ villa }: { villa: Villa }) {
   const detailHref = `/villas/${villa.slug}`;
 
   return (
-    <article className={styles.card} aria-labelledby={`villa-${villa.id}-title`}>
+    <article
+      className={`${styles.card} ${isDescriptionExpanded ? styles.cardExpanded : ""}`}
+      aria-labelledby={`villa-${villa.id}-title`}
+    >
       <VillaGallery images={images} title={title} href={detailHref} />
 
       <div className={styles.content}>
@@ -144,27 +157,33 @@ export default function VillaCard({ villa }: { villa: Villa }) {
           </h3>
         </div>
 
-        <div className={styles.descriptionBlock}>
-          <p>{description}</p>
-          <Link href={detailHref} className={styles.readMore}>
+        <div className={`${styles.descriptionBlock} ${isDescriptionExpanded ? styles.descriptionExpanded : ""}`}>
+          <p id={descriptionId}>{isDescriptionExpanded ? fullDescription : summary}</p>
+          <button
+            type="button"
+            className={styles.readMore}
+            aria-controls={descriptionId}
+            aria-expanded={isDescriptionExpanded}
+            onClick={() => setIsDescriptionExpanded((expanded) => !expanded)}
+          >
             <ChevronDown aria-hidden="true" size={14} strokeWidth={2.5} />
-            <span>Read more</span>
-          </Link>
+            <span>{isDescriptionExpanded ? "Read less" : "Read more"}</span>
+          </button>
         </div>
 
         <dl className={styles.stats}>
           <div className={styles.stat}>
-            <Users aria-hidden="true" size={22} strokeWidth={2.2} />
+            <Image className={styles.statIcon} src="/images/icons/villa-guests.svg" alt="" width={32} height={32} />
             <dt className={styles.visuallyHidden}>Guests</dt>
             <dd>{guests || "—"} guests</dd>
           </div>
           <div className={styles.stat}>
-            <BedDouble aria-hidden="true" size={22} strokeWidth={2.2} />
+            <Image className={styles.statIcon} src="/images/icons/villa-bedrooms.svg" alt="" width={32} height={32} />
             <dt className={styles.visuallyHidden}>Bedrooms</dt>
             <dd>{bedrooms || "—"} bedrooms</dd>
           </div>
           <div className={styles.stat}>
-            <Bath aria-hidden="true" size={22} strokeWidth={2.2} />
+            <Image className={styles.statIcon} src="/images/icons/villa-bathrooms.svg" alt="" width={32} height={32} />
             <dt className={styles.visuallyHidden}>Bathrooms</dt>
             <dd>{bathrooms || "—"} bathrooms</dd>
           </div>
