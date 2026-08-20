@@ -1,0 +1,164 @@
+.screen {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  place-items: center;
+  overflow: hidden;
+  background: #1a2e4a;
+  font-family: var(--font-raleway), "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-1.5vh);
+}
+
+.mark {
+  position: relative;
+  display: grid;
+  width: 96px;
+  height: 96px;
+  place-items: center;
+}
+
+.orbit {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from -20deg,
+    transparent 0 8%,
+    #0f91b2 8% 14%,
+    transparent 14% 31%,
+    #0f91b2 31% 40%,
+    transparent 40% 58%,
+    #0f91b2 58% 68%,
+    transparent 68% 83%,
+    #0f91b2 83% 91%,
+    transparent 91% 100%
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 1.5px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 1.5px)
+  );
+  animation: orbit 2.4s linear infinite;
+}
+
+.seal {
+  display: grid;
+  width: 66px;
+  height: 66px;
+  place-items: center;
+  border: 1.5px solid #d3c84a;
+  border-radius: 50%;
+}
+
+.logo {
+  width: 45px;
+  height: auto;
+}
+
+.copy {
+  margin-top: 17px;
+  text-align: center;
+}
+
+.wordmark,
+.loadingText {
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.wordmark {
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  white-space: nowrap;
+}
+
+.loadingText {
+  margin-top: 7px;
+  color: #0f91b2;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (min-width: 768px) {
+  .brand {
+    transform: translateY(-2vh);
+  }
+
+  .mark {
+    width: 124px;
+    height: 124px;
+  }
+
+  .orbit {
+    -webkit-mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 2.5px),
+      #000 calc(100% - 2px)
+    );
+    mask: radial-gradient(
+      farthest-side,
+      transparent calc(100% - 2.5px),
+      #000 calc(100% - 2px)
+    );
+  }
+
+  .seal {
+    width: 84px;
+    height: 84px;
+    border-width: 2px;
+  }
+
+  .logo {
+    width: 57px;
+  }
+
+  .copy {
+    margin-top: 23px;
+  }
+
+  .wordmark {
+    font-size: 26px;
+    letter-spacing: 0.46em;
+    text-indent: 0.46em;
+  }
+
+  .loadingText {
+    margin-top: 9px;
+    font-size: 18px;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbit {
+    animation-duration: 8s;
+  }
+}
