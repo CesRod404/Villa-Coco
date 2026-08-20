@@ -62,6 +62,14 @@ export interface VillaACFFields {
     precio?: number | string;
     nightly_rate?: number | string;
     price_per_night?: number | string;
+    // NOTA: ninguno de estos 3 existe todavía en el grupo ACF real de
+    // WordPress (verificado en /wp-json/wp/v2/villa) — se declaran aquí
+    // solo para que, si el equipo de contenido agrega un campo de
+    // metraje, el código de app/api/recommend/route.ts lo recoja
+    // automáticamente sin tener que tocar tipos de nuevo.
+    size_m2?: number | string;
+    area_m2?: number | string;
+    square_meters?: number | string;
 }
 
 export type Villa = WPPost<VillaACFFields>;

@@ -7,6 +7,12 @@
  * "Analyzing your preferences." Recibe la respuesta ya resuelta de
  * app/api/recommend (villa elegida por matching determinista + copy
  * generado por IA) y la renderiza siguiendo el Figma.
+ *
+ * Fila de stats corregida para seguir el Figma exactamente: metraje (m²)
+ * → recámaras → huéspedes, en ese orden. Antes mostraba huéspedes →
+ * recámaras → baños (orden distinto y sin metraje). El metraje solo se
+ * pinta si WordPress lo trae — no existe todavía como campo ACF real, así
+ * que por ahora se omite en vez de inventar un número (ver route.ts).
  */
 
 import Image from "next/image";
@@ -21,6 +27,11 @@ export interface VillaRecommendationData {
   blurb: string;
   image: { url: string; alt?: string } | null;
   stats: {
+    // Solo se puebla si WordPress tiene un campo de metraje cargado
+    // (size_m2 / area_m2 / square_meters) — no existe todavía en el ACF
+    // real, así que hoy este stat se omite en el card en vez de inventar
+    // un número, igual que con el resto de los stats.
+    areaSqm?: number;
     bedrooms?: number;
     bathrooms?: number;
     estimatedGuests?: number;
@@ -97,11 +108,11 @@ export default function VillaRecommendationResult({
       {/* Blurb */}
       <p className="text-card-body mt-3 shrink-0 text-secondary">{blurb}</p>
 
-      {/* Stats */}
+      {/* Stats — orden del Figma: metraje, recámaras, huéspedes */}
       <div className="mt-4 flex shrink-0 flex-wrap items-center gap-x-4 gap-y-1 border-b border-border pb-4 text-label uppercase text-primary">
-        {stats.estimatedGuests && <span>Up to {stats.estimatedGuests} Guests</span>}
+        {stats.areaSqm && <span>{stats.areaSqm} M²</span>}
         {stats.bedrooms && <span>{stats.bedrooms} Bedrooms</span>}
-        {stats.bathrooms && <span>{stats.bathrooms} Bathrooms</span>}
+        {stats.estimatedGuests && <span>Up to {stats.estimatedGuests} Guests</span>}
       </div>
 
       {/* Fechas disponibles */}

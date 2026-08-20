@@ -9,6 +9,19 @@ const NGROK_HEADERS = { "ngrok-skip-browser-warning": "1" };
 
 const WORDPRESS_MEDIA_PROXY_PATH = "/api/wordpress-media/";
 
+// ---------------------------------------------------------------------
+// CACHÉ — antes TODO usaba cache: "no-store", así que cada carga de
+// página repetía absolutamente todas las peticiones a WordPress desde
+// cero (villa list, cada imagen, disponibilidad...), sin importar que
+// nada hubiera cambiado. Contra un WordPress detrás de ngrok donde cada
+// petición individual mide 3-5 segundos, eso es lo que estaba causando
+// los ~60s de carga. Ahora se usa el cache de datos de Next.js con
+// revalidate: contenido que casi no cambia (villas, medios) se cachea
+// varios minutos; disponibilidad (que sí debe verse fresca) se cachea
+// solo unos segundos.
+const CONTENT_REVALIDATE_SECONDS = 120; // villas, retiros, paquetes, testimonios, FAQs
+const MEDIA_REVALIDATE_SECONDS = 300; // imágenes casi nunca cambian una vez subidas
+const AVAILABILITY_REVALIDATE_SECONDS = 20; // disponibilidad sí debe verse razonablemente fresca
 
 function normalizeUrls(obj: any): any{
     if(typeof obj === "string"){
@@ -52,42 +65,81 @@ function normalizeImageField(field: any): AcfImageField | null {
     return null;
 }
 
-async function normalizeVillaImages(
-    villa: Villa,
-    mediaRequests = new Map<number, Promise<AcfImageField | null>>()
-): Promise<Villa> {
-    const resolveImageField = async (field: unknown): Promise<AcfImageField | null> => {
+function collectRawImageIds(villa: Villa): number[] {
+    // Los campos ACF están tipados como AcfImageField | null (nunca number),
+    // pero en runtime WordPress puede devolver el ID numérico crudo cuando
+    // el Return Format de ACF es "Image ID". Se tipa el array como
+    // unknown[] para que el type predicate `field is number` sea válido —
+    // si se dejara como (AcfImageField | null | undefined)[], TypeScript
+    // rechaza el predicado porque number no es subtipo de ese union
+    // (TS2322 / TS2677, que es justo lo que rompía `npm run prod`).
+    const rawFields: unknown[] = [villa.acf?.image_1, villa.acf?.image_2, villa.acf?.image_3, villa.acf?.image_4];
+    return rawFields.filter(
+        (field): field is number => typeof field === "number" && Number.isInteger(field) && field > 0
+    );
+}
+
+// ---------------------------------------------------------------------
+// Resuelve TODOS los IDs de imagen crudos de una sola pasada, en UNA
+// sola petición a /wp/v2/media?include[]=... — antes cada villa hacía
+// hasta 4 peticiones separadas (una por image_1..image_4) vía
+// resolveMediaImage(), y con getVillas() cargando las 4 villas eso podía
+// llegar a 16 peticiones, cada una de 3-5s contra este WordPress. El
+// causante real: en ACF los campos image_1-4 están devolviendo el ID
+// numérico crudo en vez del objeto de imagen (Return Format = "Image
+// ID" en vez de "Image Array"/"Image URL") — cambiar eso en WordPress
+// eliminaría esta llamada por completo, pero mientras tanto esto la deja
+// en 1 sola petición sin importar cuántas villas/imágenes haya.
+async function resolveMediaImagesBatch(ids: number[]): Promise<Map<number, AcfImageField | null>> {
+    const resolved = new Map<number, AcfImageField | null>();
+    const uniqueIds = [...new Set(ids)];
+    if (uniqueIds.length === 0) return resolved;
+
+    try {
+        const params = uniqueIds.map((id) => `include[]=${id}`).join("&");
+        const res = await fetch(`${API_URL}/media?${params}&per_page=${uniqueIds.length}`, {
+            next: { revalidate: MEDIA_REVALIDATE_SECONDS },
+            headers: NGROK_HEADERS,
+        });
+        if (!res.ok) return resolved;
+
+        const items = await res.json();
+        for (const item of Array.isArray(items) ? items : []) {
+            const url = normalizeUrls(item?.source_url ?? null);
+            if (!url) continue;
+            resolved.set(item.id, {
+                url,
+                alt: item?.alt_text || "",
+                width: Number(item?.media_details?.width) || undefined,
+                height: Number(item?.media_details?.height) || undefined,
+            });
+        }
+    } catch (error) {
+        unstable_rethrow(error);
+        console.error("No se pudo resolver el batch de imágenes de WordPress:", error);
+    }
+
+    return resolved;
+}
+
+function applyResolvedImages(villa: Villa, resolved: Map<number, AcfImageField | null>): Villa {
+    const resolveField = (field: unknown): AcfImageField | null => {
         const normalized = normalizeImageField(field);
         if (normalized) return normalized;
-
-        if (typeof field !== "number" || !Number.isInteger(field) || field <= 0) {
-            return null;
+        if (typeof field === "number" && Number.isInteger(field) && field > 0) {
+            return resolved.get(field) ?? null;
         }
-
-        let request = mediaRequests.get(field);
-        if (!request) {
-            request = resolveMediaImage(field);
-            mediaRequests.set(field, request);
-        }
-
-        return request;
+        return null;
     };
-
-    const [image_1, image_2, image_3, image_4] = await Promise.all([
-        resolveImageField(villa.acf?.image_1),
-        resolveImageField(villa.acf?.image_2),
-        resolveImageField(villa.acf?.image_3),
-        resolveImageField(villa.acf?.image_4),
-    ]);
 
     return {
         ...villa,
         acf: {
             ...villa.acf,
-            image_1,
-            image_2,
-            image_3,
-            image_4,
+            image_1: resolveField(villa.acf?.image_1),
+            image_2: resolveField(villa.acf?.image_2),
+            image_3: resolveField(villa.acf?.image_3),
+            image_4: resolveField(villa.acf?.image_4),
         },
     };
 }
@@ -97,7 +149,7 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
     const url = `${API_URL}${endpoint}`;
     try {
         const res = await fetch(url, {
-            cache: "no-store",
+            next: { revalidate: CONTENT_REVALIDATE_SECONDS },
             headers: NGROK_HEADERS,
         });
 
@@ -123,7 +175,7 @@ async function fetchWP<T>(endpoint: string): Promise<T[]> {
 async function resolveMediaUrl(mediaId: number): Promise<string | null> {
     try {
         const res = await fetch(`${API_URL}/media/${mediaId}`, {
-            cache: "no-store",
+            next: { revalidate: MEDIA_REVALIDATE_SECONDS },
             headers: NGROK_HEADERS,
         });
         if (!res.ok) return null;
@@ -135,41 +187,19 @@ async function resolveMediaUrl(mediaId: number): Promise<string | null> {
     }
 }
 
-async function resolveMediaImage(mediaId: number): Promise<AcfImageField | null> {
-    try {
-        const res = await fetch(`${API_URL}/media/${mediaId}`, {
-            cache: "no-store",
-            headers: NGROK_HEADERS,
-        });
-        if (!res.ok) return null;
-
-        const data = await res.json();
-        const url = normalizeUrls(data?.source_url ?? null);
-        if (!url) return null;
-
-        return {
-            url,
-            alt: data?.alt_text || "",
-            width: Number(data?.media_details?.width) || undefined,
-            height: Number(data?.media_details?.height) || undefined,
-        };
-    } catch (error) {
-        unstable_rethrow(error);
-        return null;
-    }
-}
-
 // 1. Villas (villa)
 export async function getVillas(): Promise<Villa[]> {
     const villas = await fetchWP<Villa>("/villa?_embed");
-    const mediaRequests = new Map<number, Promise<AcfImageField | null>>();
-    return Promise.all(villas.map((villa) => normalizeVillaImages(villa, mediaRequests)));
+    const resolved = await resolveMediaImagesBatch(villas.flatMap(collectRawImageIds));
+    return villas.map((villa) => applyResolvedImages(villa, resolved));
 }
 
 export async function getVillaBySlug(slug: string): Promise<Villa | null> {
     const villas = await fetchWP<Villa>(`/villa?slug=${encodeURIComponent(slug)}&_embed`);
     const villa = villas[0];
-    return villa ? await normalizeVillaImages(villa) : null;
+    if (!villa) return null;
+    const resolved = await resolveMediaImagesBatch(collectRawImageIds(villa));
+    return applyResolvedImages(villa, resolved);
 }
 
 export async function getVillaReservations(villaId: number): Promise<ReservationPeriod[]> {
@@ -179,7 +209,7 @@ export async function getVillaReservations(villaId: number): Promise<Reservation
 export async function getVillaAvailability(villaId: number): Promise<VillaAvailability> {
     try {
         const response = await fetch(`${RESERVATIONS_API_URL}/villas/${villaId}/reservations`, {
-            cache: "no-store",
+            next: { revalidate: AVAILABILITY_REVALIDATE_SECONDS },
             headers: NGROK_HEADERS,
         });
         if (!response.ok) return { reservations: [], isAvailable: false };
