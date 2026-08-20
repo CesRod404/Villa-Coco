@@ -1,0 +1,222 @@
+.page {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  isolation: isolate;
+  width: 100%;
+  min-height: 700px;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  background: #1a2e4a;
+  color: #ffffff;
+  font-family: var(--font-raleway), "Avenir Next", "Segoe UI", sans-serif;
+}
+
+.background {
+  position: absolute;
+  z-index: -3;
+  inset: 0;
+  background: #1a2e4a;
+}
+
+.background::before {
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/home/villas-hero.png");
+  background-position: 62% center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  content: "";
+  opacity: 0.6;
+}
+
+.background::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 46, 74, 0.5);
+  content: "";
+}
+
+.logo {
+  position: absolute;
+  z-index: 2;
+  top: 13.04%;
+  left: 50%;
+  width: 133px;
+  height: 112px;
+  object-fit: contain;
+  transform: translateX(-50%);
+}
+
+.message {
+  position: absolute;
+  z-index: 1;
+  top: 29.98%;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: 42.45%;
+  min-height: 325px;
+  flex-direction: column;
+  align-items: center;
+  padding: 45px 24px 24px;
+  background: rgba(26, 46, 74, 0.2);
+  text-align: center;
+}
+
+.title {
+  display: flex;
+  margin: 0;
+  flex-direction: column;
+  color: #1a2e4a;
+  font-size: clamp(40px, 11.94vw, 48px);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.04;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px #0f91b2;
+  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.lead {
+  margin: 36px 0 0;
+  font-size: clamp(20px, 5.97vw, 24px);
+  font-weight: 700;
+  line-height: 1.28;
+}
+
+.description {
+  margin: 29px 0 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: clamp(14px, 3.98vw, 16px);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.homeLink {
+  position: absolute;
+  z-index: 3;
+  top: 76.54%;
+  left: 50%;
+  display: inline-flex;
+  width: 252px;
+  height: 59px;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  border: 2px solid #55cfe7;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #01708c 0%, #03a069 100%);
+  box-shadow:
+    0 7px 11px -7px rgba(0, 0, 0, 0.1),
+    0 18px 27px -5px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.homeLink:hover {
+  border-color: #b9f4ff;
+  box-shadow:
+    0 12px 18px -10px rgba(0, 0, 0, 0.22),
+    0 24px 34px -8px rgba(0, 0, 0, 0.24);
+  transform: translateX(-50%) translateY(-3px);
+}
+
+.homeLink:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 5px;
+}
+
+.arrow {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+}
+
+.wave {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 13.16%;
+  min-height: 92px;
+  fill: rgba(15, 145, 178, 0.2);
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .background::before {
+    background-position: center;
+  }
+
+  .logo {
+    top: 9%;
+    width: clamp(150px, 11.5vw, 190px);
+    height: auto;
+  }
+
+  .message {
+    top: 27%;
+    height: 44%;
+    min-height: 360px;
+    padding-top: clamp(42px, 5vh, 64px);
+  }
+
+  .title {
+    font-size: clamp(52px, 4.45vw, 72px);
+    line-height: 1.02;
+  }
+
+  .lead {
+    margin-top: clamp(28px, 3.5vh, 42px);
+    font-size: clamp(23px, 1.8vw, 30px);
+  }
+
+  .description {
+    margin-top: clamp(22px, 2.8vh, 34px);
+    font-size: clamp(16px, 1.1vw, 18px);
+  }
+
+  .homeLink {
+    top: 77%;
+    width: 280px;
+    height: 64px;
+    font-size: 17px;
+  }
+
+  .wave {
+    height: 15%;
+  }
+}
+
+@media (max-height: 760px) {
+  .page {
+    height: 760px;
+  }
+
+  .logo {
+    top: 8%;
+    width: 110px;
+    height: auto;
+  }
+
+  .message {
+    top: 25%;
+  }
+
+  .homeLink {
+    top: 78%;
+  }
+}

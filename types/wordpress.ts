@@ -95,6 +95,8 @@ export type Package = WPPost<PackageACFFields>;
 // 4. Testimonio (testimonial)
 export interface TestimonialACFFields {
     quote: string;
+    lugar?: string;
+    fecha?: string;
     author_name: string;
     author_context?: string;
     author_photo?: string | number | { url?: string; alt?: string };
