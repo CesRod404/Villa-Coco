@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReservationPlanner from "@/components/reservation/ReservationPlanner";
-import { getVillaAvailability, getVillaBySlug } from "@/lib/wp";
+import DataFallbackNotice from "@/components/common/DataFallbackNotice";
+import { getVillaAvailability, getVillaBySlugWithSource } from "@/lib/wp";
 import type { Villa } from "@/types/wordpress";
 
 function plainText(value?: string) {
@@ -63,10 +64,16 @@ export default async function VillaDetailPage({
   const [{ slug }, query] = await Promise.all([params, searchParams]);
   const companionSlug = Array.isArray(query.with) ? query.with[0] : query.with;
 
-  const [primaryVilla, companionVilla] = await Promise.all([
-    getVillaBySlug(slug),
-    companionSlug && companionSlug !== slug ? getVillaBySlug(companionSlug) : Promise.resolve(null),
+  const [primaryResult, companionResult] = await Promise.all([
+    getVillaBySlugWithSource(slug),
+    companionSlug && companionSlug !== slug
+      ? getVillaBySlugWithSource(companionSlug)
+      : Promise.resolve(null),
   ]);
+  const primaryVilla = primaryResult.data;
+  const companionVilla = companionResult?.data ?? null;
+  const isUsingFallback =
+    primaryResult.source === "fallback" || companionResult?.source === "fallback";
 
   if (!primaryVilla) notFound();
 
@@ -93,6 +100,7 @@ export default async function VillaDetailPage({
   return (
     <main className="min-h-screen bg-[#edf5f5] text-[#17304f]">
       <section className="mx-auto max-w-[1440px] px-4 py-6 sm:px-7 sm:py-10 lg:px-12 lg:py-14">
+        <DataFallbackNotice visible={isUsingFallback} />
         <Link href={combined ? "/#mix-match" : "/#villas"} className="text-sm font-semibold tracking-wide text-[#4d806f] hover:underline">
           ← {combined ? "Volver a Mix & Match" : "Volver a las villas"}
         </Link>

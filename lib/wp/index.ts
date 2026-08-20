@@ -1,7 +1,8 @@
 import { Villa, Retreat, Package, Testimonial, FAQ, ReservationPeriod, VillaAvailability, AcfImageField } from "../../types/wordpress";
 import { unstable_rethrow } from "next/navigation";
+import { getWordpressFallback } from "./fallback";
 
-export const WORDPRESS_BASE_URL = process.env.WORDPRESS_API_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
+export const WORDPRESS_BASE_URL = process.env.WORDPRESS_API_URL || process.env.WORDPRESS_PUBLIC_URL || process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:8881";
 const BASE_URL = WORDPRESS_BASE_URL;
 const API_URL = `${BASE_URL}/wp-json/wp/v2`;
 const RESERVATIONS_API_URL = `${BASE_URL}/wp-json/villa-coco/v1`;
@@ -22,6 +23,14 @@ const WORDPRESS_MEDIA_PROXY_PATH = "/api/wordpress-media/";
 const CONTENT_REVALIDATE_SECONDS = 120; // villas, retiros, paquetes, testimonios, FAQs
 const MEDIA_REVALIDATE_SECONDS = 300; // imágenes casi nunca cambian una vez subidas
 const AVAILABILITY_REVALIDATE_SECONDS = 20; // disponibilidad sí debe verse razonablemente fresca
+const WORDPRESS_REQUEST_TIMEOUT_MS = 12_000;
+
+export type WordpressDataSource = "wordpress" | "fallback";
+
+export type WordpressDataResult<T> = {
+    data: T;
+    source: WordpressDataSource;
+};
 
 function normalizeUrls(obj: any): any{
     if(typeof obj === "string"){
@@ -145,28 +154,43 @@ function applyResolvedImages(villa: Villa, resolved: Map<number, AcfImageField |
 }
 
 // Helper genérico para peticiones a la API REST de WordPress
-async function fetchWP<T>(endpoint: string): Promise<T[]> {
+async function fetchWPWithSource<T>(endpoint: string): Promise<WordpressDataResult<T[]>> {
     const url = `${API_URL}${endpoint}`;
+    const fallback = getWordpressFallback<T>(endpoint);
     try {
         const res = await fetch(url, {
             next: { revalidate: CONTENT_REVALIDATE_SECONDS },
             headers: NGROK_HEADERS,
+            signal: AbortSignal.timeout(WORDPRESS_REQUEST_TIMEOUT_MS),
         });
 
         if (!res.ok) {
             console.error(`Error en API WordPress (${url}): ${res.status} ${res.statusText}`);
-            return [];
+            return {
+                data: fallback ?? [],
+                source: fallback ? "fallback" : "wordpress",
+            };
         }
 
         const data = await res.json();
 
         const normalized = normalizeUrls(data);
-        return Array.isArray(normalized) ? normalized : [normalized];
+        return {
+            data: Array.isArray(normalized) ? normalized : [normalized],
+            source: "wordpress",
+        };
     } catch (error) {
         unstable_rethrow(error);
         console.error(`No se pudo conectar a WordPress en ${url}:`, error);
-        return [];
+        return {
+            data: fallback ?? [],
+            source: fallback ? "fallback" : "wordpress",
+        };
     }
+}
+
+async function fetchWP<T>(endpoint: string): Promise<T[]> {
+    return (await fetchWPWithSource<T>(endpoint)).data;
 }
 
 // Resuelve un ID de media de WordPress a su URL pública. Se usa cuando un
@@ -188,18 +212,29 @@ async function resolveMediaUrl(mediaId: number): Promise<string | null> {
 }
 
 // 1. Villas (villa)
+export async function getVillasWithSource(): Promise<WordpressDataResult<Villa[]>> {
+    const result = await fetchWPWithSource<Villa>("/villa?_embed");
+    const resolved = await resolveMediaImagesBatch(result.data.flatMap(collectRawImageIds));
+    return {
+        data: result.data.map((villa) => applyResolvedImages(villa, resolved)),
+        source: result.source,
+    };
+}
+
 export async function getVillas(): Promise<Villa[]> {
-    const villas = await fetchWP<Villa>("/villa?_embed");
-    const resolved = await resolveMediaImagesBatch(villas.flatMap(collectRawImageIds));
-    return villas.map((villa) => applyResolvedImages(villa, resolved));
+    return (await getVillasWithSource()).data;
+}
+
+export async function getVillaBySlugWithSource(slug: string): Promise<WordpressDataResult<Villa | null>> {
+    const result = await fetchWPWithSource<Villa>(`/villa?slug=${encodeURIComponent(slug)}&_embed`);
+    const villa = result.data[0];
+    if (!villa) return { data: null, source: result.source };
+    const resolved = await resolveMediaImagesBatch(collectRawImageIds(villa));
+    return { data: applyResolvedImages(villa, resolved), source: result.source };
 }
 
 export async function getVillaBySlug(slug: string): Promise<Villa | null> {
-    const villas = await fetchWP<Villa>(`/villa?slug=${encodeURIComponent(slug)}&_embed`);
-    const villa = villas[0];
-    if (!villa) return null;
-    const resolved = await resolveMediaImagesBatch(collectRawImageIds(villa));
-    return applyResolvedImages(villa, resolved);
+    return (await getVillaBySlugWithSource(slug)).data;
 }
 
 export async function getVillaReservations(villaId: number): Promise<ReservationPeriod[]> {
@@ -237,13 +272,13 @@ export async function getPackages(): Promise<Package[]> {
 }
 
 // 4. Testimonios (testimonio) — slug real en WordPress: "testimonio"
-export async function getTestimonials(): Promise<Testimonial[]> {
-    const testimonials = await fetchWP<Testimonial>("/testimonio?_embed");
+export async function getTestimonialsWithSource(): Promise<WordpressDataResult<Testimonial[]>> {
+    const result = await fetchWPWithSource<Testimonial>("/testimonio?_embed");
 
     // Resuelve author_photo cuando llega como número (ID de attachment),
     // en paralelo para no encadenar los fetches uno por uno.
-    return Promise.all(
-        testimonials.map(async (t) => {
+    const data = await Promise.all(
+        result.data.map(async (t) => {
             const photo = t.acf?.author_photo;
             if (typeof photo === "number") {
                 const url = await resolveMediaUrl(photo);
@@ -252,6 +287,12 @@ export async function getTestimonials(): Promise<Testimonial[]> {
             return t;
         })
     );
+
+    return { data, source: result.source };
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+    return (await getTestimonialsWithSource()).data;
 }
 
 // 5. Preguntas Frecuentes (faq)

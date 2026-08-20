@@ -9,7 +9,8 @@
  * así que por ahora todo el carrusel usa un solo fondo (--surface).
  */
 
-import { getVillas, getTestimonials } from "@/lib/wp";
+import DataFallbackNotice from "@/components/common/DataFallbackNotice";
+import { getVillasWithSource, getTestimonialsWithSource } from "@/lib/wp";
 import TestimonialCard from "@/components/testimonials/TestimonialCard";
 
 function firstRelatedVillaId(value?: number | number[]) {
@@ -17,11 +18,19 @@ function firstRelatedVillaId(value?: number | number[]) {
 }
 
 export default async function TestimonialsPage() {
-  const [testimonials, villas] = await Promise.all([getTestimonials(), getVillas()]);
+  const [testimonialResult, villaResult] = await Promise.all([
+    getTestimonialsWithSource(),
+    getVillasWithSource(),
+  ]);
+  const testimonials = testimonialResult.data;
+  const villas = villaResult.data;
+  const isUsingFallback =
+    testimonialResult.source === "fallback" || villaResult.source === "fallback";
   const villaNameById = new Map(villas.map((v) => [v.id, v.title.rendered]));
 
   return (
     <main className="space-y-8 bg-surface py-12">
+      <DataFallbackNotice visible={isUsingFallback} />
       <header className="space-y-2 px-6 text-center">
         <p className="text-eyebrow uppercase text-primary">What People Say About</p>
         <h1 className="text-section uppercase text-secondary">Coco B</h1>

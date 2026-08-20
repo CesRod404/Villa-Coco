@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "prod": "next build && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fallback:update": "node scripts/update-wordpress-fallback.mjs",
+    "fallback:test": "node scripts/test-wordpress-fallback.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",

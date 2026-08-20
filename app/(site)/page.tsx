@@ -10,7 +10,8 @@ import TestimonialCarousel, {
   type TestimonialCardData,
 } from "@/components/home/TestimonialCarousel";
 import VillaCard from "@/components/villa/VillaCard";
-import { getTestimonials, getVillas } from "@/lib/wp";
+import DataFallbackNotice from "@/components/common/DataFallbackNotice";
+import { getTestimonialsWithSource, getVillasWithSource } from "@/lib/wp";
 import type { Villa } from "@/types/wordpress";
 import styles from "./home.module.css";
 
@@ -116,10 +117,14 @@ const services = [
 ];
 
 export default async function HomePage() {
-  const [villas, testimonials] = await Promise.all([
-    getVillas(),
-    getTestimonials(),
+  const [villaResult, testimonialResult] = await Promise.all([
+    getVillasWithSource(),
+    getTestimonialsWithSource(),
   ]);
+  const villas = villaResult.data;
+  const testimonials = testimonialResult.data;
+  const isUsingFallback =
+    villaResult.source === "fallback" || testimonialResult.source === "fallback";
 
   const mixMatchVillas: MixMatchVilla[] = villas.map((villa) => ({
     id: villa.id,
@@ -170,6 +175,7 @@ export default async function HomePage() {
       </header>
 
       <section id="home" className={styles.hero} aria-labelledby="villas-hero-title">
+        <DataFallbackNotice visible={isUsingFallback} overlay />
         <div className={styles.atmosphere} aria-hidden="true" />
 
         <div className={styles.heroContent}>

@@ -1,0 +1,1427 @@
+{
+  "generatedAt": "2026-08-20T16:29:14.749Z",
+  "villas": [
+    {
+      "id": 129,
+      "date": "2026-08-15T17:35:31",
+      "date_gmt": "2026-08-15T17:35:31",
+      "guid": {
+        "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=129"
+      },
+      "modified": "2026-08-15T17:45:38",
+      "modified_gmt": "2026-08-15T17:45:38",
+      "slug": "casa-cielo",
+      "status": "publish",
+      "type": "villa",
+      "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-cielo/",
+      "title": {
+        "rendered": "Casa Cielo"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 127,
+      "template": "",
+      "class_list": [
+        "post-129",
+        "villa",
+        "type-villa",
+        "status-publish",
+        "has-post-thumbnail",
+        "hentry"
+      ],
+      "acf": {
+        "title": "Casa Cielo",
+        "description_short": "This intimate and newly renovated four-bedroom bungalow boasts a private oceanfront saltwater infinity pool and the best sunset vistas of the island. Cielo blends indoor and outdoor living wonderfully with a light-filled great room living area and poolside... ",
+        "description_long": "This intimate and newly renovated four-bedroom bungalow boasts a private oceanfront saltwater infinity pool and the best sunset vistas of the island. Cielo blends indoor and outdoor living wonderfully with a light-filled great room living area and poolside dining. Each room in Cielo is a testament to luxury and comfort, featuring custom tiles, doors, and furniture. The property's unique design and attention to detail make it a perfect retreat for those seeking tranquility and beauty. Guests can relax on the private deck, enjoy the stunning ocean views, soak in the serene atmosphere of their private sandy area, and take advantage of concierge services that ensure a truly exclusive experience.",
+        "image_1": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_1.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "image_2": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_2.png",
+          "alt": "",
+          "width": 80,
+          "height": 62
+        },
+        "image_3": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_3.png",
+          "alt": "",
+          "width": 1500,
+          "height": 1125
+        },
+        "image_4": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_4.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "suites_count": 8,
+        "bedrooms": 3,
+        "bathrooms": 3,
+        "use_cases": [
+          "infinity pool,",
+          "sunset views,",
+          "beach access,",
+          "private deck,",
+          "concierge service,"
+        ],
+        "price": 1500
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/129",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+          }
+        ],
+        "wp:featuredmedia": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=129"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "wp:featuredmedia": [
+          {
+            "id": 127,
+            "date": "2026-08-15T17:21:50",
+            "slug": "casa-lola-81-1",
+            "type": "attachment",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-lola/casa-lola-81-1/",
+            "title": {
+              "rendered": "Casa Lola 81 1"
+            },
+            "author": 1,
+            "featured_media": 0,
+            "acf": [],
+            "caption": {
+              "rendered": ""
+            },
+            "alt_text": "",
+            "media_type": "image",
+            "mime_type": "image/png",
+            "media_details": {
+              "width": 594,
+              "height": 395,
+              "file": "2026/08/Casa-Lola-81-1.png",
+              "filesize": 496792,
+              "sizes": {
+                "medium": {
+                  "file": "Casa-Lola-81-1-300x199.png",
+                  "width": 300,
+                  "height": 199,
+                  "filesize": 122855,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-300x199.png"
+                },
+                "thumbnail": {
+                  "file": "Casa-Lola-81-1-150x150.png",
+                  "width": 150,
+                  "height": 150,
+                  "filesize": 50152,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-150x150.png"
+                },
+                "full": {
+                  "file": "Casa-Lola-81-1.png",
+                  "width": 594,
+                  "height": 395,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1.png"
+                }
+              },
+              "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "",
+                "orientation": "0",
+                "keywords": [],
+                "alt": ""
+              }
+            },
+            "source_url": "/images/fallback/wordpress/casa-cielo/featured.png",
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/attachment"
+                }
+              ],
+              "author": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/users/1"
+                }
+              ],
+              "replies": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/comments?post=127"
+                }
+              ],
+              "wp:attached-to": [
+                {
+                  "embeddable": true,
+                  "post_type": "villa",
+                  "id": 126,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 128,
+      "date": "2026-08-15T17:30:50",
+      "date_gmt": "2026-08-15T17:30:50",
+      "guid": {
+        "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=128"
+      },
+      "modified": "2026-08-15T17:49:02",
+      "modified_gmt": "2026-08-15T17:49:02",
+      "slug": "casa-encantada",
+      "status": "publish",
+      "type": "villa",
+      "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-encantada/",
+      "title": {
+        "rendered": "Casa Encantada"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 127,
+      "template": "",
+      "class_list": [
+        "post-128",
+        "villa",
+        "type-villa",
+        "status-publish",
+        "has-post-thumbnail",
+        "hentry"
+      ],
+      "acf": {
+        "title": "Casa Encantada",
+        "description_short": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless...",
+        "description_long": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless indoor-outdoor living, curated  spaces, and unobstructed Caribbean horizons—the embodiment of luxury  without compromise.",
+        "image_1": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_1.webp",
+          "alt": "",
+          "width": 2500,
+          "height": 1406
+        },
+        "image_2": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_2.png",
+          "alt": "",
+          "width": 80,
+          "height": 62
+        },
+        "image_3": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_3.png",
+          "alt": "",
+          "width": 80,
+          "height": 62
+        },
+        "image_4": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_4.png",
+          "alt": "",
+          "width": 1500,
+          "height": 1125
+        },
+        "suites_count": 12,
+        "bedrooms": 6,
+        "bathrooms": 7,
+        "use_cases": [
+          "infinity pool,",
+          "beach access,",
+          "parking lot,",
+          "gourmet kitchen,",
+          "chef upon request"
+        ],
+        "price": 2600
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/128",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+          }
+        ],
+        "wp:featuredmedia": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=128"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "wp:featuredmedia": [
+          {
+            "id": 127,
+            "date": "2026-08-15T17:21:50",
+            "slug": "casa-lola-81-1",
+            "type": "attachment",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-lola/casa-lola-81-1/",
+            "title": {
+              "rendered": "Casa Lola 81 1"
+            },
+            "author": 1,
+            "featured_media": 0,
+            "acf": [],
+            "caption": {
+              "rendered": ""
+            },
+            "alt_text": "",
+            "media_type": "image",
+            "mime_type": "image/png",
+            "media_details": {
+              "width": 594,
+              "height": 395,
+              "file": "2026/08/Casa-Lola-81-1.png",
+              "filesize": 496792,
+              "sizes": {
+                "medium": {
+                  "file": "Casa-Lola-81-1-300x199.png",
+                  "width": 300,
+                  "height": 199,
+                  "filesize": 122855,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-300x199.png"
+                },
+                "thumbnail": {
+                  "file": "Casa-Lola-81-1-150x150.png",
+                  "width": 150,
+                  "height": 150,
+                  "filesize": 50152,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-150x150.png"
+                },
+                "full": {
+                  "file": "Casa-Lola-81-1.png",
+                  "width": 594,
+                  "height": 395,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1.png"
+                }
+              },
+              "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "",
+                "orientation": "0",
+                "keywords": [],
+                "alt": ""
+              }
+            },
+            "source_url": "/images/fallback/wordpress/casa-encantada/featured.png",
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/attachment"
+                }
+              ],
+              "author": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/users/1"
+                }
+              ],
+              "replies": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/comments?post=127"
+                }
+              ],
+              "wp:attached-to": [
+                {
+                  "embeddable": true,
+                  "post_type": "villa",
+                  "id": 126,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 126,
+      "date": "2026-08-15T17:26:09",
+      "date_gmt": "2026-08-15T17:26:09",
+      "guid": {
+        "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=126"
+      },
+      "modified": "2026-08-18T02:42:41",
+      "modified_gmt": "2026-08-18T02:42:41",
+      "slug": "casa-lola",
+      "status": "publish",
+      "type": "villa",
+      "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-lola/",
+      "title": {
+        "rendered": "Casa Lola"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 127,
+      "template": "",
+      "class_list": [
+        "post-126",
+        "villa",
+        "type-villa",
+        "status-publish",
+        "has-post-thumbnail",
+        "hentry"
+      ],
+      "acf": {
+        "title": "Casa Lola",
+        "description_short": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
+        "description_long": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
+        "image_1": {
+          "url": "/images/fallback/wordpress/casa-lola/image_1.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "image_2": {
+          "url": "/images/fallback/wordpress/casa-lola/image_2.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "image_3": {
+          "url": "/images/fallback/wordpress/casa-lola/image_3.png",
+          "alt": "",
+          "width": 80,
+          "height": 62
+        },
+        "image_4": {
+          "url": "/images/fallback/wordpress/casa-lola/image_4.png",
+          "alt": "",
+          "width": 1500,
+          "height": 1125
+        },
+        "suites_count": 12,
+        "bedrooms": 5,
+        "bathrooms": 7,
+        "use_cases": [
+          "12 guests,",
+          "private pool,",
+          "parking lot,",
+          "gourmet kitchen,",
+          "chef upon request"
+        ],
+        "price": 3200
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+          }
+        ],
+        "wp:featuredmedia": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=126"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "wp:featuredmedia": [
+          {
+            "id": 127,
+            "date": "2026-08-15T17:21:50",
+            "slug": "casa-lola-81-1",
+            "type": "attachment",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-lola/casa-lola-81-1/",
+            "title": {
+              "rendered": "Casa Lola 81 1"
+            },
+            "author": 1,
+            "featured_media": 0,
+            "acf": [],
+            "caption": {
+              "rendered": ""
+            },
+            "alt_text": "",
+            "media_type": "image",
+            "mime_type": "image/png",
+            "media_details": {
+              "width": 594,
+              "height": 395,
+              "file": "2026/08/Casa-Lola-81-1.png",
+              "filesize": 496792,
+              "sizes": {
+                "medium": {
+                  "file": "Casa-Lola-81-1-300x199.png",
+                  "width": 300,
+                  "height": 199,
+                  "filesize": 122855,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-300x199.png"
+                },
+                "thumbnail": {
+                  "file": "Casa-Lola-81-1-150x150.png",
+                  "width": 150,
+                  "height": 150,
+                  "filesize": 50152,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1-150x150.png"
+                },
+                "full": {
+                  "file": "Casa-Lola-81-1.png",
+                  "width": 594,
+                  "height": 395,
+                  "mime_type": "image/png",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Casa-Lola-81-1.png"
+                }
+              },
+              "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "",
+                "orientation": "0",
+                "keywords": [],
+                "alt": ""
+              }
+            },
+            "source_url": "/images/fallback/wordpress/casa-lola/featured.png",
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/attachment"
+                }
+              ],
+              "author": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/users/1"
+                }
+              ],
+              "replies": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/comments?post=127"
+                }
+              ],
+              "wp:attached-to": [
+                {
+                  "embeddable": true,
+                  "post_type": "villa",
+                  "id": 126,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 55,
+      "date": "2026-07-31T19:17:25",
+      "date_gmt": "2026-07-31T19:17:25",
+      "guid": {
+        "rendered": "http://localhost:8881/?post_type=villa&#038;p=55"
+      },
+      "modified": "2026-08-15T17:46:58",
+      "modified_gmt": "2026-08-15T17:46:58",
+      "slug": "casa-coco",
+      "status": "publish",
+      "type": "villa",
+      "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-coco/",
+      "title": {
+        "rendered": "Casa Coco"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 56,
+      "template": "",
+      "class_list": [
+        "post-55",
+        "villa",
+        "type-villa",
+        "status-publish",
+        "has-post-thumbnail",
+        "hentry"
+      ],
+      "acf": {
+        "title": "Casa Coco",
+        "description_short": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that ...",
+        "description_long": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that reflect the vibrant culture of the island and region.  Casa Coco is ideal for extended family gatherings, group vacations, weddings, retreats, and corporate events, accommodating up to 100 guests when paired with its sister property, Cielo. The Coco experience includes exceptional in-villa concierge services and curated experiences, ensuring that every need is met with the highest level of care. Guests can enjoy a variety of ocean views from the private infinity pool, rooftop shalas, hanging chair gardens, over-ocean terrace, ocean pier, and secluded beach access.",
+        "image_1": {
+          "url": "/images/fallback/wordpress/casa-coco/image_1.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "image_2": {
+          "url": "/images/fallback/wordpress/casa-coco/image_2.png",
+          "alt": "",
+          "width": 80,
+          "height": 61
+        },
+        "image_3": {
+          "url": "/images/fallback/wordpress/casa-coco/image_3.png",
+          "alt": "",
+          "width": 1500,
+          "height": 1125
+        },
+        "image_4": {
+          "url": "/images/fallback/wordpress/casa-coco/image_4.png",
+          "alt": "",
+          "width": 80,
+          "height": 62
+        },
+        "suites_count": 12,
+        "bedrooms": 10,
+        "bathrooms": 11,
+        "use_cases": [
+          "12 guests,",
+          "private pool,",
+          "parking lot,",
+          "chef upon request,",
+          "chef upon request"
+        ],
+        "price": 4200
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/55",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+          }
+        ],
+        "wp:featuredmedia": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/56"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=55"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "wp:featuredmedia": [
+          {
+            "id": 56,
+            "date": "2026-07-31T19:11:13",
+            "slug": "iamgen-ejemplo",
+            "type": "attachment",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-coco/iamgen-ejemplo/",
+            "title": {
+              "rendered": "iamgen ejemplo"
+            },
+            "author": 1,
+            "featured_media": 0,
+            "acf": [],
+            "caption": {
+              "rendered": ""
+            },
+            "alt_text": "",
+            "media_type": "image",
+            "mime_type": "image/webp",
+            "media_details": {
+              "width": 2500,
+              "height": 1406,
+              "file": "2026/07/iamgen-ejemplo.webp",
+              "filesize": 516736,
+              "sizes": {
+                "medium": {
+                  "file": "iamgen-ejemplo-300x169.webp",
+                  "width": 300,
+                  "height": 169,
+                  "filesize": 19982,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-300x169.webp"
+                },
+                "large": {
+                  "file": "iamgen-ejemplo-1024x576.webp",
+                  "width": 1024,
+                  "height": 576,
+                  "filesize": 152692,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-1024x576.webp"
+                },
+                "thumbnail": {
+                  "file": "iamgen-ejemplo-150x150.webp",
+                  "width": 150,
+                  "height": 150,
+                  "filesize": 9664,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-150x150.webp"
+                },
+                "medium_large": {
+                  "file": "iamgen-ejemplo-768x432.webp",
+                  "width": 768,
+                  "height": 432,
+                  "filesize": 96782,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-768x432.webp"
+                },
+                "1536x1536": {
+                  "file": "iamgen-ejemplo-1536x864.webp",
+                  "width": 1536,
+                  "height": 864,
+                  "filesize": 262750,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-1536x864.webp"
+                },
+                "2048x2048": {
+                  "file": "iamgen-ejemplo-2048x1152.webp",
+                  "width": 2048,
+                  "height": 1152,
+                  "filesize": 376932,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo-2048x1152.webp"
+                },
+                "full": {
+                  "file": "iamgen-ejemplo.webp",
+                  "width": 2500,
+                  "height": 1406,
+                  "mime_type": "image/webp",
+                  "source_url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/iamgen-ejemplo.webp"
+                }
+              },
+              "image_meta": {
+                "aperture": "0",
+                "credit": "",
+                "camera": "",
+                "caption": "",
+                "created_timestamp": "0",
+                "copyright": "",
+                "focal_length": "0",
+                "iso": "0",
+                "shutter_speed": "0",
+                "title": "",
+                "orientation": "0",
+                "keywords": [],
+                "alt": ""
+              }
+            },
+            "source_url": "/images/fallback/wordpress/casa-coco/featured.webp",
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/56",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/attachment"
+                }
+              ],
+              "author": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/users/1"
+                }
+              ],
+              "replies": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/comments?post=56"
+                }
+              ],
+              "wp:attached-to": [
+                {
+                  "embeddable": true,
+                  "post_type": "villa",
+                  "id": 55,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/55"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 135,
+      "date": "2026-08-18T18:48:43",
+      "date_gmt": "2026-08-18T18:48:43",
+      "guid": {
+        "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=testimonio&#038;p=135"
+      },
+      "modified": "2026-08-18T18:48:47",
+      "modified_gmt": "2026-08-18T18:48:47",
+      "slug": "jacqueline-coleman",
+      "status": "publish",
+      "type": "testimonio",
+      "link": "https://xerox-life-worry.ngrok-free.dev/testimonio/jacqueline-coleman/",
+      "title": {
+        "rendered": "JACQUELINE COLEMAN"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 0,
+      "template": "",
+      "class_list": [
+        "post-135",
+        "testimonio",
+        "type-testimonio",
+        "status-publish",
+        "hentry"
+      ],
+      "acf": {
+        "quote": "Everything at Coco B is just top of the line! This is just a perfect tropical oasis for an island getaway. The staff is extremely professional and hospitable. The owners are fantastic people who have poured their heart and soul into making Coco B such a warm and welcoming place -- not to mention all of the stunning design and details. And the culinary team is absolutely phenomenal! I'll be dreaming about those meals for a while!",
+        "lugar": "",
+        "fecha": null,
+        "author_name": "JACQUELINE COLEMAN",
+        "author_photo": "/images/fallback/wordpress/testimonials/135-author.webp",
+        "related_villa_id": [
+          128
+        ],
+        "rating": 5
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio/135",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/testimonio"
+          }
+        ],
+        "acf:post": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/128"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=135"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "acf:post": [
+          {
+            "id": 128,
+            "date": "2026-08-15T17:30:50",
+            "slug": "casa-encantada",
+            "type": "villa",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-encantada/",
+            "title": {
+              "rendered": "Casa Encantada"
+            },
+            "featured_media": 127,
+            "acf": {
+              "title": "Casa Encantada",
+              "description_short": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless...",
+              "description_long": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless indoor-outdoor living, curated  spaces, and unobstructed Caribbean horizons—the embodiment of luxury  without compromise.",
+              "image_1": 56,
+              "image_2": 116,
+              "image_3": 116,
+              "image_4": 57,
+              "suites_count": 12,
+              "bedrooms": 6,
+              "bathrooms": 7,
+              "use_cases": [
+                "infinity pool,",
+                "beach access,",
+                "parking lot,",
+                "gourmet kitchen,",
+                "chef upon request"
+              ],
+              "price": 2600
+            },
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/128",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+                }
+              ],
+              "wp:featuredmedia": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127"
+                }
+              ],
+              "wp:attachment": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=128"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 133,
+      "date": "2026-08-18T18:46:40",
+      "date_gmt": "2026-08-18T18:46:40",
+      "guid": {
+        "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=testimonio&#038;p=133"
+      },
+      "modified": "2026-08-18T18:46:43",
+      "modified_gmt": "2026-08-18T18:46:43",
+      "slug": "natalie-breault",
+      "status": "publish",
+      "type": "testimonio",
+      "link": "https://xerox-life-worry.ngrok-free.dev/testimonio/natalie-breault/",
+      "title": {
+        "rendered": "NATALIE BREAULT"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 0,
+      "template": "",
+      "class_list": [
+        "post-133",
+        "testimonio",
+        "type-testimonio",
+        "status-publish",
+        "hentry"
+      ],
+      "acf": {
+        "quote": "I stayed at CocoB - Casa Coco for a yoga/wellness retreat. The experience was excellent! It was beautifully designed and plenty of room for our group to not be on top of each other. The staff was so helpful and eager to make sure we had everything that we needed & helped plan activities outside the villa for us. I stayed in a single, king room - and it was so comfortable, quiet, and relaxing. The property itself is laid out nicely with many options to sit outside/inside, cabana, lounge chair, etc. Food prep was delicious & plenty available. If you prefer more activity/action/night life, you may want a different location. This resort is more private & away from the center of town, which was good for our trip purpose. We would highly recommend Casa Coco for your trip or retreat!",
+        "lugar": "",
+        "fecha": null,
+        "author_name": "NATALIE BREAULT",
+        "author_photo": "/images/fallback/wordpress/testimonials/133-author.webp",
+        "related_villa_id": [
+          55
+        ],
+        "rating": 5
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio/133",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/testimonio"
+          }
+        ],
+        "acf:post": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/55"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=133"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "acf:post": [
+          {
+            "id": 55,
+            "date": "2026-07-31T19:17:25",
+            "slug": "casa-coco",
+            "type": "villa",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-coco/",
+            "title": {
+              "rendered": "Casa Coco"
+            },
+            "featured_media": 56,
+            "acf": {
+              "title": "Casa Coco",
+              "description_short": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that ...",
+              "description_long": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that reflect the vibrant culture of the island and region.  Casa Coco is ideal for extended family gatherings, group vacations, weddings, retreats, and corporate events, accommodating up to 100 guests when paired with its sister property, Cielo. The Coco experience includes exceptional in-villa concierge services and curated experiences, ensuring that every need is met with the highest level of care. Guests can enjoy a variety of ocean views from the private infinity pool, rooftop shalas, hanging chair gardens, over-ocean terrace, ocean pier, and secluded beach access.",
+              "image_1": 117,
+              "image_2": 118,
+              "image_3": 57,
+              "image_4": 116,
+              "suites_count": 12,
+              "bedrooms": 10,
+              "bathrooms": 11,
+              "use_cases": [
+                "12 guests,",
+                "private pool,",
+                "parking lot,",
+                "chef upon request,",
+                "chef upon request"
+              ],
+              "price": 4200
+            },
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/55",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+                }
+              ],
+              "wp:featuredmedia": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/56"
+                }
+              ],
+              "wp:attachment": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=55"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 99,
+      "date": "2026-08-04T22:20:51",
+      "date_gmt": "2026-08-04T22:20:51",
+      "guid": {
+        "rendered": "http://localhost:8881/?post_type=testimonio&#038;p=99"
+      },
+      "modified": "2026-08-18T20:27:54",
+      "modified_gmt": "2026-08-18T20:27:54",
+      "slug": "testimonio-de-prueba",
+      "status": "publish",
+      "type": "testimonio",
+      "link": "https://xerox-life-worry.ngrok-free.dev/testimonio/testimonio-de-prueba/",
+      "title": {
+        "rendered": "Testimonio de prueba"
+      },
+      "content": {
+        "rendered": "",
+        "protected": false
+      },
+      "featured_media": 0,
+      "template": "",
+      "class_list": [
+        "post-99",
+        "testimonio",
+        "type-testimonio",
+        "status-publish",
+        "hentry"
+      ],
+      "acf": {
+        "quote": "We celebrated our anniversary here and it exceeded every expectation. The team anticipated every need before we even asked. We are already planning our return.",
+        "lugar": "New York",
+        "fecha": "20250415",
+        "author_name": "James Whitfield",
+        "author_photo": "/images/fallback/wordpress/testimonials/99-author.jpg",
+        "related_villa_id": [
+          126
+        ],
+        "rating": 4
+      },
+      "_links": {
+        "self": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio/99",
+            "targetHints": {
+              "allow": [
+                "GET"
+              ]
+            }
+          }
+        ],
+        "collection": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/testimonio"
+          }
+        ],
+        "about": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/testimonio"
+          }
+        ],
+        "acf:post": [
+          {
+            "embeddable": true,
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126"
+          }
+        ],
+        "wp:attachment": [
+          {
+            "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=99"
+          }
+        ],
+        "curies": [
+          {
+            "name": "wp",
+            "href": "https://api.w.org/{rel}",
+            "templated": true
+          }
+        ]
+      },
+      "_embedded": {
+        "acf:post": [
+          {
+            "id": 126,
+            "date": "2026-08-15T17:26:09",
+            "slug": "casa-lola",
+            "type": "villa",
+            "link": "https://xerox-life-worry.ngrok-free.dev/villa/casa-lola/",
+            "title": {
+              "rendered": "Casa Lola"
+            },
+            "featured_media": 127,
+            "acf": {
+              "title": "Casa Lola",
+              "description_short": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
+              "description_long": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
+              "image_1": 117,
+              "image_2": 118,
+              "image_3": 116,
+              "image_4": 57,
+              "suites_count": 12,
+              "bedrooms": 5,
+              "bathrooms": 7,
+              "use_cases": [
+                "12 guests,",
+                "private pool,",
+                "parking lot,",
+                "gourmet kitchen,",
+                "chef upon request"
+              ],
+              "price": 3200
+            },
+            "_links": {
+              "self": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa/126",
+                  "targetHints": {
+                    "allow": [
+                      "GET"
+                    ]
+                  }
+                }
+              ],
+              "collection": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa"
+                }
+              ],
+              "about": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/types/villa"
+                }
+              ],
+              "wp:featuredmedia": [
+                {
+                  "embeddable": true,
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media/127"
+                }
+              ],
+              "wp:attachment": [
+                {
+                  "href": "https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/media?parent=126"
+                }
+              ],
+              "curies": [
+                {
+                  "name": "wp",
+                  "href": "https://api.w.org/{rel}",
+                  "templated": true
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
