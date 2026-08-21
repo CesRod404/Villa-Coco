@@ -210,7 +210,7 @@ export default function ReservationPlanner({
                 </div>
 
                 <div className="p-4 sm:p-6">
-                    <div className="grid grid-cols-7 gap-0 text-center">
+                    <div className="grid grid-cols-7 gap-px text-center">
                         {DAYS.map((day) => <span key={day} className="pb-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">{day}</span>)}
                         {days.map((date, index) => {
                             if (!date) return <span key={`blank-${index}`} />;
@@ -221,7 +221,7 @@ export default function ReservationPlanner({
                             const selectedEnd = checkOut ? iso === addDays(checkOut, -1) : false;
                             const selected = selectedStart || selectedEnd;
                             const inSelection = isBetween(iso, checkIn, checkOut ? addDays(checkOut, -1) : undefined);
-                            return <button key={iso} disabled={disabled || !availabilityOnline} onClick={() => selectDate(iso)} className={`h-11 w-full rounded-lg border-0 text-sm font-bold outline-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2c4a7c] ${booked ? "bg-[#c9a24c] text-white" : selected ? "bg-[#2c4a7c] text-white" : inSelection ? "bg-[#dce7f4] text-[#1a2e4a]" : disabled ? "cursor-not-allowed text-slate-300 line-through" : "bg-[#eaf3ec] text-[#2f6b4c] hover:bg-[#d7ebdd]"}`}>{date.getDate()}</button>;
+                            return <button key={iso} disabled={disabled || !availabilityOnline} onClick={() => selectDate(iso)} className={`h-8 w-full rounded-lg border text-sm font-bold outline-none transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2c4a7c] ${booked ? "border-[#c9a24c] bg-[#c9a24c] text-white" : selected ? "border-[#2c4a7c] bg-[#2c4a7c] text-white" : inSelection ? "border-[#dce7f4] bg-[#dce7f4] text-[#1a2e4a]" : disabled ? "cursor-not-allowed border-transparent text-slate-300 line-through" : "border-[#d5e7ec] bg-[#eaf3ec] text-[#2f6b4c] hover:bg-[#d7ebdd]"}`}>{date.getDate()}</button>;
                         })}
                     </div>
                 </div>
@@ -240,7 +240,7 @@ export default function ReservationPlanner({
     const logo = (
         <div className="flex justify-center pt-5">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/home/villas-logo.svg" alt="Coco B Isla" className="h-9 w-auto opacity-90" />
+            <img src="/images/home/villas-logo-dark.svg" alt="Coco B Isla" width={114} height={96} className="h-[96px] w-[114px] object-contain" />
         </div>
     );
 
@@ -392,6 +392,7 @@ export default function ReservationPlanner({
 
                     <form
                         noValidate
+                        suppressHydrationWarning
                         onSubmit={async (event) => {
                             event.preventDefault();
                             setTouched({ firstName: true, lastName: true, email: true, phone: true, referralSource: true, travelPlans: true });
@@ -440,7 +441,7 @@ export default function ReservationPlanner({
                                 />
                                 {touched.lastName && errors.lastName && <span className="mt-1 block text-xs font-normal normal-case text-red-600">{errors.lastName}</span>}
                             </label>
-                            <label className="text-xs font-bold uppercase tracking-[0.3px] text-[#6a7282] sm:col-span-2">
+                            <label className="text-xs font-bold uppercase tracking-[0.3px] text-[#6a7282]">
                                 Email Address
                                 <input
                                     required
@@ -457,7 +458,7 @@ export default function ReservationPlanner({
                                 />
                                 {touched.email && errors.email && <span className="mt-1 block text-xs font-normal normal-case text-red-600">{errors.email}</span>}
                             </label>
-                            <label className="text-xs font-bold uppercase tracking-[0.3px] text-[#6a7282] sm:col-span-2">
+                            <label className="text-xs font-bold uppercase tracking-[0.3px] text-[#6a7282]">
                                 Phone Number
                                 <div className={`mt-1.5 flex overflow-hidden rounded-lg border bg-white focus-within:ring-2 ${touched.phone && errors.phone ? "border-red-400 focus-within:border-red-400 focus-within:ring-red-100" : "border-[#e2e8f0] focus-within:border-[#1a2e4a] focus-within:ring-[#dce7f4]"}`}>
                                     <select name="phoneCountryCode" aria-label="Country code" value={phoneCountryCode} onChange={(event) => setPhoneCountryCode(event.target.value)} className="w-24 border-r border-[#e2e8f0] bg-[#f1f5f9] px-2 py-2.5 text-sm font-semibold text-[#1a2e4a] outline-none">

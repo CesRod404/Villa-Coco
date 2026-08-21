@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { WORDPRESS_BASE_URL } from "@/lib/wp";
 import {
   buildHubSpotVillaFields,
@@ -23,26 +23,31 @@ type ReservationRequest = {
   travelPlans?: string;
 };
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as ReservationRequest | null;
   const villaIds = body ? normalizeRequestedVillaIds(body) : [];
   if (!body || !villaIds.length || !body.checkIn || !body.checkOut || !Number.isInteger(body.guests) || !body.firstName || !body.lastName || !body.email || !body.phone || !isHubSpotReferralSource(body.referralSource) || !body.travelPlans?.trim()) {
     return NextResponse.json({ error: "Completa todos los datos de la solicitud." }, { status: 400 });
   }
 
+  // Cookie que HubSpot usa para enlazar el envío con el contacto/visitante
+  // correcto. Solo existe si el sitio cargó el script de tracking de
+  // HubSpot (ver app/layout.tsx).
+  const hutk = request.cookies.get("hubspotutk")?.value;
+
   const normalizedBody = { ...body, villaId: villaIds[0], villaIds };
   try {
     const response = await fetch(`${WORDPRESS_BASE_URL}/wp-json/villa-coco/v1/reservation-requests`, { method: "POST", headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "1" }, body: JSON.stringify(normalizedBody), cache: "no-store" });
     const result = await response.json().catch(() => null);
     if (!response.ok) return NextResponse.json({ error: result?.message || "No fue posible registrar la solicitud." }, { status: response.status });
-    const hubspotSynced = await submitToHubSpot(normalizedBody).catch(() => false);
+    const hubspotSynced = await submitToHubSpot(normalizedBody, hutk).catch(() => false);
     return NextResponse.json({ id: result.id, ids: result.ids || [result.id], hubspotSynced }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "El servicio de reservas no está disponible en este momento." }, { status: 503 });
   }
 }
 
-async function submitToHubSpot(body: ReservationRequest) {
+async function submitToHubSpot(body: ReservationRequest, hutk?: string) {
   const portalId = process.env.HUBSPOT_PORTAL_ID;
   const formId = process.env.HUBSPOT_FORM_ID;
   if (!portalId || !formId || portalId.startsWith("your_") || formId.startsWith("your_")) return false;
@@ -63,7 +68,15 @@ async function submitToHubSpot(body: ReservationRequest) {
   });
   const response = await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formId}`, {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fields, submittedAt: String(Date.now()), context: { pageName: "Solicitud de reserva Villa Coco", pageUri: process.env.NEXT_PUBLIC_SITE_URL || "" } }),
+    body: JSON.stringify({
+      fields,
+      submittedAt: String(Date.now()),
+      context: {
+        pageName: "Solicitud de reserva Villa Coco",
+        pageUri: process.env.NEXT_PUBLIC_SITE_URL || "",
+        ...(hutk ? { hutk } : {}),
+      },
+    }),
   });
   if (!response.ok) {
     console.error("HubSpot rechazó la solicitud de reserva:", await response.text());

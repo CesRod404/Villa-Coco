@@ -75,7 +75,11 @@
 
 .descriptionBlock p {
   display: -webkit-box;
-  height: 92px;
+  /* 3 líneas completas a line-height 1.7 * font-size 16px (27.2px c/u).
+     Debe ser un múltiplo exacto del line-height: si queda más alto que
+     eso, se alcanza a ver el borde superior de una 4ª línea cortada a
+     la mitad en vez de detenerse en un renglón completo. */
+  height: 81.6px;
   margin: 0;
   overflow: hidden;
   color: #1a2e4a;

@@ -51,6 +51,9 @@ export function buildHubSpotVillaFields(data: VillaFormData) {
     { name: "check_in_date", value: data.checkIn },
     { name: "check_out_date", value: data.checkOut },
     { name: "number_of_guests", value: String(data.guests) },
+    // Valores internos exactos según CONFIGURACION_HUBSPOT.md: "yes" / "no"
+    // en minúsculas. HubSpot rechaza "Yes"/"No" por no coincidir con las
+    // opciones permitidas de la propiedad `flexible_dates`.
     { name: "flexible_dates", value: data.flexibleDates ? "yes" : "no" },
     { name: "villa_of_interest", value: getVillaOfInterest(data.villaName) },
     { name: "how_you_heard_about_us", value: data.referralSource },

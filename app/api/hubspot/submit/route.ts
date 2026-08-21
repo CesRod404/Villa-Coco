@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       flexibleDates:
         body.flexibleDates === true ||
         body.flexibleDates === "Yes" ||
-        body.flexibleDates === "yes",
+        body.flexibleDates === "Yes",
       villaName:
         body.villaOfInterest === "Casa Coco (10 Bedrooms)" ||
         body.villaOfInterest === "casa_coco"
@@ -64,6 +64,12 @@ export async function POST(req: NextRequest) {
       referralSource: body.howYouHeardAboutUs,
       travelPlans: body.message.trim(),
     });
+
+    // Cookie que HubSpot usa para enlazar el envío con el contacto/visitante
+    // correcto. Sin esto, HubSpot avisa que no puede vincular la
+    // presentación a un contacto existente. Solo existe si el sitio cargó
+    // el script de tracking de HubSpot (ver app/layout.tsx).
+    const hutk = req.cookies.get("hubspotutk")?.value;
 
     const hubspotRes = await fetch(
       `https://api.hsforms.com/submissions/v3/integration/submit/${PORTAL_ID}/${FORM_ID}`,
@@ -75,6 +81,7 @@ export async function POST(req: NextRequest) {
           context: {
             pageUri: req.headers.get("referer") ?? "",
             pageName: "Solicitud de Villa",
+            ...(hutk ? { hutk } : {}),
           },
         }),
       }

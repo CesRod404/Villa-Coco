@@ -36,7 +36,7 @@ export default function Loading() {
 
         <div className={styles.copy}>
           <p className={styles.wordmark}>COCO·B·ISLA</p>
-          <p className={styles.loadingText}>CARGANDO</p>
+          <p className={styles.loadingText}>LOADING</p>
         </div>
       </div>
     </main>

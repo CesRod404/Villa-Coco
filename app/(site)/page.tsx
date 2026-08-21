@@ -108,12 +108,13 @@ function villaImages(villa: Villa): MixMatchVilla["images"] {
 }
 
 const services = [
-  { iconSrc: "/images/icons/service-concierge.svg", label: "24-hour concierge" },
-  { iconSrc: "/images/icons/service-yoga.svg", label: "Yoga & wellness" },
-  { iconSrc: "/images/icons/service-boat.svg", label: "Private boat transfers" },
-  { iconSrc: "/images/icons/service-chef.svg", label: "Private chef on request" },
-  { iconSrc: "/images/icons/service-weddings.svg", label: "Weddings & events" },
-  { iconSrc: "/images/icons/service-excursions.svg", label: "Excursions & activities" },
+  { iconSrc: "/images/icons/service-concierge.svg", label: "24-hour concierge", iconWidth: 32, iconHeight: 32 },
+  { iconSrc: "/images/icons/service-yoga.svg", label: "Yoga & wellness", iconWidth: 32, iconHeight: 32 },
+  { iconSrc: "/images/icons/service-boat.svg", label: "Private boat transfers", iconWidth: 32, iconHeight: 32 },
+  { iconSrc: "/images/icons/service-chef.svg", label: "Private chef on request", iconWidth: 32, iconHeight: 32 },
+  // Wedding rings + toast glass, combined side by side (48x24) to match the Figma lockup.
+  { iconSrc: "/images/icons/service-weddings.svg", label: "Weddings & events", iconWidth: 48, iconHeight: 24 },
+  { iconSrc: "/images/icons/service-excursions.svg", label: "Excursions & activities", iconWidth: 32, iconHeight: 32 },
 ];
 
 export default async function HomePage() {
@@ -303,9 +304,15 @@ export default async function HomePage() {
         </p>
 
         <ul className={styles.serviceList} aria-label="Concierge services">
-          {services.map(({ iconSrc, label }) => (
+          {services.map(({ iconSrc, label, iconWidth, iconHeight }) => (
             <li key={label}>
-              <Image className={styles.serviceIcon} src={iconSrc} alt="" width={32} height={32} />
+              <Image
+                className={styles.serviceIcon}
+                src={iconSrc}
+                alt=""
+                width={iconWidth}
+                height={iconHeight}
+              />
               <span>{label}</span>
             </li>
           ))}
@@ -316,23 +323,25 @@ export default async function HomePage() {
         <div className={styles.footerInner}>
           <Image src="/images/home/villas-logo.svg" alt="Villa Coco" width={72} height={61} className={styles.footerLogo} />
 
-          <section className={styles.footerDirect} aria-labelledby="direct-contact-title">
-            <h2 id="direct-contact-title">Direct Contact</h2>
-            <address>
-              <a href="tel:+12065790798"><Phone aria-hidden="true" size={22} /> Mobile<br /><span>+1 206-579-0798</span></a>
-              <a href="tel:+18334392626"><Phone aria-hidden="true" size={22} /> US Toll Free<br /><span>+1 833-439-2626</span></a>
-              <a href="mailto:jeffrey@cocobisla.com"><Mail aria-hidden="true" size={22} /> Email<br /><span>jeffrey@cocobisla.com</span></a>
-            </address>
-          </section>
+          <div className={styles.footerColumns}>
+            <section className={styles.footerDesk} aria-labelledby="front-desk-title">
+              <h2 id="front-desk-title">Concierge & Front Desk</h2>
+              <div className={styles.footerDeskDetails}>
+                <p>(7 a.m. - 11 p.m. Central)</p>
+                <a href="https://wa.me/529983154343">Call & WhatsApp: +52 - 998 - 315 - 4343</a>
+                <a href="tel:+529982096937">Call: +52 998 209 6937</a>
+              </div>
+            </section>
 
-          <section className={styles.footerDesk} aria-labelledby="front-desk-title">
-            <h2 id="front-desk-title">Concierge & Front Desk</h2>
-            <div className={styles.footerDeskDetails}>
-              <p>(7 a.m. - 11 p.m. Central)</p>
-              <a href="https://wa.me/529983154343">Call & WhatsApp: +52 - 998 - 315 - 4343</a>
-              <a href="tel:+529982096937">Call: +52 998 209 6937</a>
-            </div>
-          </section>
+            <section className={styles.footerDirect} aria-labelledby="direct-contact-title">
+              <h2 id="direct-contact-title">Direct Contact</h2>
+              <address>
+                <a href="tel:+12065790798"><Phone aria-hidden="true" size={22} /> Mobile<br /><span>+1 206-579-0798</span></a>
+                <a href="tel:+18334392626"><Phone aria-hidden="true" size={22} /> US Toll Free<br /><span>+1 833-439-2626</span></a>
+                <a href="mailto:jeffrey@cocobisla.com"><Mail aria-hidden="true" size={22} /> Email<br /><span>jeffrey@cocobisla.com</span></a>
+              </address>
+            </section>
+          </div>
 
           <p className={styles.cookiePreferences}>Cookies preferences</p>
         </div>
