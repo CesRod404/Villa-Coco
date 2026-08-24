@@ -2,6 +2,7 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import { Mail, Phone } from "lucide-react";
 import FindVillaChatButton from "@/components/home/FindVillaChatButton";
+import CookiePreferences from "@/components/home/CookiePreferences";
 import HeroNavbar from "@/components/home/HeroNavbar";
 import MixMatchConfigurator, {
   type MixMatchVilla,
@@ -12,7 +13,9 @@ import TestimonialCarousel, {
 import VillaCard from "@/components/villa/VillaCard";
 import DataFallbackNotice from "@/components/common/DataFallbackNotice";
 import { getTestimonialsWithSource, getVillasWithSource } from "@/lib/wp";
+import { getWordpressFallback } from "@/lib/wp/fallback";
 import type { Villa } from "@/types/wordpress";
+import { getVillaImages } from "@/lib/images/villa-images";
 import styles from "./home.module.css";
 
 const raleway = localFont({
@@ -83,30 +86,6 @@ function formatTestimonialDate(value?: string) {
   }).format(new Date(Date.UTC(year, month - 1, day)));
 }
 
-function villaImages(villa: Villa): MixMatchVilla["images"] {
-  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
-  const candidates = [
-    villa.acf.image_1,
-    villa.acf.image_2,
-    villa.acf.image_3,
-    villa.acf.image_4,
-    featured?.source_url
-      ? {
-          url: featured.source_url,
-          width: featured.media_details?.width,
-          height: featured.media_details?.height,
-        }
-      : null,
-  ];
-
-  return candidates.reduce<MixMatchVilla["images"]>((images, image) => {
-    if (!image?.url || images.some((existing) => existing.src === image.url)) return images;
-
-    images.push({ src: image.url, width: image.width, height: image.height });
-    return images;
-  }, []);
-}
-
 const services = [
   { iconSrc: "/images/icons/service-concierge.svg", label: "24-hour concierge", iconWidth: 32, iconHeight: 32 },
   { iconSrc: "/images/icons/service-yoga.svg", label: "Yoga & wellness", iconWidth: 32, iconHeight: 32 },
@@ -123,25 +102,29 @@ export default async function HomePage() {
     getTestimonialsWithSource(),
   ]);
   const villas = villaResult.data;
+  const fallbackVillas = getWordpressFallback<Villa>("/villa") || [];
+  const fallbackVillaBySlug = new Map(fallbackVillas.map((villa) => [villa.slug, villa]));
   const testimonials = testimonialResult.data;
   const isUsingFallback =
     villaResult.source === "fallback" || testimonialResult.source === "fallback";
 
-  const mixMatchVillas: MixMatchVilla[] = villas.map((villa) => ({
-    id: villa.id,
-    slug: villa.slug,
-    name: villaName(villa),
-    images: villaImages(villa),
-    bedrooms: positiveNumber(villa.acf.bedrooms, villa.acf.habitaciones),
-    suites: positiveNumber(villa.acf.suites_count),
-    guests:
-      positiveNumber(
-        villa.acf.guests,
-        villa.acf.max_guests,
-        villa.acf.capacity,
-        villa.acf.capacidad_personas,
-      ) || positiveNumber(villa.acf.suites_count) * 2,
-  }));
+  const mixMatchVillas: MixMatchVilla[] = villas.map((villa) => {
+    return {
+      id: villa.id,
+      slug: villa.slug,
+      name: villaName(villa),
+      images: getVillaImages(villa, fallbackVillaBySlug.get(villa.slug)),
+      bedrooms: positiveNumber(villa.acf.bedrooms, villa.acf.habitaciones),
+      suites: positiveNumber(villa.acf.suites_count),
+      guests:
+        positiveNumber(
+          villa.acf.guests,
+          villa.acf.max_guests,
+          villa.acf.capacity,
+          villa.acf.capacidad_personas,
+        ) || positiveNumber(villa.acf.suites_count) * 2,
+    };
+  });
 
   const testimonialCards: TestimonialCardData[] = testimonials.map((item) => {
     const relatedId = Array.isArray(item.acf?.related_villa_id)
@@ -176,6 +159,16 @@ export default async function HomePage() {
       </header>
 
       <section id="home" className={styles.hero} aria-labelledby="villas-hero-title">
+        <Image
+          className={styles.heroBackground}
+          src="/images/home/villas-hero.png"
+          alt="Costa de Isla Mujeres frente a las villas Coco B"
+          width={2880}
+          height={2046}
+          sizes="100vw"
+          loading="eager"
+          fetchPriority="high"
+        />
         <DataFallbackNotice visible={isUsingFallback} overlay />
         <div className={styles.atmosphere} aria-hidden="true" />
 
@@ -239,7 +232,9 @@ export default async function HomePage() {
         </header>
 
         <div className={styles.collectionCards}>
-          {villas.map((villa) => <VillaCard key={villa.id} villa={villa} />)}
+          {villas.map((villa) => (
+            <VillaCard key={villa.id} villa={villa} fallbackVilla={fallbackVillaBySlug.get(villa.slug)} />
+          ))}
         </div>
       </section>
 
@@ -248,6 +243,7 @@ export default async function HomePage() {
           <div className={styles.darkEyebrow}><span /><strong>Mix &</strong><span /></div>
           <h2 id="mix-match-title">Match</h2>
           <p>Pair two side-by-side villas for larger groups</p>
+          <p className={styles.mixMatchPrompt}>Select one of the possible options:</p>
         </header>
         <MixMatchConfigurator villas={mixMatchVillas} />
       </section>
@@ -343,7 +339,7 @@ export default async function HomePage() {
             </section>
           </div>
 
-          <p className={styles.cookiePreferences}>Cookies preferences</p>
+          <CookiePreferences className={styles.cookiePreferences} />
         </div>
       </footer>
     </main>

@@ -58,7 +58,15 @@ export default function TestimonialCarousel({ testimonials }: { testimonials: Te
               className={`${styles.card} ${centered ? styles.featured : ""}`}
             >
               {item.photo ? (
-                <img className={styles.avatar} src={item.photo} alt="" loading="lazy" />
+                <img
+                  className={styles.avatar}
+                  src={item.photo}
+                  alt=""
+                  width={70}
+                  height={70}
+                  loading="lazy"
+                  decoding="async"
+                />
               ) : (
                 <span className={styles.avatarFallback} aria-hidden="true">
                   {initials(item.authorName)}

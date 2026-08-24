@@ -5,7 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import type { Villa } from "@/types/wordpress";
-import VillaGallery, { type VillaGalleryImage } from "./VillaGallery";
+import { getVillaImages } from "@/lib/images/villa-images";
+import VillaGallery from "./VillaGallery";
 import styles from "./VillaCard.module.css";
 
 function plainText(value?: string) {
@@ -32,50 +33,6 @@ function plainText(value?: string) {
     .replace(/Â/g, "")
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function extractImages(villa: Villa): VillaGalleryImage[] {
-  const images: VillaGalleryImage[] = [];
-  const addImage = (image?: VillaGalleryImage | null) => {
-    const src = image?.src?.trim();
-
-    if (!src || images.some((existing) => existing.src === src)) return;
-
-    images.push({ src, alt: image?.alt || "" });
-  };
-
-  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
-
-  if (featured?.source_url) {
-    addImage({
-      src: featured.source_url,
-      alt: featured.alt_text || "",
-    });
-  }
-
-  for (const image of [
-    villa.acf?.image_1,
-    villa.acf?.image_2,
-    villa.acf?.image_3,
-    villa.acf?.image_4,
-  ]) {
-    if (image?.url) addImage({ src: image.url, alt: image.alt });
-  }
-
-  // Conserva compatibilidad con villas que todavía usen el campo Gallery de ACF Pro.
-  const gallery = villa.acf?.gallery;
-  if (Array.isArray(gallery)) {
-    for (const image of gallery) {
-      const normalized =
-        typeof image === "string"
-          ? { src: image, alt: "" }
-          : { src: image.url || image.src || "", alt: image.alt || "" };
-
-      addImage(normalized);
-    }
-  }
-
-  return images;
 }
 
 function firstPositiveNumber(values: unknown[]) {
@@ -105,7 +62,7 @@ function normalizeAmenities(villa: Villa) {
   return Array.from(new Set(amenities)).slice(0, 8);
 }
 
-export default function VillaCard({ villa }: { villa: Villa }) {
+export default function VillaCard({ villa, fallbackVilla }: { villa: Villa; fallbackVilla?: Villa }) {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const title = plainText(villa.title?.rendered) || "Villa";
   const villaName = title.replace(/^Casa\s+/i, "") || title;
@@ -122,7 +79,7 @@ export default function VillaCard({ villa }: { villa: Villa }) {
   const summary = plainText(summarySource);
   const fullDescription = plainText(fullDescriptionSource) || summary;
   const descriptionId = `villa-${villa.id}-description`;
-  const images = extractImages(villa);
+  const images = getVillaImages(villa, fallbackVilla);
   const acf = villa.acf;
   const guests =
     firstPositiveNumber([

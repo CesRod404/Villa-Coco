@@ -82,7 +82,16 @@ function collectRawImageIds(villa: Villa): number[] {
     // si se dejara como (AcfImageField | null | undefined)[], TypeScript
     // rechaza el predicado porque number no es subtipo de ese union
     // (TS2322 / TS2677, que es justo lo que rompía `npm run prod`).
-    const rawFields: unknown[] = [villa.acf?.image_1, villa.acf?.image_2, villa.acf?.image_3, villa.acf?.image_4];
+    const rawFields: unknown[] = [
+        villa.acf?.image_1,
+        villa.acf?.image_2,
+        villa.acf?.image_3,
+        villa.acf?.image_4,
+        villa.acf?.image_5,
+        villa.acf?.image_6,
+        villa.acf?.image_7,
+        villa.acf?.image_8,
+    ];
     return rawFields.filter(
         (field): field is number => typeof field === "number" && Number.isInteger(field) && field > 0
     );
@@ -91,10 +100,10 @@ function collectRawImageIds(villa: Villa): number[] {
 // ---------------------------------------------------------------------
 // Resuelve TODOS los IDs de imagen crudos de una sola pasada, en UNA
 // sola petición a /wp/v2/media?include[]=... — antes cada villa hacía
-// hasta 4 peticiones separadas (una por image_1..image_4) vía
+// hasta 8 peticiones separadas (una por image_1..image_8) vía
 // resolveMediaImage(), y con getVillas() cargando las 4 villas eso podía
 // llegar a 16 peticiones, cada una de 3-5s contra este WordPress. El
-// causante real: en ACF los campos image_1-4 están devolviendo el ID
+// causante real: en ACF los campos image_1-8 están devolviendo el ID
 // numérico crudo en vez del objeto de imagen (Return Format = "Image
 // ID" en vez de "Image Array"/"Image URL") — cambiar eso en WordPress
 // eliminaría esta llamada por completo, pero mientras tanto esto la deja
@@ -149,6 +158,10 @@ function applyResolvedImages(villa: Villa, resolved: Map<number, AcfImageField |
             image_2: resolveField(villa.acf?.image_2),
             image_3: resolveField(villa.acf?.image_3),
             image_4: resolveField(villa.acf?.image_4),
+            image_5: resolveField(villa.acf?.image_5),
+            image_6: resolveField(villa.acf?.image_6),
+            image_7: resolveField(villa.acf?.image_7),
+            image_8: resolveField(villa.acf?.image_8),
         },
     };
 }

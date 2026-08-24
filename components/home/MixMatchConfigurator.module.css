@@ -1,14 +1,14 @@
 .configurator {
-  width: min(764px, calc(100% - 40px));
+  width: min(760px, calc(100% - 40px));
   margin-inline: auto;
   container: mix-match / inline-size;
 }
 
 .pairGrid {
   display: grid;
-  width: 764px;
-  height: 303px;
-  grid-template-columns: repeat(2, 358px);
+  width: 760px;
+  height: 288px;
+  grid-template-columns: repeat(2, 356px);
   gap: 48px;
 }
 
@@ -16,31 +16,32 @@
   appearance: none;
   box-sizing: border-box;
   display: grid;
-  width: 358px;
-  height: 303px;
+  width: 356px;
+  height: 288px;
   margin: 0;
-  padding: 0;
-  grid-template-rows: 63px 228px;
-  gap: 12px;
-  border: 0;
+  padding: 16px;
+  grid-template-rows: 55px 194px;
+  gap: 6px;
+  border: 1px solid #a1a1a1;
+  border-radius: 20px;
   background: transparent;
   color: #1c1c1c;
   font-family: var(--font-raleway), "Avenir Next", "Segoe UI", sans-serif;
   cursor: pointer;
-  text-align: center;
+  text-align: left;
 }
 
 .pairHeading {
   box-sizing: border-box;
   display: flex;
-  width: 358px;
-  height: 63px;
-  padding: 0 0 12px;
-  align-items: center;
+  width: 322px;
+  height: 55px;
+  padding: 0;
+  align-items: flex-start;
   flex-direction: column;
   justify-content: flex-start;
   gap: 5px;
-  border-bottom: 1px solid #b3b3b3;
+  border-bottom: 0;
 }
 
 .pairHeading strong {
@@ -48,7 +49,7 @@
   width: 100%;
   overflow: hidden;
   color: #1c1c1c;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 4px;
   line-height: 1.2;
@@ -69,16 +70,16 @@
 
 .pairImages {
   display: grid;
-  width: 358px;
-  height: 228px;
-  grid-template-columns: repeat(2, 171px);
-  gap: 16px;
+  width: 322px;
+  height: 194px;
+  grid-template-columns: repeat(2, 152px);
+  gap: 18px;
 }
 
 .imageFrame {
   display: grid;
-  width: 171px;
-  height: 228px;
+  width: 152px;
+  height: 194px;
   place-items: center;
   overflow: hidden;
   border-radius: 8px;
@@ -107,7 +108,19 @@
 }
 
 .pairCardSelected .imageFrame {
-  box-shadow: 0 0 0 2px #2091a7;
+  box-shadow: none;
+}
+
+.pairCardSelected {
+  border-color: #00819b;
+  box-shadow: 0 0 0 2px rgba(0, 129, 155, 0.16);
+}
+
+@media (min-width: 768px) {
+  .pairCardSelected {
+    border-color: #a1a1a1;
+    box-shadow: none;
+  }
 }
 
 .pairCard:focus-visible {
@@ -142,9 +155,9 @@
 .inquire {
   display: flex;
   box-sizing: border-box;
-  width: min(540px, 100%);
-  min-height: 64px;
-  margin: 60px auto 0;
+  width: min(382px, 100%);
+  min-height: 46px;
+  margin: 49px auto 0;
   padding-inline: 28px;
   align-items: center;
   justify-content: center;
@@ -178,11 +191,11 @@
   cursor: not-allowed;
 }
 
-@container mix-match (max-width: 763px) {
+@container mix-match (max-width: 759px) {
   .pairGrid {
     width: 100%;
     height: auto;
-    grid-template-columns: minmax(0, 358px);
+    grid-template-columns: minmax(0, 356px);
     justify-content: center;
     gap: 36px;
   }
@@ -198,7 +211,7 @@
   .pairHeading {
     width: 100%;
     height: auto;
-    min-height: 63px;
+    min-height: 55px;
   }
 
   .pairHeading strong {
@@ -244,13 +257,14 @@
     width: 100%;
     height: auto;
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 24px;
   }
 
   .pairCard {
     width: 100%;
     height: auto;
-    grid-template-rows: 63px auto;
+    padding: 14px;
+    grid-template-rows: 55px auto;
   }
 
   .pairHeading {
@@ -266,7 +280,7 @@
     width: 100%;
     height: auto;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
+    gap: 12px;
   }
 
   .imageFrame {

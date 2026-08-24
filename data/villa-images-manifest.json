@@ -1,0 +1,1023 @@
+{
+  "generatedAt": "2026-08-24T19:52:39.437Z",
+  "quality": 75,
+  "budgets": {
+    "thumb": 25600,
+    "card": 102400,
+    "gallery": 256000
+  },
+  "villas": {
+    "casa-cielo": {
+      "id": 129,
+      "images": [
+        {
+          "field": "image_1",
+          "mediaId": 160,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_01_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_1-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 12000
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_1-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 49124
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_1-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 82948
+            }
+          }
+        },
+        {
+          "field": "image_2",
+          "mediaId": 161,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_02_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_2-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 13338
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_2-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 53846
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_2-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 91648
+            }
+          }
+        },
+        {
+          "field": "image_3",
+          "mediaId": 162,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_03_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_3-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 13192
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_3-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 52670
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_3-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 89062
+            }
+          }
+        },
+        {
+          "field": "image_4",
+          "mediaId": 163,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_04_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_4-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 4756
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_4-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 13988
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_4-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 21864
+            }
+          }
+        },
+        {
+          "field": "image_5",
+          "mediaId": 164,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_05_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_5-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8702
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_5-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 30346
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_5-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 50434
+            }
+          }
+        },
+        {
+          "field": "image_6",
+          "mediaId": 166,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_06_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_6-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 12998
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_6-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 53080
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_6-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 92914
+            }
+          }
+        },
+        {
+          "field": "image_7",
+          "mediaId": 167,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_07_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_7-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 9458
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_7-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 36084
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_7-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 57502
+            }
+          }
+        },
+        {
+          "field": "image_8",
+          "mediaId": 168,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Cielo_08_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-cielo/image_8-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 9758
+            },
+            "card": {
+              "src": "/images/villas/casa-cielo/image_8-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 39960
+            },
+            "gallery": {
+              "src": "/images/villas/casa-cielo/image_8-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 67578
+            }
+          }
+        }
+      ]
+    },
+    "casa-encantada": {
+      "id": 128,
+      "images": [
+        {
+          "field": "image_1",
+          "mediaId": 169,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_01_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_1-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8072
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_1-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 28030
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_1-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 46296
+            }
+          }
+        },
+        {
+          "field": "image_2",
+          "mediaId": 170,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_02_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_2-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8986
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_2-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 26898
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_2-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 41810
+            }
+          }
+        },
+        {
+          "field": "image_3",
+          "mediaId": 171,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_03_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_3-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 6042
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_3-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 17988
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_3-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 27530
+            }
+          }
+        },
+        {
+          "field": "image_4",
+          "mediaId": 172,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_04_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_4-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 9406
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_4-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 31838
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_4-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 51106
+            }
+          }
+        },
+        {
+          "field": "image_5",
+          "mediaId": 174,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_05_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_5-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 7876
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_5-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 28712
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_5-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 47434
+            }
+          }
+        },
+        {
+          "field": "image_6",
+          "mediaId": 175,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_06_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_6-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11566
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_6-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 46456
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_6-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 77532
+            }
+          }
+        },
+        {
+          "field": "image_7",
+          "mediaId": 176,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_07_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_7-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8754
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_7-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 28614
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_7-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 45922
+            }
+          }
+        },
+        {
+          "field": "image_8",
+          "mediaId": 177,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Encantada_08_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-encantada/image_8-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 9250
+            },
+            "card": {
+              "src": "/images/villas/casa-encantada/image_8-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 24622
+            },
+            "gallery": {
+              "src": "/images/villas/casa-encantada/image_8-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 35586
+            }
+          }
+        }
+      ]
+    },
+    "casa-lola": {
+      "id": 126,
+      "images": [
+        {
+          "field": "image_1",
+          "mediaId": 152,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Rectangle-2.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_1-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11014
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_1-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 38794
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_1-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 62216
+            }
+          }
+        },
+        {
+          "field": "image_2",
+          "mediaId": 153,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Lola_02_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_2-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11958
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_2-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 45598
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_2-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 76328
+            }
+          }
+        },
+        {
+          "field": "image_3",
+          "mediaId": 154,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Lola_03_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_3-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 10768
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_3-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 39540
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_3-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 65716
+            }
+          }
+        },
+        {
+          "field": "image_4",
+          "mediaId": 155,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Rectangle-2-1.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_4-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8410
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_4-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 28986
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_4-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 48274
+            }
+          }
+        },
+        {
+          "field": "image_5",
+          "mediaId": 156,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Lola_05_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_5-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 6714
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_5-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 19230
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_5-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 29268
+            }
+          }
+        },
+        {
+          "field": "image_6",
+          "mediaId": 157,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Lola_06_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_6-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 6344
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_6-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 19674
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_6-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 30488
+            }
+          }
+        },
+        {
+          "field": "image_7",
+          "mediaId": 158,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Lola_07_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_7-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11756
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_7-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 46158
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_7-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 80230
+            }
+          }
+        },
+        {
+          "field": "image_8",
+          "mediaId": 159,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/08/Rectangle-2-2.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-lola/image_8-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 9154
+            },
+            "card": {
+              "src": "/images/villas/casa-lola/image_8-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 26220
+            },
+            "gallery": {
+              "src": "/images/villas/casa-lola/image_8-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 37040
+            }
+          }
+        }
+      ]
+    },
+    "casa-coco": {
+      "id": 55,
+      "images": [
+        {
+          "field": "image_1",
+          "mediaId": 178,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_01_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_1-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11130
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_1-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 41126
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_1-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 65410
+            }
+          }
+        },
+        {
+          "field": "image_2",
+          "mediaId": 179,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_02_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_2-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 13572
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_2-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 52252
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_2-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 81388
+            }
+          }
+        },
+        {
+          "field": "image_3",
+          "mediaId": 180,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_03_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_3-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11222
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_3-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 40400
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_3-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 63252
+            }
+          }
+        },
+        {
+          "field": "image_4",
+          "mediaId": 182,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_04_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_4-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 7426
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_4-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 28012
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_4-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 44978
+            }
+          }
+        },
+        {
+          "field": "image_5",
+          "mediaId": 183,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_05_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_5-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 8414
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_5-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 33778
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_5-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 55442
+            }
+          }
+        },
+        {
+          "field": "image_6",
+          "mediaId": 184,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_06_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_6-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 5974
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_6-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 20318
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_6-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 31468
+            }
+          }
+        },
+        {
+          "field": "image_7",
+          "mediaId": 185,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_07_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_7-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 11246
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_7-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 41230
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_7-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 65446
+            }
+          }
+        },
+        {
+          "field": "image_8",
+          "mediaId": 186,
+          "alt": "",
+          "original": {
+            "url": "https://xerox-life-worry.ngrok-free.dev/wp-content/uploads/2026/07/Coco_08_gallery_Desktop.jpg",
+            "width": 600,
+            "height": 400,
+            "format": "jpeg"
+          },
+          "variants": {
+            "thumb": {
+              "src": "/images/villas/casa-coco/image_8-thumb.webp",
+              "width": 240,
+              "height": 160,
+              "bytes": 14140
+            },
+            "card": {
+              "src": "/images/villas/casa-coco/image_8-card.webp",
+              "width": 480,
+              "height": 320,
+              "bytes": 62278
+            },
+            "gallery": {
+              "src": "/images/villas/casa-coco/image_8-gallery.webp",
+              "width": 600,
+              "height": 400,
+              "bytes": 104162
+            }
+          }
+        }
+      ]
+    }
+  }
+}

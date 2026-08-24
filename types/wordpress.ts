@@ -44,6 +44,10 @@ export interface VillaACFFields {
     image_2?: AcfImageField | null;
     image_3?: AcfImageField | null;
     image_4?: AcfImageField | null;
+    image_5?: AcfImageField | null;
+    image_6?: AcfImageField | null;
+    image_7?: AcfImageField | null;
+    image_8?: AcfImageField | null;
     suites_count: number;
     minimum_stay_nights: number;
     bedrooms: number;

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-20T16:29:14.749Z",
+  "generatedAt": "2026-08-24T19:57:06.726Z",
   "villas": [
     {
       "id": 129,
@@ -8,8 +8,8 @@
       "guid": {
         "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=129"
       },
-      "modified": "2026-08-15T17:45:38",
-      "modified_gmt": "2026-08-15T17:45:38",
+      "modified": "2026-08-24T19:36:27",
+      "modified_gmt": "2026-08-24T19:36:27",
       "slug": "casa-cielo",
       "status": "publish",
       "type": "villa",
@@ -36,28 +36,52 @@
         "description_short": "This intimate and newly renovated four-bedroom bungalow boasts a private oceanfront saltwater infinity pool and the best sunset vistas of the island. Cielo blends indoor and outdoor living wonderfully with a light-filled great room living area and poolside... ",
         "description_long": "This intimate and newly renovated four-bedroom bungalow boasts a private oceanfront saltwater infinity pool and the best sunset vistas of the island. Cielo blends indoor and outdoor living wonderfully with a light-filled great room living area and poolside dining. Each room in Cielo is a testament to luxury and comfort, featuring custom tiles, doors, and furniture. The property's unique design and attention to detail make it a perfect retreat for those seeking tranquility and beauty. Guests can relax on the private deck, enjoy the stunning ocean views, soak in the serene atmosphere of their private sandy area, and take advantage of concierge services that ensure a truly exclusive experience.",
         "image_1": {
-          "url": "/images/fallback/wordpress/casa-cielo/image_1.png",
+          "url": "/images/fallback/wordpress/casa-cielo/image_1.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
         },
         "image_2": {
-          "url": "/images/fallback/wordpress/casa-cielo/image_2.png",
+          "url": "/images/fallback/wordpress/casa-cielo/image_2.jpg",
           "alt": "",
-          "width": 80,
-          "height": 62
+          "width": 600,
+          "height": 400
         },
         "image_3": {
-          "url": "/images/fallback/wordpress/casa-cielo/image_3.png",
+          "url": "/images/fallback/wordpress/casa-cielo/image_3.jpg",
           "alt": "",
-          "width": 1500,
-          "height": 1125
+          "width": 600,
+          "height": 400
         },
         "image_4": {
-          "url": "/images/fallback/wordpress/casa-cielo/image_4.png",
+          "url": "/images/fallback/wordpress/casa-cielo/image_4.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
+        },
+        "image_5": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_5.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_6": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_6.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_7": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_7.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_8": {
+          "url": "/images/fallback/wordpress/casa-cielo/image_8.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
         },
         "suites_count": 8,
         "bedrooms": 3,
@@ -238,8 +262,8 @@
       "guid": {
         "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=128"
       },
-      "modified": "2026-08-15T17:49:02",
-      "modified_gmt": "2026-08-15T17:49:02",
+      "modified": "2026-08-24T19:39:04",
+      "modified_gmt": "2026-08-24T19:39:04",
       "slug": "casa-encantada",
       "status": "publish",
       "type": "villa",
@@ -266,28 +290,52 @@
         "description_short": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless...",
         "description_long": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless indoor-outdoor living, curated  spaces, and unobstructed Caribbean horizons—the embodiment of luxury  without compromise.",
         "image_1": {
-          "url": "/images/fallback/wordpress/casa-encantada/image_1.webp",
+          "url": "/images/fallback/wordpress/casa-encantada/image_1.jpg",
           "alt": "",
-          "width": 2500,
-          "height": 1406
+          "width": 600,
+          "height": 400
         },
         "image_2": {
-          "url": "/images/fallback/wordpress/casa-encantada/image_2.png",
+          "url": "/images/fallback/wordpress/casa-encantada/image_2.jpg",
           "alt": "",
-          "width": 80,
-          "height": 62
+          "width": 600,
+          "height": 400
         },
         "image_3": {
-          "url": "/images/fallback/wordpress/casa-encantada/image_3.png",
+          "url": "/images/fallback/wordpress/casa-encantada/image_3.jpg",
           "alt": "",
-          "width": 80,
-          "height": 62
+          "width": 600,
+          "height": 400
         },
         "image_4": {
-          "url": "/images/fallback/wordpress/casa-encantada/image_4.png",
+          "url": "/images/fallback/wordpress/casa-encantada/image_4.jpg",
           "alt": "",
-          "width": 1500,
-          "height": 1125
+          "width": 600,
+          "height": 400
+        },
+        "image_5": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_5.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_6": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_6.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_7": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_7.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_8": {
+          "url": "/images/fallback/wordpress/casa-encantada/image_8.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
         },
         "suites_count": 12,
         "bedrooms": 6,
@@ -468,8 +516,8 @@
       "guid": {
         "rendered": "https://xerox-life-worry.ngrok-free.dev/?post_type=villa&#038;p=126"
       },
-      "modified": "2026-08-18T02:42:41",
-      "modified_gmt": "2026-08-18T02:42:41",
+      "modified": "2026-08-24T19:31:07",
+      "modified_gmt": "2026-08-24T19:31:07",
       "slug": "casa-lola",
       "status": "publish",
       "type": "villa",
@@ -496,28 +544,52 @@
         "description_short": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
         "description_long": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
         "image_1": {
-          "url": "/images/fallback/wordpress/casa-lola/image_1.png",
+          "url": "/images/fallback/wordpress/casa-lola/image_1.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
         },
         "image_2": {
-          "url": "/images/fallback/wordpress/casa-lola/image_2.png",
+          "url": "/images/fallback/wordpress/casa-lola/image_2.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
         },
         "image_3": {
-          "url": "/images/fallback/wordpress/casa-lola/image_3.png",
+          "url": "/images/fallback/wordpress/casa-lola/image_3.jpg",
           "alt": "",
-          "width": 80,
-          "height": 62
+          "width": 600,
+          "height": 400
         },
         "image_4": {
-          "url": "/images/fallback/wordpress/casa-lola/image_4.png",
+          "url": "/images/fallback/wordpress/casa-lola/image_4.jpg",
           "alt": "",
-          "width": 1500,
-          "height": 1125
+          "width": 600,
+          "height": 400
+        },
+        "image_5": {
+          "url": "/images/fallback/wordpress/casa-lola/image_5.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_6": {
+          "url": "/images/fallback/wordpress/casa-lola/image_6.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_7": {
+          "url": "/images/fallback/wordpress/casa-lola/image_7.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_8": {
+          "url": "/images/fallback/wordpress/casa-lola/image_8.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
         },
         "suites_count": 12,
         "bedrooms": 5,
@@ -698,8 +770,8 @@
       "guid": {
         "rendered": "http://localhost:8881/?post_type=villa&#038;p=55"
       },
-      "modified": "2026-08-15T17:46:58",
-      "modified_gmt": "2026-08-15T17:46:58",
+      "modified": "2026-08-24T19:42:40",
+      "modified_gmt": "2026-08-24T19:42:40",
       "slug": "casa-coco",
       "status": "publish",
       "type": "villa",
@@ -726,28 +798,52 @@
         "description_short": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that ...",
         "description_long": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that reflect the vibrant culture of the island and region.  Casa Coco is ideal for extended family gatherings, group vacations, weddings, retreats, and corporate events, accommodating up to 100 guests when paired with its sister property, Cielo. The Coco experience includes exceptional in-villa concierge services and curated experiences, ensuring that every need is met with the highest level of care. Guests can enjoy a variety of ocean views from the private infinity pool, rooftop shalas, hanging chair gardens, over-ocean terrace, ocean pier, and secluded beach access.",
         "image_1": {
-          "url": "/images/fallback/wordpress/casa-coco/image_1.png",
+          "url": "/images/fallback/wordpress/casa-coco/image_1.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
         },
         "image_2": {
-          "url": "/images/fallback/wordpress/casa-coco/image_2.png",
+          "url": "/images/fallback/wordpress/casa-coco/image_2.jpg",
           "alt": "",
-          "width": 80,
-          "height": 61
+          "width": 600,
+          "height": 400
         },
         "image_3": {
-          "url": "/images/fallback/wordpress/casa-coco/image_3.png",
+          "url": "/images/fallback/wordpress/casa-coco/image_3.jpg",
           "alt": "",
-          "width": 1500,
-          "height": 1125
+          "width": 600,
+          "height": 400
         },
         "image_4": {
-          "url": "/images/fallback/wordpress/casa-coco/image_4.png",
+          "url": "/images/fallback/wordpress/casa-coco/image_4.jpg",
           "alt": "",
-          "width": 80,
-          "height": 62
+          "width": 600,
+          "height": 400
+        },
+        "image_5": {
+          "url": "/images/fallback/wordpress/casa-coco/image_5.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_6": {
+          "url": "/images/fallback/wordpress/casa-coco/image_6.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_7": {
+          "url": "/images/fallback/wordpress/casa-coco/image_7.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
+        },
+        "image_8": {
+          "url": "/images/fallback/wordpress/casa-coco/image_8.jpg",
+          "alt": "",
+          "width": 600,
+          "height": 400
         },
         "suites_count": 12,
         "bedrooms": 10,
@@ -1051,10 +1147,14 @@
               "title": "Casa Encantada",
               "description_short": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless...",
               "description_long": "The inaugural masterpiece of Coco B Isla, Villa Encantada is where  sophistication meets serenity. Designed for those who appreciate refined  elegance, this sanctuary offers seamless indoor-outdoor living, curated  spaces, and unobstructed Caribbean horizons—the embodiment of luxury  without compromise.",
-              "image_1": 56,
-              "image_2": 116,
-              "image_3": 116,
-              "image_4": 57,
+              "image_1": 169,
+              "image_2": 170,
+              "image_3": 171,
+              "image_4": 172,
+              "image_5": 174,
+              "image_6": 175,
+              "image_7": 176,
+              "image_8": 177,
               "suites_count": 12,
               "bedrooms": 6,
               "bathrooms": 7,
@@ -1207,10 +1307,14 @@
               "title": "Casa Coco",
               "description_short": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that ...",
               "description_long": "Casa Coco embodies refined bohemian elegance with its casual yet sophisticated decor. This villa features 10 meticulously designed suites, blending comfort and luxury with custom tiles, doors, and furnishings that reflect the vibrant culture of the island and region.  Casa Coco is ideal for extended family gatherings, group vacations, weddings, retreats, and corporate events, accommodating up to 100 guests when paired with its sister property, Cielo. The Coco experience includes exceptional in-villa concierge services and curated experiences, ensuring that every need is met with the highest level of care. Guests can enjoy a variety of ocean views from the private infinity pool, rooftop shalas, hanging chair gardens, over-ocean terrace, ocean pier, and secluded beach access.",
-              "image_1": 117,
-              "image_2": 118,
-              "image_3": 57,
-              "image_4": 116,
+              "image_1": 178,
+              "image_2": 179,
+              "image_3": 180,
+              "image_4": 182,
+              "image_5": 183,
+              "image_6": 184,
+              "image_7": 185,
+              "image_8": 186,
               "suites_count": 12,
               "bedrooms": 10,
               "bathrooms": 11,
@@ -1363,10 +1467,14 @@
               "title": "Casa Lola",
               "description_short": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
               "description_long": "Discover Casa Lola, the island’s newest and most coveted beach villa. Featuring seven exquisite suites, this villa offers expansive open-air spaces and a rooftop terrace with stunning 360-degree views of the Caribbean.  Adorned with custom tiles, handcrafted doors, and unique furniture pieces, Casa Lola is a perfect blend of modern luxury and Mexican charm. For larger groups, Casa Lola can be combined with its sister villa, Encantada, to provide a total of 13 suites. Guests at Casa Lola enjoy a private saltwater infinity pool, mesmerizing water walls, numerous lounging areas, and an exclusive stretch of white sand beach. The experience is further elevated by Coco B’s exceptional in-villa concierge services, ensuring every need is met with the highest level of care for a secluded and luxurious getaway.",
-              "image_1": 117,
-              "image_2": 118,
-              "image_3": 116,
-              "image_4": 57,
+              "image_1": 152,
+              "image_2": 153,
+              "image_3": 154,
+              "image_4": 155,
+              "image_5": 156,
+              "image_6": 157,
+              "image_7": 158,
+              "image_8": 159,
               "suites_count": 12,
               "bedrooms": 5,
               "bathrooms": 7,

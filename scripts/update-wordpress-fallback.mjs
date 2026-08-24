@@ -118,7 +118,16 @@ async function snapshotVilla(villa) {
     featured.source_url = await saveImage(featured.source_url, `${slug}/featured`);
   }
 
-  for (const fieldName of ["image_1", "image_2", "image_3", "image_4"]) {
+  for (const fieldName of [
+    "image_1",
+    "image_2",
+    "image_3",
+    "image_4",
+    "image_5",
+    "image_6",
+    "image_7",
+    "image_8",
+  ]) {
     copy.acf[fieldName] = await localizeImageField(copy.acf?.[fieldName], `${slug}/${fieldName}`);
   }
 

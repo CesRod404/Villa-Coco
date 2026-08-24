@@ -9,6 +9,7 @@ import type {
   NightsAnswer,
 } from "@/components/recommender/VillaRecommender";
 import type { VillaRecommendationData } from "@/components/recommender/VillaRecommendationResult";
+import { getVillaPrimaryImage } from "@/lib/images/villa-images";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.6-flash";
@@ -40,7 +41,7 @@ const GEMINI_TIMEOUT_MS = 20000;
 // https://xerox-life-worry.ngrok-free.dev/wp-json/wp/v2/villa (WordPress
 // publicado, no el localhost:8881 con datos de prueba). El grupo ACF real
 // del CPT "villa" SOLO tiene: title, description_short, description_long,
-// image_1-4, suites_count, bedrooms, bathrooms, use_cases, price.
+// image_1-8, suites_count, bedrooms, bathrooms, use_cases, price.
 //
 // NO existen todavía: minimum_stay_nights, location, amenities, features,
 // guests/max_guests/capacity, size_m2 — aunque están declarados como
@@ -505,7 +506,10 @@ export async function POST(req: Request) {
     }
 
     const acf = villa.acf;
-    const image = acf.image_1 || acf.image_2 || acf.image_3 || acf.image_4;
+    const image =
+      acf.image_1 || acf.image_2 || acf.image_3 || acf.image_4 ||
+      acf.image_5 || acf.image_6 || acf.image_7 || acf.image_8;
+    const optimizedImage = getVillaPrimaryImage(villa);
     const featuredImage = villa._embedded?.["wp:featuredmedia"]?.[0];
     const tags = normalizeList(acf.use_cases as string[] | string | undefined);
     const estimatedGuests = getVillaCapacity(acf, tags);
@@ -530,12 +534,22 @@ export async function POST(req: Request) {
       name: villa.title.rendered,
       tagline: picked.tagline || "Your Island Escape",
       blurb: picked.blurb || acf.description_short || "",
-      image: image
-        ? { url: image.url, alt: image.alt || villa.title.rendered }
+      image: optimizedImage
+        ? {
+            url: optimizedImage.cardSrc,
+            alt: optimizedImage.alt || villa.title.rendered,
+            width: optimizedImage.cardWidth,
+            height: optimizedImage.cardHeight,
+            srcSet: optimizedImage.srcSet,
+          }
+        : image
+          ? { url: image.url, alt: image.alt || villa.title.rendered }
         : featuredImage?.source_url
           ? {
               url: featuredImage.source_url,
               alt: featuredImage.alt_text || villa.title.rendered,
+              width: featuredImage.media_details?.width,
+              height: featuredImage.media_details?.height,
             }
           : null,
       stats: {

@@ -1,18 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { ResponsiveVillaImage } from "@/lib/images/villa-images";
 import styles from "./MixMatchConfigurator.module.css";
 
 export type MixMatchVilla = {
   id: number;
   slug: string;
   name: string;
-  images: Array<{
-    src: string;
-    width?: number;
-    height?: number;
-  }>;
+  images: ResponsiveVillaImage[];
   bedrooms: number;
   suites: number;
   guests: number;
@@ -23,7 +20,36 @@ type VillaPair = {
   villas: [MixMatchVilla, MixMatchVilla];
 };
 
-type PairImageAssignments = Map<number, string | undefined>;
+type PairImageAssignments = Map<number, ResponsiveVillaImage | undefined>;
+
+function ResilientPairImage({ image }: { image: ResponsiveVillaImage }) {
+  const [src, setSrc] = useState(image.fallbackSrc || image.src);
+
+  useEffect(() => {
+    setSrc(image.fallbackSrc || image.src);
+    if (!image.fallbackSrc || image.fallbackSrc === image.src) return;
+
+    const candidate = new window.Image();
+    candidate.onload = () => setSrc(image.src);
+    candidate.src = image.src;
+    return () => {
+      candidate.onload = null;
+    };
+  }, [image.fallbackSrc, image.src]);
+
+  return (
+    <img
+      src={src}
+      srcSet={src === image.src ? image.srcSet : undefined}
+      sizes="(max-width: 759px) calc(50vw - 28px), 171px"
+      alt=""
+      width={image.width}
+      height={image.height}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
 
 const preferredPairs = [
   ["lola", "encantada"],
@@ -81,28 +107,17 @@ function buildPairs(villas: MixMatchVilla[]): VillaPair[] {
   return pairs.slice(0, 2);
 }
 
-function assignBestImages(pairs: VillaPair[]): PairImageAssignments {
+function assignPairImages(pairs: VillaPair[]): PairImageAssignments {
   const assignments: PairImageAssignments = new Map();
   const usedSources = new Set<string>();
-  const minimumArea = 171 * 228;
 
   for (const pair of pairs) {
     for (const villa of pair.villas) {
-      const ranked = [...villa.images].sort(
-        (first, second) =>
-          (second.width || 0) * (second.height || 0) -
-          (first.width || 0) * (first.height || 0),
-      );
-      const highResolution = ranked.filter(
-        (image) => !image.width || !image.height || image.width * image.height >= minimumArea,
-      );
       const selected =
-        highResolution.find((image) => !usedSources.has(image.src)) ||
-        highResolution[0] ||
-        ranked.find((image) => !usedSources.has(image.src)) ||
-        ranked[0];
+        villa.images.find((image) => !usedSources.has(image.src)) ||
+        villa.images[0];
 
-      assignments.set(villa.id, selected?.src);
+      assignments.set(villa.id, selected);
       if (selected) usedSources.add(selected.src);
     }
   }
@@ -146,7 +161,7 @@ function PairCard({
           return (
             <span className={styles.imageFrame} key={villa.id}>
               {image ? (
-                <img src={image} alt="" loading="lazy" decoding="async" />
+                <ResilientPairImage image={image} />
               ) : (
                 <span>Image coming soon</span>
               )}
@@ -160,7 +175,7 @@ function PairCard({
 
 export default function MixMatchConfigurator({ villas }: { villas: MixMatchVilla[] }) {
   const pairs = useMemo(() => buildPairs(villas), [villas]);
-  const pairImages = useMemo(() => assignBestImages(pairs), [pairs]);
+  const pairImages = useMemo(() => assignPairImages(pairs), [pairs]);
   const [selectedKey, setSelectedKey] = useState<string | undefined>(pairs[0]?.key);
   const selectedPair = pairs.find((pair) => pair.key === selectedKey) || pairs[0];
   const [first, second] = selectedPair?.villas || [];

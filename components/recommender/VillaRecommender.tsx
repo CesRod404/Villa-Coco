@@ -30,6 +30,7 @@
 
 import { useState } from "react";
 import { X, ChevronLeft } from "lucide-react";
+import styles from "./VillaRecommender.module.css";
 
 export type PeopleAnswer = "couple" | "small" | "group" | "large";
 export type AtmosphereAnswer = "peaceful" | "lively" | "luxurious" | "rustic";
@@ -165,52 +166,47 @@ export default function VillaRecommender({
   const isCurrentAnswered = Boolean(answers[currentQuestion.key]);
 
   return (
-    <div
-      style={{ width: 384, maxWidth: "100%" }}
-      className={`mx-auto flex h-[440px] flex-col rounded-md bg-background p-5 shadow-card ${className}`}
-    >
+    <div className={`${styles.modal} ${className}`}>
       {/* Top bar */}
-      <div className="mb-3 flex shrink-0 items-center justify-between">
+      <div className={styles.topBar}>
         <button
           type="button"
           onClick={goBack}
           aria-label="Back"
-          className={`flex h-6 w-6 items-center justify-center rounded-full text-secondary transition-colors hover:bg-chip-alt ${
-            step === 1 ? "invisible" : ""
-          }`}
+          className={`${styles.iconButton} ${step === 1 ? styles.invisible : ""}`}
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft size={22} />
         </button>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="flex h-6 w-6 items-center justify-center rounded-full text-secondary transition-colors hover:bg-chip-alt"
+          className={styles.iconButton}
         >
-          <X className="h-4 w-4" />
+          <X size={22} />
         </button>
       </div>
 
-      <div className="w-full shrink-0 text-center">
-        <p className="text-heading text-primary">VILLA RECOMMENDER</p>
-        <span className="mx-auto mt-1.5 block h-px w-8 bg-primary" />
+      <div>
+        <p className={styles.heading}>VILLA RECOMMENDER</p>
+        <span className={styles.headingLine} />
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <p className="text-caption mt-3 shrink-0 text-center font-semibold uppercase tracking-wide text-accent">
+      <div className="flex flex-1 flex-col">
+        <p className={styles.step}>
           {currentQuestion.step} of {TOTAL_QUESTIONS}
         </p>
 
         {/* line-clamp-2 + min-h: sea 1 o 2 líneas, la pregunta SIEMPRE
             ocupa el mismo espacio, así el layout nunca se mueve. */}
-        <h2 className="text-body mt-3 line-clamp-2 min-h-[2.75rem] shrink-0 text-center text-base font-semibold text-secondary">
+        <h2 className={styles.question}>
           {currentQuestion.question}
         </h2>
-        <p className="text-caption mb-4 mt-1 line-clamp-1 min-h-[0.9rem] shrink-0 text-center text-muted">
+        <p className={styles.subtext}>
           {currentQuestion.subtext}
         </p>
 
-        <div className="grid flex-1 grid-cols-2 grid-rows-2 gap-2.5">
+        <div className={styles.options}>
           {currentQuestion.options.map((option) => {
             const selected = answers[currentQuestion.key] === option.value;
             return (
@@ -219,25 +215,15 @@ export default function VillaRecommender({
                 type="button"
                 onClick={() => selectOption(currentQuestion.key, option.value)}
                 aria-pressed={selected}
-                className={`flex h-full items-center justify-between gap-2 rounded-md border px-3 py-3 text-left transition-colors ${
-                  selected
-                    ? "border-primary bg-surface"
-                    : "border-border bg-background hover:border-primary"
-                }`}
+                className={`${styles.option} ${selected ? styles.optionSelected : ""}`}
               >
-                <span className="text-caption line-clamp-2 font-medium leading-snug text-secondary">
-                  {option.label}
-                </span>
+                <span>{option.label}</span>
 
                 {/* Radio indicator */}
                 <span
-                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                    selected ? "border-primary" : "border-border"
-                  }`}
+                  className={styles.radio}
                 >
-                  {selected && (
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                  )}
+                  {selected && <span className={styles.radioDot} />}
                 </span>
               </button>
             );
@@ -245,17 +231,13 @@ export default function VillaRecommender({
         </div>
       </div>
 
-      <div className="mt-4 flex shrink-0 flex-col gap-2.5">
-        <div className="flex justify-center gap-1.5">
+      <div className={styles.footer}>
+        <div className={styles.progress} aria-label={`Step ${step} of ${TOTAL_QUESTIONS}`}>
           {QUESTIONS.map((q) => (
             <span
               key={q.key}
-              className={`h-1.5 rounded-full transition-all ${
-                q.step === step
-                  ? "w-4 bg-primary"
-                  : q.step < step
-                    ? "w-1.5 bg-primary"
-                    : "w-1.5 bg-border"
+              className={`${styles.progressDot} ${
+                q.step === step ? styles.progressCurrent : q.step < step ? styles.progressDone : ""
               }`}
             />
           ))}
@@ -265,7 +247,7 @@ export default function VillaRecommender({
           type="button"
           onClick={goNext}
           disabled={!isCurrentAnswered}
-          className="text-button rounded-md bg-primary py-2.5 text-primary-foreground transition-opacity disabled:pointer-events-none disabled:opacity-35"
+          className={styles.continueButton}
         >
           {step === TOTAL_QUESTIONS ? "See my results" : "Continue"}
         </button>

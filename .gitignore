@@ -10,6 +10,7 @@
 # Production / Build
 /build
 /dist
+/.cache/villa-image-masters/
 
 # Debug Logs
 npm-debug.log*

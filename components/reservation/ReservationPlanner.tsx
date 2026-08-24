@@ -1,16 +1,49 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Bath, BedDouble, ChevronLeft, ChevronRight, Minus, Plus, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Minus, Plus } from "lucide-react";
 import type { ReservationPeriod } from "@/types/wordpress";
+import type { ResponsiveVillaImage } from "@/lib/images/villa-images";
 import { HUBSPOT_REFERRAL_OPTIONS } from "@/lib/hubspot/villa-form";
+import styles from "./ReservationPlanner.module.css";
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" });
 
 const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function ResilientPhoto({ image, alt, className = "" }: { image?: ResponsiveVillaImage; alt: string; className?: string }) {
+    const [resolvedSrc, setResolvedSrc] = useState(image?.fallbackSrc || image?.cardSrc || image?.src);
+
+    useEffect(() => {
+        const primarySrc = image?.cardSrc || image?.src;
+        setResolvedSrc(image?.fallbackSrc || primarySrc);
+        if (!primarySrc || !image?.fallbackSrc || primarySrc === image.fallbackSrc) return;
+        const candidate = new window.Image();
+        candidate.onload = () => setResolvedSrc(primarySrc);
+        candidate.src = primarySrc;
+        return () => { candidate.onload = null; };
+    }, [image]);
+
+    if (!resolvedSrc || !image) return null;
+    const primarySrc = image.cardSrc || image.src;
+    return (
+        <img
+            src={resolvedSrc}
+            srcSet={resolvedSrc === primarySrc ? image.srcSet : undefined}
+            sizes="(max-width: 1023px) 136px, 456px"
+            width={image.cardWidth || image.width}
+            height={image.cardHeight || image.height}
+            alt={alt}
+            className={className}
+            loading="lazy"
+            decoding="async"
+        />
+    );
+}
 
 function toIso(date: Date) {
     const year = date.getFullYear();
@@ -28,6 +61,10 @@ function addDays(value: string, days: number) {
     const date = parseIso(value);
     date.setDate(date.getDate() + days);
     return toIso(date);
+}
+
+function shortVillaName(name: string) {
+    return name.replace(/^(casa|villa)\s+/i, "").trim();
 }
 
 function shiftMonth(date: Date, delta: number) {
@@ -51,11 +88,18 @@ function isBetween(value: string, start?: string, end?: string) {
 }
 
 type ReservationPlannerProps = {
-    villas: Array<{ id: number; name: string }>;
+    villas: Array<{
+        id: number;
+        name: string;
+        image?: ResponsiveVillaImage;
+        guests?: number;
+        bedrooms?: number;
+        bathrooms?: number;
+    }>;
     reservations: ReservationPeriod[];
     availabilityOnline: boolean;
     maxGuests?: number;
-    heroImage?: string;
+    heroImage?: ResponsiveVillaImage;
     heroImageAlt?: string;
     description?: string;
     price?: number;
@@ -209,6 +253,12 @@ export default function ReservationPlanner({
                     ) : <span className="w-9" aria-hidden="true" />}
                 </div>
 
+                <div className={styles.calendarLegend} aria-label="Calendar status legend">
+                    <span className={styles.legendItem}><span className={`${styles.legendSwatch} ${styles.availableSwatch}`}>8</span>Available</span>
+                    <span className={styles.legendItem}><span className={`${styles.legendSwatch} ${styles.bookedSwatch}`}>8</span>Booked</span>
+                    <span className={styles.legendItem}><span className={`${styles.legendSwatch} ${styles.selectedSwatch}`}>8</span>Selected</span>
+                </div>
+
                 <div className="p-4 sm:p-6">
                     <div className="grid grid-cols-7 gap-px text-center">
                         {DAYS.map((day) => <span key={day} className="pb-2 text-[11px] font-bold uppercase tracking-wide text-slate-400">{day}</span>)}
@@ -229,11 +279,11 @@ export default function ReservationPlanner({
         );
     }
 
-    const statsRow = (
+    const statsRow = (villa: { guests?: number; bedrooms?: number; bathrooms?: number } = { guests: maxGuests, bedrooms, bathrooms }) => (
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-[#6a7282]">
-            <span className="inline-flex items-center gap-1.5"><Users aria-hidden="true" size={16} className="text-[#008fa9]" />{maxGuests} guests</span>
-            {Boolean(bedrooms) && <span className="inline-flex items-center gap-1.5"><BedDouble aria-hidden="true" size={16} className="text-[#008fa9]" />{bedrooms} bedrooms</span>}
-            {Boolean(bathrooms) && <span className="inline-flex items-center gap-1.5"><Bath aria-hidden="true" size={16} className="text-[#008fa9]" />{bathrooms} bathrooms</span>}
+            <span className="inline-flex items-center gap-1.5"><Image src="/images/icons/villa-guests.svg" alt="" width={16} height={16} />{villa.guests || maxGuests} guests</span>
+            {Boolean(villa.bedrooms) && <span className="inline-flex items-center gap-1.5"><Image src="/images/icons/villa-bedrooms.svg" alt="" width={16} height={16} />{villa.bedrooms} bedrooms</span>}
+            {Boolean(villa.bathrooms) && <span className="inline-flex items-center gap-1.5"><Image src="/images/icons/villa-bathrooms.svg" alt="" width={16} height={16} />{villa.bathrooms} bathrooms</span>}
         </div>
     );
 
@@ -247,9 +297,9 @@ export default function ReservationPlanner({
     // --- "villa-finish" confirmation screen ---
     if (submitted) {
         return (
-            <section className="overflow-hidden rounded-[2rem] border border-[#e2e8f0] bg-white shadow-[0_24px_70px_rgba(26,46,74,0.10)]">
+            <section className={styles.planner}>
                 {logo}
-                <p className="mt-4 bg-[#d5efff] px-6 py-2.5 text-left text-xs font-bold uppercase tracking-[0.2em] text-[#1a2e4a] sm:px-8">{pairedStay ? "Mix & Match · Two Villas" : `Villa · ${villaName}`}</p>
+                <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{`Villa - ${villas[0]?.name || villaName}`}</p>
 
                 <div className="p-5 sm:p-8">
                     <header className="text-center">
@@ -259,14 +309,14 @@ export default function ReservationPlanner({
 
                     <div className="mx-auto mt-6 max-w-sm overflow-hidden rounded-2xl border border-[#e2e8f0]">
                         {heroImage ? (
-                            <img src={heroImage} alt={heroImageAlt || villaName} className="aspect-[4/3] w-full object-cover" />
+                            <ResilientPhoto image={heroImage} alt={heroImageAlt || villaName} className="aspect-[4/3] w-full object-cover" />
                         ) : (
                             <div className="flex aspect-[4/3] w-full items-center justify-center bg-[#eaf3f4] text-xs font-bold uppercase tracking-wide text-[#527079]">Image coming soon</div>
                         )}
 
                         <div className="space-y-3 p-5">
                             <p className="text-base font-bold uppercase tracking-wide text-[#1a2e4a]">{villaName}</p>
-                            {statsRow}
+                                {statsRow()}
                             {Boolean(price) && (
                                 <p className="text-sm text-[#1c1c1c]">From <strong className="text-base font-semibold">${price!.toLocaleString("en-US")}</strong> / night + taxes</p>
                             )}
@@ -292,9 +342,9 @@ export default function ReservationPlanner({
     }
 
     return (
-        <section id="reservar" className="overflow-hidden rounded-[2rem] border border-[#e2e8f0] bg-white shadow-[0_24px_70px_rgba(26,46,74,0.10)]">
+        <section id="reservar" className={styles.planner}>
             {logo}
-            <p className="mt-4 bg-[#d5efff] px-6 py-2.5 text-left text-xs font-bold uppercase tracking-[0.2em] text-[#1a2e4a] sm:px-8">{pairedStay ? "Mix & Match · Two Villas" : `Villa · ${villaName}`}</p>
+            <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{`Villa - ${villas[0]?.name || villaName}`}</p>
             <header className="px-6 pt-6 sm:px-8">
                 <h2 className="text-lg leading-7 font-bold tracking-normal text-[#1a2e4a] uppercase">Let&apos;s Get Your Travel Planned</h2>
                 <p className="mt-1 text-xs font-bold uppercase leading-4 tracking-[1.2px] text-[#99a1af]">Please complete the form below.</p>
@@ -303,17 +353,44 @@ export default function ReservationPlanner({
             <div className="p-5 sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-10">
                 {/* --- Villa summary column --- */}
                 <div>
+                    <div className={styles.pairHeading}>
+                        {pairedStay && (
+                            <>
+                                <h3>{villas.map((villa) => shortVillaName(villa.name)).join(" + ")}</h3>
+                                <p>{bedrooms || villas.reduce((total, villa) => total + (villa.bedrooms || 0), 0)} Total Bedrooms / Suites</p>
+                            </>
+                        )}
+                    </div>
+
+                    <div className={styles.mobileSummary}>
+                        {villas.map((villa, index) => (
+                            <div className={styles.summaryRow} key={villa.id}>
+                                <div className={styles.summaryImage}>
+                                    <ResilientPhoto
+                                        image={villa.image || (index === 0 ? heroImage : undefined)}
+                                        alt={villa.name}
+                                    />
+                                </div>
+                                <div>
+                                    <p className={styles.summaryEyebrow}>Villa</p>
+                                    <p className={styles.summaryName}>{villa.name.replace(/^(Casa|Villa)\s+/i, "")}</p>
+                                    {statsRow(villa)}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
                     {/* Desktop: full summary card (image, stats, description, price + amenities) */}
                     <div className="hidden lg:block">
                         <div className="overflow-hidden rounded-2xl border border-[#e2e8f0]">
                             {heroImage ? (
-                                <img src={heroImage} alt={heroImageAlt || villaName} className="aspect-[4/3] w-full object-cover" />
+                                <ResilientPhoto image={heroImage} alt={heroImageAlt || villaName} className="aspect-[4/3] w-full object-cover" />
                             ) : (
                                 <div className="flex aspect-[4/3] w-full items-center justify-center bg-[#eaf3f4] text-xs font-bold uppercase tracking-wide text-[#527079]">Image coming soon</div>
                             )}
                         </div>
 
-                        <div className="mt-4">{statsRow}</div>
+                        <div className="mt-4">{statsRow()}</div>
 
                         {description && <p className="mt-3 text-sm leading-6 text-[#1a2e4a]">{description}</p>}
 
@@ -334,18 +411,7 @@ export default function ReservationPlanner({
                     </div>
 
                     {/* Mobile/tablet: compact villa card (thumbnail + name + stats) */}
-                    <div className="flex items-center gap-3 lg:hidden">
-                        <div className="h-20 w-24 shrink-0 overflow-hidden rounded-xl border border-[#e2e8f0] bg-[#eaf3f4]">
-                            {heroImage ? (
-                                <img src={heroImage} alt={heroImageAlt || villaName} className="h-full w-full object-cover" />
-                            ) : null}
-                        </div>
-                        <div>
-                            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#99a1af]">Villa</p>
-                            <p className="text-sm font-bold uppercase tracking-wide text-[#1a2e4a]">{villaName}</p>
-                            <div className="mt-1">{statsRow}</div>
-                        </div>
-                    </div>
+                    <div className="hidden lg:hidden" aria-hidden="true" />
                 </div>
 
                 {/* --- Booking column --- */}
@@ -355,12 +421,6 @@ export default function ReservationPlanner({
                     <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#6a7282]">
                         Stay Dates{checkIn && checkOut && ` ${parseIso(checkIn).getDate()} — ${parseIso(checkOut).getDate()}`}
                     </p>
-
-                    <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs leading-4 font-medium tracking-normal text-[#6a7282]">
-                        <span className="flex items-center gap-2"><span className="flex h-4 w-5 items-center justify-center rounded-sm text-[9px] font-bold bg-[#e8f5ee] text-[#166534]">8</span>Available</span>
-                        <span className="flex items-center gap-2"><span className="flex h-4 w-5 items-center justify-center text-[9px] font-medium text-[#6a7282] line-through">8</span>Booked</span>
-                        <span className="flex items-center gap-2"><span className="flex h-4 w-5 items-center justify-center rounded-sm text-[9px] font-bold bg-[#2c4a7c] text-white">8</span>Selected</span>
-                    </div>
 
                     {/* Mobile/tablet: single month with prev/next */}
                     <div className="lg:hidden">

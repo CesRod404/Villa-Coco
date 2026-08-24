@@ -1,6 +1,16 @@
 import "./globals.css";
 import Script from "next/script";
+import localFont from "next/font/local";
 import ChatWidget from "@/components/chat/ChatWidget";
+
+const raleway = localFont({
+  src: [
+    { path: "./fonts/Raleway-Regular.ttf", weight: "400", style: "normal" },
+    { path: "./fonts/Raleway-SemiBold.ttf", weight: "600", style: "normal" },
+  ],
+  display: "swap",
+  variable: "--font-raleway",
+});
 
 export const metadata = {
   title: "Villa Coco",
@@ -20,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body>
+      <body className={raleway.variable}>
         {children}
         <ChatWidget />
         {HUBSPOT_TRACKING_PORTAL_ID && (

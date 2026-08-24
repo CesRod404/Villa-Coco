@@ -1,0 +1,241 @@
+.planner {
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 70px rgba(26, 46, 74, 0.1);
+  color: #1a2e4a;
+  font-family: var(--font-raleway), "Raleway", sans-serif;
+}
+
+.mobileBar {
+  display: none;
+}
+
+.contextBar {
+  display: flex;
+  min-height: 48px;
+  margin-top: 16px;
+  padding-inline: 32px;
+  align-items: center;
+  gap: 12px;
+  background: #d5efff;
+  color: #1a2e4a;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.contextSparkle {
+  color: #0f91b2;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.pairHeading {
+  display: none;
+}
+
+.mobileSummary {
+  display: none;
+}
+
+.calendarLegend {
+  display: flex;
+  padding: 10px 14px;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-bottom: 1px solid #e8eef7;
+  background: #f8fafc;
+  color: #6a7282;
+  font-size: 12px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendSwatch {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.availableSwatch {
+  background: #8ee5f3;
+  color: #17684a;
+}
+
+.bookedSwatch {
+  background: #e8eef7;
+  color: #6a7282;
+}
+
+.selectedSwatch {
+  background: #2c4a7c;
+  color: #fff;
+}
+
+@media (max-width: 1023px) {
+  .planner {
+    width: 100%;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .mobileBar {
+    position: relative;
+    display: grid;
+    height: 96px;
+    padding: 0 18px;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    background: #fff;
+  }
+
+  .mobileBar button {
+    appearance: none;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    color: #1a2e4a;
+    cursor: pointer;
+  }
+
+  .mobileBar img {
+    width: 80px;
+    height: 68px;
+    justify-self: center;
+    filter: brightness(0) saturate(100%) invert(17%) sepia(18%) saturate(1799%) hue-rotate(173deg) brightness(92%) contrast(91%);
+    object-fit: contain;
+  }
+
+  .contextBar {
+    min-height: 56px;
+    margin: 0;
+    padding-inline: 24px;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+  }
+
+  .pairHeading {
+    display: block;
+    margin: 22px 0 14px;
+  }
+
+  .pairHeading h3 {
+    margin: 0;
+    color: #00535e;
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .pairHeading p {
+    margin: 7px 0 0;
+    color: #596579;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .mobileSummary {
+    display: grid;
+    padding: 14px;
+    gap: 20px;
+    border: 1px solid #a1a1a1;
+    border-radius: 12px;
+    background: #fff;
+  }
+
+  .summaryRow {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+  }
+
+  .summaryImage {
+    width: 130px;
+    height: 136px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #e8eef7;
+  }
+
+  .summaryImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .summaryEyebrow {
+    margin: 0;
+    color: #99a1af;
+    font-size: 14px;
+    letter-spacing: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .summaryName {
+    margin: 4px 0 10px;
+    color: #00535e;
+    font-size: 27px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+}
+
+@media (max-width: 480px) {
+  .mobileBar {
+    height: 92px;
+    padding-inline: 14px;
+  }
+
+  .contextBar {
+    min-height: 52px;
+    padding-inline: 20px;
+    font-size: 15px;
+  }
+
+  .summaryRow {
+    grid-template-columns: 126px minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .summaryImage {
+    width: 126px;
+    height: 132px;
+  }
+
+  .summaryName {
+    font-size: 25px;
+  }
+
+  .calendarLegend {
+    gap: 9px;
+    font-size: 11px;
+  }
+
+  .legendSwatch {
+    width: 22px;
+    height: 22px;
+  }
+}

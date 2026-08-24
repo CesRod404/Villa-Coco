@@ -30,6 +30,10 @@ for (const villa of snapshot.villas) {
     villa.acf?.image_2?.url,
     villa.acf?.image_3?.url,
     villa.acf?.image_4?.url,
+    villa.acf?.image_5?.url,
+    villa.acf?.image_6?.url,
+    villa.acf?.image_7?.url,
+    villa.acf?.image_8?.url,
   ].filter(Boolean);
   assert.ok(gallery.length > 0, `La villa ${villa.slug} necesita al menos una imagen`);
 

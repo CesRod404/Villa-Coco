@@ -18,7 +18,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ChevronLeft, Sparkles, X } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import VillaRecommender, {
   type VillaRecommenderAnswers,
 } from "@/components/recommender/VillaRecommender";
@@ -114,7 +114,7 @@ export default function FindVillaChatButton({
         mounted &&
         createPortal(
           <div
-            className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 p-4"
+            className="fixed inset-0 z-[999] flex items-center justify-center bg-black/50 p-6 sm:p-4"
             onClick={closeModal}
           >
             <div onClick={(e) => e.stopPropagation()}>

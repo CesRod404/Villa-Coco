@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import ReservationPlanner from "@/components/reservation/ReservationPlanner";
 import DataFallbackNotice from "@/components/common/DataFallbackNotice";
 import { getVillaAvailability, getVillaBySlugWithSource } from "@/lib/wp";
+import { getWordpressFallback } from "@/lib/wp/fallback";
 import type { Villa } from "@/types/wordpress";
+import { getVillaPrimaryImage } from "@/lib/images/villa-images";
 
 function plainText(value?: string) {
   return (value || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -28,12 +30,8 @@ function capacity(villa: Villa) {
   );
 }
 
-function heroImage(villa: Villa) {
-  const featured = villa._embedded?.["wp:featuredmedia"]?.[0];
-  return {
-    src: featured?.source_url || villa.acf.image_1?.url,
-    alt: featured?.alt_text || villa.acf.image_1?.alt || plainText(villa.title.rendered),
-  };
+function heroImage(villa: Villa, fallbackVilla?: Villa) {
+  return getVillaPrimaryImage(villa, fallbackVilla);
 }
 
 function nightlyPrice(villa: Villa) {
@@ -78,6 +76,8 @@ export default async function VillaDetailPage({
   if (!primaryVilla) notFound();
 
   const villas = companionVilla ? [primaryVilla, companionVilla] : [primaryVilla];
+  const fallbackVillas = getWordpressFallback<Villa>("/villa") || [];
+  const fallbackVillaBySlug = new Map(fallbackVillas.map((villa) => [villa.slug, villa]));
   const availability = await Promise.all(villas.map((villa) => getVillaAvailability(villa.id)));
   const combined = villas.length === 2;
   const reservations = availability.flatMap((item) => item.reservations);
@@ -86,7 +86,7 @@ export default async function VillaDetailPage({
 
   // Villa summary data for the reservation card (image, description, price, amenities)
   // reused inside ReservationPlanner to match the new form design.
-  const summaryImage = heroImage(primaryVilla);
+  const summaryImage = heroImage(primaryVilla, fallbackVillaBySlug.get(primaryVilla.slug));
   const summaryDescription = combined
     ? "Two private villas, one shared itinerary and a single availability request."
     : primaryVilla.acf.description_short
@@ -98,21 +98,30 @@ export default async function VillaDetailPage({
   const totalBathrooms = villas.reduce((sum, villa) => sum + positiveNumber(villa.acf.bathrooms, villa.acf.banos), 0) || undefined;
 
   return (
-    <main className="min-h-screen bg-[#edf5f5] text-[#17304f]">
-      <section className="mx-auto max-w-[1440px] px-4 py-6 sm:px-7 sm:py-10 lg:px-12 lg:py-14">
+    <main className="min-h-screen bg-white text-[#17304f] lg:bg-[#edf5f5]">
+      <section className="mx-auto max-w-[1440px] px-0 py-0 lg:px-12 lg:py-14">
         <DataFallbackNotice visible={isUsingFallback} />
-        <Link href={combined ? "/#mix-match" : "/#villas"} className="text-sm font-semibold tracking-wide text-[#4d806f] hover:underline">
+        <Link href={combined ? "/#mix-match" : "/#villas"} className="mx-4 mt-5 hidden text-sm font-semibold tracking-wide text-[#4d806f] hover:underline lg:inline-block">
           ← {combined ? "Volver a Mix & Match" : "Volver a las villas"}
         </Link>
 
-        <div id="reservation" className="mx-auto mt-8 max-w-[1160px] scroll-mt-8">
+        <div id="reservation" className="mx-auto mt-0 max-w-[1160px] scroll-mt-8 lg:mt-8">
           <ReservationPlanner
-            villas={villas.map((villa) => ({ id: villa.id, name: plainText(villa.title.rendered) }))}
+            villas={villas.map((villa, index) => {
+              return {
+                id: villa.id,
+                name: plainText(villa.title.rendered),
+                image: heroImage(villa, fallbackVillaBySlug.get(villa.slug)),
+                guests: capacity(villa),
+                bedrooms: positiveNumber(villa.acf.bedrooms, villa.acf.habitaciones),
+                bathrooms: positiveNumber(villa.acf.bathrooms, villa.acf.banos),
+              };
+            })}
             maxGuests={maxGuests}
             reservations={reservations}
             availabilityOnline={availabilityOnline}
-            heroImage={summaryImage.src}
-            heroImageAlt={summaryImage.alt}
+            heroImage={summaryImage}
+            heroImageAlt={summaryImage?.alt || plainText(primaryVilla.title.rendered)}
             description={summaryDescription}
             price={summaryPrice}
             amenities={summaryAmenities}
