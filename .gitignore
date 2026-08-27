@@ -56,3 +56,8 @@ wordpress-docker/wordpress/wp-content/uploads/
 wordpress-docker/wordpress/wp-content/cache/
 wordpress-docker/wordpress/wp-content/upgrade/
 wordpress-docker/wordpress/wp-content/debug.log
+
+# Temporary and output files
+/output/
+/tmp/
+

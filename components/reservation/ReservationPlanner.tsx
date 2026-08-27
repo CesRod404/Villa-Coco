@@ -15,28 +15,29 @@ const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "long", year: "
 const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]+$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-function ResilientPhoto({ image, alt, className = "" }: { image?: ResponsiveVillaImage; alt: string; className?: string }) {
-    const [resolvedSrc, setResolvedSrc] = useState(image?.fallbackSrc || image?.cardSrc || image?.src);
+function ResilientPhoto({ image, alt, className = "", gallery = false }: { image?: ResponsiveVillaImage; alt: string; className?: string; gallery?: boolean }) {
+    const preferredSrc = gallery ? image?.src : image?.cardSrc || image?.src;
+    const [resolvedSrc, setResolvedSrc] = useState(image?.fallbackSrc || preferredSrc);
 
     useEffect(() => {
-        const primarySrc = image?.cardSrc || image?.src;
+        const primarySrc = gallery ? image?.src : image?.cardSrc || image?.src;
         setResolvedSrc(image?.fallbackSrc || primarySrc);
         if (!primarySrc || !image?.fallbackSrc || primarySrc === image.fallbackSrc) return;
         const candidate = new window.Image();
         candidate.onload = () => setResolvedSrc(primarySrc);
         candidate.src = primarySrc;
         return () => { candidate.onload = null; };
-    }, [image]);
+    }, [gallery, image]);
 
     if (!resolvedSrc || !image) return null;
-    const primarySrc = image.cardSrc || image.src;
+    const primarySrc = gallery ? image.src : image.cardSrc || image.src;
     return (
         <img
             src={resolvedSrc}
             srcSet={resolvedSrc === primarySrc ? image.srcSet : undefined}
-            sizes="(max-width: 1023px) 136px, 456px"
-            width={image.cardWidth || image.width}
-            height={image.cardHeight || image.height}
+            sizes={gallery ? "(max-width: 1023px) 136px, 604px" : "(max-width: 1023px) 136px, 456px"}
+            width={gallery ? image.width : image.cardWidth || image.width}
+            height={gallery ? image.height : image.cardHeight || image.height}
             alt={alt}
             className={className}
             loading="lazy"
@@ -125,6 +126,10 @@ export default function ReservationPlanner({
     const villaIds = villas.map((villa) => villa.id);
     const villaName = villas.map((villa) => villa.name).join(" + ");
     const pairedStay = villas.length > 1;
+    const displayVillaName = villas.map((villa) => shortVillaName(villa.name)).join(" + ");
+    const contextLabel = pairedStay
+        ? `Mix& Match - ${displayVillaName}`
+        : `Villa - ${displayVillaName}`;
     const [month, setMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
     const [checkIn, setCheckIn] = useState<string>();
     const [checkOut, setCheckOut] = useState<string>();
@@ -197,6 +202,15 @@ export default function ReservationPlanner({
         return (event: React.ChangeEvent<HTMLInputElement>) => {
             setter(event.target.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ' -]/g, ""));
         };
+    }
+
+    function updateGuests(value: number) {
+        if (!Number.isFinite(value)) return;
+        setGuests(Math.min(maxGuests, Math.max(1, Math.trunc(value))));
+    }
+
+    function handleGuestsKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+        if (["e", "E", "+", "-", ".", ","].includes(event.key)) event.preventDefault();
     }
 
     const primaryCalendarDays = useMemo(() => buildCalendarDays(month), [month]);
@@ -299,7 +313,7 @@ export default function ReservationPlanner({
         return (
             <section className={styles.planner}>
                 {logo}
-                <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{`Villa - ${villas[0]?.name || villaName}`}</p>
+                <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{contextLabel}</p>
 
                 <div className="p-5 sm:p-8">
                     <header className="text-center">
@@ -344,13 +358,13 @@ export default function ReservationPlanner({
     return (
         <section id="reservar" className={styles.planner}>
             {logo}
-            <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{`Villa - ${villas[0]?.name || villaName}`}</p>
+            <p className={styles.contextBar}><span className={styles.contextSparkle}>✦</span>{contextLabel}</p>
             <header className="px-6 pt-6 sm:px-8">
                 <h2 className="text-lg leading-7 font-bold tracking-normal text-[#1a2e4a] uppercase">Let&apos;s Get Your Travel Planned</h2>
                 <p className="mt-1 text-xs font-bold uppercase leading-4 tracking-[1.2px] text-[#99a1af]">Please complete the form below.</p>
             </header>
 
-            <div className="p-5 sm:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] lg:items-start lg:gap-10">
+            <div className="p-5 sm:p-8 lg:grid lg:grid-cols-[minmax(0,604px)_minmax(400px,1fr)] lg:items-start lg:gap-8">
                 {/* --- Villa summary column --- */}
                 <div>
                     <div className={styles.pairHeading}>
@@ -380,34 +394,46 @@ export default function ReservationPlanner({
                         ))}
                     </div>
 
-                    {/* Desktop: full summary card (image, stats, description, price + amenities) */}
-                    <div className="hidden lg:block">
-                        <div className="overflow-hidden rounded-2xl border border-[#e2e8f0]">
-                            {heroImage ? (
-                                <ResilientPhoto image={heroImage} alt={heroImageAlt || villaName} className="aspect-[4/3] w-full object-cover" />
-                            ) : (
-                                <div className="flex aspect-[4/3] w-full items-center justify-center bg-[#eaf3f4] text-xs font-bold uppercase tracking-wide text-[#527079]">Image coming soon</div>
-                            )}
+                    {/* Desktop: one complete summary per selected villa. */}
+                    <div className={styles.desktopSummary}>
+                        <div className={pairedStay ? styles.combinedVillaStack : undefined}>
+                            {villas.map((villa, index) => (
+                                <article className={styles.desktopVillaSummary} key={villa.id}>
+                                    <div className={styles.desktopVillaImage}>
+                                        {villa.image || (index === 0 ? heroImage : undefined) ? (
+                                            <ResilientPhoto
+                                                image={villa.image || (index === 0 ? heroImage : undefined)}
+                                                alt={villa.name}
+                                                className="h-full w-full object-cover"
+                                                gallery
+                                            />
+                                        ) : (
+                                            <div className="flex h-full w-full items-center justify-center bg-[#eaf3f4] text-xs font-bold uppercase tracking-wide text-[#527079]">Image coming soon</div>
+                                        )}
+                                    </div>
+                                    <div className={styles.desktopVillaStats}>{statsRow(villa)}</div>
+                                </article>
+                            ))}
                         </div>
 
-                        <div className="mt-4">{statsRow()}</div>
+                        <div className={styles.staySummary}>
+                            {description && <p className={styles.stayDescription}>{description}</p>}
 
-                        {description && <p className="mt-3 text-sm leading-6 text-[#1a2e4a]">{description}</p>}
-
-                        {(Boolean(price) || amenities.length > 0) && (
-                            <div className="mt-4 flex items-start justify-between gap-6">
-                                {Boolean(price) ? (
-                                    <p className="shrink-0 text-sm text-[#1c1c1c]">From <strong className="text-2xl font-semibold">${price!.toLocaleString("en-US")}</strong><span className="block text-xs text-[#6a7282]">/ night + taxes</span></p>
-                                ) : <span />}
-                                {amenities.length > 0 && (
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {amenities.map((amenity) => (
-                                            <span key={amenity} className="inline-flex items-center whitespace-nowrap rounded-full bg-[#ccf6ff] px-2.5 py-1 text-xs font-semibold text-[#1a2e4a]">{amenity}</span>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                            {(Boolean(price) || amenities.length > 0) && (
+                                <div className={styles.stayCommercial}>
+                                    {Boolean(price) ? (
+                                        <p className={styles.stayPrice}>From <strong>${price!.toLocaleString("en-US")}</strong><span>/ night + taxes</span></p>
+                                    ) : <span />}
+                                    {amenities.length > 0 && (
+                                        <div className={styles.stayAmenities}>
+                                            {amenities.map((amenity) => (
+                                                <span key={amenity}>{amenity}</span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Mobile/tablet: compact villa card (thumbnail + name + stats) */}
@@ -415,37 +441,50 @@ export default function ReservationPlanner({
                 </div>
 
                 {/* --- Booking column --- */}
-                <div className="mt-8 lg:mt-0">
+                <div className={`${styles.bookingColumn} mt-8 lg:mt-0`}>
                     {!availabilityOnline && <div role="alert" className="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-5 text-amber-800">Availability can&apos;t be verified right now. Try reloading before submitting a request.</div>}
 
-                    <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#6a7282]">
-                        Stay Dates{checkIn && checkOut && ` ${parseIso(checkIn).getDate()} — ${parseIso(checkOut).getDate()}`}
-                    </p>
+                    <div className={styles.calendarShell}>
+                        <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-[#6a7282]">
+                            Stay Dates{checkIn && checkOut && ` ${parseIso(checkIn).getDate()} — ${parseIso(checkOut).getDate()}`}
+                        </p>
 
-                    {/* Mobile/tablet: single month with prev/next */}
-                    <div className="lg:hidden">
-                        {renderMonthPanel(month, primaryCalendarDays, { showPrev: true, showNext: true })}
-                    </div>
+                        {/* Use one or two months according to the booking column's real width. */}
+                        <div className={styles.singleCalendar}>
+                            {renderMonthPanel(month, primaryCalendarDays, { showPrev: true, showNext: true })}
+                        </div>
 
-                    {/* Desktop: two months side by side */}
-                    <div className="hidden lg:grid lg:grid-cols-2 lg:gap-4">
-                        {renderMonthPanel(month, primaryCalendarDays, { showPrev: true, showNext: false })}
-                        {renderMonthPanel(secondaryMonth, secondaryCalendarDays, { showPrev: false, showNext: true })}
-                    </div>
+                        <div className={styles.doubleCalendar}>
+                            {renderMonthPanel(month, primaryCalendarDays, { showPrev: true, showNext: false })}
+                            {renderMonthPanel(secondaryMonth, secondaryCalendarDays, { showPrev: false, showNext: true })}
+                        </div>
 
-                    {dateError && <p role="alert" className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">{dateError}</p>}
+                        {dateError && <p role="alert" className="mt-3 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">{dateError}</p>}
 
-                    <div className="mt-5 flex items-center gap-3 text-sm text-[#1a2e4a]">
-                        <button type="button" role="switch" aria-checked={flexibleDates} aria-label="My dates are flexible" onClick={() => setFlexibleDates((value) => !value)} className={`relative h-6 w-10 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a2e4a] ${flexibleDates ? "bg-[#77E0F2]" : "bg-[#dfe3eb]"}`}><span className="absolute left-0 top-1 h-4 w-4 rounded-full bg-white shadow-[0_1px_4px_rgba(26,46,74,.22)] transition-transform duration-200" style={{ transform: `translateX(${flexibleDates ? 20 : 4}px)` }} /></button>
-                        <span className="font-semibold">My dates are flexible<span className="block text-xs font-normal text-slate-500">I can adjust ±3 days for better availability</span></span>
+                        <div className="mt-5 flex items-center gap-3 text-sm text-[#1a2e4a]">
+                            <button type="button" role="switch" aria-checked={flexibleDates} aria-label="My dates are flexible" onClick={() => setFlexibleDates((value) => !value)} className={`relative h-6 w-10 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a2e4a] ${flexibleDates ? "bg-[#77E0F2]" : "bg-[#dfe3eb]"}`}><span className="absolute left-0 top-1 h-4 w-4 rounded-full bg-white shadow-[0_1px_4px_rgba(26,46,74,.22)] transition-transform duration-200" style={{ transform: `translateX(${flexibleDates ? 20 : 4}px)` }} /></button>
+                            <span className="font-semibold">My dates are flexible<span className="block text-xs font-normal text-slate-500">I can adjust ±3 days for better availability</span></span>
+                        </div>
                     </div>
 
                     <div className="mt-6">
                         <p className="text-xs font-bold uppercase tracking-[0.3px] text-[#6a7282]">Number of Guests</p>
                         <div className="mt-2 flex items-center gap-3">
-                            <button type="button" aria-label="Decrease guests" disabled={guests <= 1} onClick={() => setGuests((value) => value - 1)} className="rounded-lg border border-[#e2e8f0] p-1.5 disabled:opacity-30"><Minus size={16} /></button>
-                            <span className="w-5 text-center font-bold text-[#1a2e4a]">{guests}</span>
-                            <button type="button" aria-label="Increase guests" disabled={guests >= maxGuests} onClick={() => setGuests((value) => value + 1)} className="rounded-lg border border-[#e2e8f0] p-1.5 disabled:opacity-30"><Plus size={16} /></button>
+                            <button type="button" aria-label="Decrease guests" disabled={guests <= 1} onClick={() => updateGuests(guests - 1)} className="rounded-lg border border-[#e2e8f0] p-1.5 disabled:opacity-30"><Minus size={16} /></button>
+                            <input
+                                type="number"
+                                inputMode="numeric"
+                                min={1}
+                                max={maxGuests}
+                                step={1}
+                                value={guests}
+                                aria-label="Number of guests"
+                                onFocus={(event) => event.currentTarget.select()}
+                                onKeyDown={handleGuestsKeyDown}
+                                onChange={(event) => updateGuests(event.currentTarget.valueAsNumber)}
+                                className="w-8 appearance-none bg-transparent text-center font-bold text-[#1a2e4a] outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                            />
+                            <button type="button" aria-label="Increase guests" disabled={guests >= maxGuests} onClick={() => updateGuests(guests + 1)} className="rounded-lg border border-[#e2e8f0] p-1.5 disabled:opacity-30"><Plus size={16} /></button>
                             <span className="text-xs font-medium text-[#6f7684]">max. {maxGuests} guests</span>
                         </div>
                     </div>

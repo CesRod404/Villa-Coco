@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import type { ResponsiveVillaImage } from "@/lib/images/villa-images";
+import {
+  buildMixMatchBookingHref,
+  buildMixMatchPairs,
+  type MixMatchPair,
+} from "@/lib/mix-match";
 import styles from "./MixMatchConfigurator.module.css";
 
 export type MixMatchVilla = {
@@ -15,10 +20,7 @@ export type MixMatchVilla = {
   guests: number;
 };
 
-type VillaPair = {
-  key: string;
-  villas: [MixMatchVilla, MixMatchVilla];
-};
+type VillaPair = MixMatchPair<MixMatchVilla>;
 
 type PairImageAssignments = Map<number, ResponsiveVillaImage | undefined>;
 
@@ -51,60 +53,8 @@ function ResilientPairImage({ image }: { image: ResponsiveVillaImage }) {
   );
 }
 
-const preferredPairs = [
-  ["lola", "encantada"],
-  ["coco", "cielo"],
-] as const;
-
-function normalizedName(name: string) {
-  return name
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-}
-
 function shortName(name: string) {
   return name.replace(/^(casa|villa)\s+/i, "").trim();
-}
-
-function pairKey(first: MixMatchVilla, second: MixMatchVilla) {
-  return [first.id, second.id].sort((a, b) => a - b).join("-");
-}
-
-function buildPairs(villas: MixMatchVilla[]): VillaPair[] {
-  const pairs: VillaPair[] = [];
-  const usedIds = new Set<number>();
-
-  for (const [firstName, secondName] of preferredPairs) {
-    const first = villas.find(
-      (villa) => !usedIds.has(villa.id) && normalizedName(villa.name).includes(firstName),
-    );
-    const second = villas.find(
-      (villa) =>
-        villa.id !== first?.id &&
-        !usedIds.has(villa.id) &&
-        normalizedName(villa.name).includes(secondName),
-    );
-
-    if (first && second) {
-      pairs.push({ key: pairKey(first, second), villas: [first, second] });
-      usedIds.add(first.id);
-      usedIds.add(second.id);
-    }
-  }
-
-  const remaining = villas.filter((villa) => !usedIds.has(villa.id));
-  for (let index = 0; index + 1 < remaining.length; index += 2) {
-    const first = remaining[index];
-    const second = remaining[index + 1];
-    pairs.push({ key: pairKey(first, second), villas: [first, second] });
-  }
-
-  if (!pairs.length && villas.length >= 2) {
-    pairs.push({ key: pairKey(villas[0], villas[1]), villas: [villas[0], villas[1]] });
-  }
-
-  return pairs.slice(0, 2);
 }
 
 function assignPairImages(pairs: VillaPair[]): PairImageAssignments {
@@ -174,15 +124,12 @@ function PairCard({
 }
 
 export default function MixMatchConfigurator({ villas }: { villas: MixMatchVilla[] }) {
-  const pairs = useMemo(() => buildPairs(villas), [villas]);
+  const pairs = useMemo(() => buildMixMatchPairs(villas), [villas]);
   const pairImages = useMemo(() => assignPairImages(pairs), [pairs]);
-  const [selectedKey, setSelectedKey] = useState<string | undefined>(pairs[0]?.key);
-  const selectedPair = pairs.find((pair) => pair.key === selectedKey) || pairs[0];
+  const [selectedKey, setSelectedKey] = useState<string>();
+  const selectedPair = pairs.find((pair) => pair.key === selectedKey);
   const [first, second] = selectedPair?.villas || [];
-  const pairReady = Boolean(first && second);
-  const bookingHref = pairReady
-    ? `/villas/${first.slug}?with=${encodeURIComponent(second.slug)}#reservation`
-    : "#mix-match";
+  const bookingHref = buildMixMatchBookingHref(selectedPair);
 
   return (
     <div className={styles.configurator}>
@@ -205,11 +152,13 @@ export default function MixMatchConfigurator({ villas }: { villas: MixMatchVilla
       )}
 
       <p className={styles.selectionStatus} aria-live="polite">
-        {pairReady ? `${first.name} and ${second.name} selected` : "Select two villas"}
+        {selectedPair
+          ? `${selectedPair.villas[0].name} and ${selectedPair.villas[1].name} selected`
+          : "Select a villa combination"}
       </p>
 
-      {pairReady ? (
-        <Link className={styles.inquire} href={bookingHref}>
+      {bookingHref ? (
+        <Link key={bookingHref} className={styles.inquire} href={bookingHref} prefetch={false}>
           Inquire here
         </Link>
       ) : (

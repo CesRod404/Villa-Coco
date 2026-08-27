@@ -113,14 +113,7 @@
 
 .pairCardSelected {
   border-color: #00819b;
-  box-shadow: 0 0 0 2px rgba(0, 129, 155, 0.16);
-}
-
-@media (min-width: 768px) {
-  .pairCardSelected {
-    border-color: #a1a1a1;
-    box-shadow: none;
-  }
+  box-shadow: 0 0 0 3px rgba(0, 129, 155, 0.35);
 }
 
 .pairCard:focus-visible {

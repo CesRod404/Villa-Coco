@@ -20,13 +20,22 @@ function positiveNumber(...values: unknown[]) {
 }
 
 function capacity(villa: Villa) {
+  const useCases = Array.isArray(villa.acf.use_cases)
+    ? villa.acf.use_cases
+    : villa.acf.use_cases
+      ? [villa.acf.use_cases]
+      : [];
+  const taggedCapacity = useCases
+    .map((value) => String(value).match(/(\d+)\s*guests?/i))
+    .find(Boolean)?.[1];
+
   return (
     positiveNumber(
       villa.acf.guests,
       villa.acf.max_guests,
       villa.acf.capacity,
       villa.acf.capacidad_personas,
-    ) || positiveNumber(villa.acf.suites_count) * 2
+    ) || positiveNumber(taggedCapacity) || positiveNumber(villa.acf.suites_count) * 2
   );
 }
 
@@ -48,7 +57,7 @@ function amenityTags(villa: Villa) {
   const amenities = (Array.isArray(source) ? source : [source])
     .flatMap((value) => String(value).split(","))
     .map((value) => value.replace(/[_-]+/g, " ").trim())
-    .filter(Boolean);
+    .filter((value) => Boolean(value) && !/^\d+\s*guests?$/i.test(value));
   return Array.from(new Set(amenities)).slice(0, 8);
 }
 
@@ -92,20 +101,22 @@ export default async function VillaDetailPage({
     : primaryVilla.acf.description_short
       ? plainText(primaryVilla.acf.description_short)
       : undefined;
-  const summaryPrice = combined ? undefined : nightlyPrice(primaryVilla);
-  const summaryAmenities = amenityTags(primaryVilla);
+  const summaryPrice = villas.reduce((total, villa) => total + (nightlyPrice(villa) || 0), 0) || undefined;
+  const summaryAmenities = Array.from(
+    new Set(villas.flatMap((villa) => amenityTags(villa))),
+  ).slice(0, 8);
   const totalBedrooms = villas.reduce((sum, villa) => sum + positiveNumber(villa.acf.bedrooms, villa.acf.habitaciones), 0) || undefined;
   const totalBathrooms = villas.reduce((sum, villa) => sum + positiveNumber(villa.acf.bathrooms, villa.acf.banos), 0) || undefined;
 
   return (
-    <main className="min-h-screen bg-white text-[#17304f] lg:bg-[#edf5f5]">
+    <main className="min-h-screen bg-white text-[#17304f]">
       <section className="mx-auto max-w-[1440px] px-0 py-0 lg:px-12 lg:py-14">
         <DataFallbackNotice visible={isUsingFallback} />
         <Link href={combined ? "/#mix-match" : "/#villas"} className="mx-4 mt-5 hidden text-sm font-semibold tracking-wide text-[#4d806f] hover:underline lg:inline-block">
           ← {combined ? "Volver a Mix & Match" : "Volver a las villas"}
         </Link>
 
-        <div id="reservation" className="mx-auto mt-0 max-w-[1160px] scroll-mt-8 lg:mt-8">
+        <div id="reservation" className="mx-auto mt-0 max-w-[1380px] scroll-mt-8 lg:mt-8">
           <ReservationPlanner
             villas={villas.map((villa, index) => {
               return {

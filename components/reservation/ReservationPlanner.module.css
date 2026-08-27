@@ -41,11 +41,34 @@
   display: none;
 }
 
+.desktopSummary {
+  display: none;
+}
+
+.calendarShell {
+  margin: 0;
+}
+
+.bookingColumn {
+  min-width: 0;
+  container-name: booking;
+  container-type: inline-size;
+}
+
+.singleCalendar {
+  display: block;
+}
+
+.doubleCalendar {
+  display: none;
+}
+
 .calendarLegend {
   display: flex;
   padding: 10px 14px;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 16px;
   border-bottom: 1px solid #e8eef7;
   background: #f8fafc;
@@ -200,6 +223,138 @@
     letter-spacing: 3px;
     line-height: 1;
     text-transform: uppercase;
+  }
+}
+
+@container booking (min-width: 560px) {
+  .singleCalendar {
+    display: none;
+  }
+
+  .doubleCalendar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .planner {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .contextBar {
+    min-height: 56px;
+    margin-top: 16px;
+    padding-inline: 32px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+  }
+
+  .contextSparkle {
+    display: none;
+  }
+
+  .desktopSummary {
+    display: block;
+  }
+
+  .combinedVillaStack {
+    display: grid;
+    gap: 24px;
+  }
+
+  .desktopVillaSummary {
+    min-width: 0;
+  }
+
+  .desktopVillaImage {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: #eaf3f4;
+  }
+
+  .desktopVillaStats {
+    display: flex;
+    min-height: 56px;
+    padding: 12px 16px;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #eef1f4;
+  }
+
+  .staySummary {
+    display: grid;
+    margin-top: 24px;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 1fr);
+    align-items: start;
+    gap: 28px;
+  }
+
+  .stayDescription {
+    margin: 0;
+    color: #1c1c1c;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.45;
+  }
+
+  .stayCommercial {
+    padding: 18px;
+    background: #f4f7fb;
+  }
+
+  .stayPrice {
+    display: flex;
+    margin: 0 0 12px;
+    align-items: baseline;
+    gap: 8px;
+    color: #6a7282;
+    font-size: 16px;
+  }
+
+  .stayPrice strong {
+    color: #1a2e4a;
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  .stayPrice span {
+    font-size: 14px;
+  }
+
+  .stayAmenities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .stayAmenities span {
+    display: flex;
+    min-height: 26px;
+    padding: 4px 12px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #e8eef7;
+    color: #2c4a7c;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .calendarShell {
+    padding: 12px;
+    border-radius: 16px;
+    background: #f8fafc;
+  }
+
+  .bookingColumn {
+    margin-top: -64px;
   }
 }
 

@@ -11,7 +11,8 @@
     "fallback:update": "node scripts/update-wordpress-fallback.mjs",
     "fallback:test": "node scripts/test-wordpress-fallback.mjs",
     "images:build": "node scripts/process-villa-images.mjs",
-    "images:test": "node scripts/test-villa-images.mjs"
+    "images:test": "node scripts/test-villa-images.mjs",
+    "mix-match:test": "node --experimental-strip-types scripts/test-mix-match.mjs"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",
